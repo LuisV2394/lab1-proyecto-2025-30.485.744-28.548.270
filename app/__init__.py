@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from dotenv import load_dotenv
+from .swagger_config import init_swagger
 import os
 
 load_dotenv()
@@ -20,6 +21,8 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    
+   
 
     try:
         from app.routes.auth_routes import auth_bp
@@ -34,6 +37,8 @@ def create_app():
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
 
+    init_swagger(app)
+    
     @app.route("/ping")
     def ping():
         return {"status": "ok", "database": app.config["SQLALCHEMY_DATABASE_URI"]}

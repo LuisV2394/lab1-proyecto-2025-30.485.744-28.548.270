@@ -1,0 +1,152 @@
+# docs/professionals.yaml
+
+# GET /professionals/
+get:
+  tags:
+    - Professionals
+  summary: Retrieve all professionals
+  description: Returns a list of all professionals in the system.
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: List of professionals
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Professional'
+
+# GET /professionals/{professional_id}
+get_by_id:
+  tags:
+    - Professionals
+  summary: Retrieve a professional by ID
+  description: Returns a specific professional by their ID.
+  parameters:
+    - name: professional_id
+      in: path
+      type: integer
+      required: true
+      description: ID of the professional
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: Professional found
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/Professional'
+    404:
+      description: Professional not found
+
+# POST /professionals/
+post:
+  tags:
+    - Professionals
+  summary: Create a new professional
+  description: Allows creating a new professional in the system.
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            person_id:
+              type: integer
+            registration_number:
+              type: string
+            specialty:
+              type: string
+            sub_specialty:
+              type: string
+            schedule_enabled:
+              type: boolean
+          required:
+            - person_id
+            - registration_number
+            - specialty
+  responses:
+    201:
+      description: Professional created successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/Professional'
+    400:
+      description: Missing or invalid required fields
+
+# PATCH /professionals/{professional_id}
+patch:
+  tags:
+    - Professionals
+  summary: Update an existing professional
+  description: Allows updating the data of an existing professional.
+  parameters:
+    - name: professional_id
+      in: path
+      type: integer
+      required: true
+      description: ID of the professional to update
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            person_id:
+              type: integer
+            registration_number:
+              type: string
+            specialty:
+              type: string
+            sub_specialty:
+              type: string
+            is_active:
+              type: boolean
+            schedule_enabled:
+              type: boolean
+  responses:
+    200:
+      description: Professional updated successfully
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/Professional'
+    404:
+      description: Professional not found
+
+# DELETE /professionals/{professional_id}
+delete:
+  tags:
+    - Professionals
+  summary: Deactivate a professional
+  description: Marks a professional as inactive.
+  parameters:
+    - name: professional_id
+      in: path
+      type: integer
+      required: true
+      description: ID of the professional to deactivate
+  security:
+    - BearerAuth: []
+  responses:
+    200:
+      description: Professional deactivated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    404:
+      description: Professional not found
