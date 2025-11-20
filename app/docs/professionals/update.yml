@@ -2,11 +2,42 @@ tags:
   - Professionals
 summary: Update a professional
 description: Updates fields of an existing professional.
+
 parameters:
+  - in: path
+    name: professional_id
+    required: true
+    type: integer
+    description: ID of the professional to update
+    example: 7
+
   - in: body
     name: body
+    required: true
     schema:
       type: object
+      properties:
+        registration_number:
+          type: string
+          example: "REG-9087"
+        specialty:
+          type: string
+          example: "Cardiología"
+        subspecialty:
+          type: string
+          example: "Cardiología Pediátrica"
+        is_active:
+          type: boolean
+          example: true
+        agenda_enabled:
+          type: boolean
+          example: false
+      description: "Any of the fields may be updated. All fields are optional."
+
 responses:
   200:
     description: Professional updated successfully
+  404:
+    description: Professional not found
+  400:
+    description: Invalid data

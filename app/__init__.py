@@ -6,6 +6,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from .swagger_config import init_swagger
 import os
+from flask import request
+from flask_jwt_extended import JWTManager
 
 load_dotenv()
 
@@ -23,6 +25,12 @@ def create_app():
     jwt.init_app(app)
     
     init_swagger(app)
+    @app.before_request
+    def fix_swagger_authorization_header():
+        auth = request.headers.get("Authorization", "")
+
+        if auth and not auth.startswith("Bearer "):
+            request.environ["HTTP_AUTHORIZATION"] = "Bearer " + auth
 
     try:
         from app.routes.auth_routes import auth_bp

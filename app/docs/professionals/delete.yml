@@ -2,6 +2,17 @@ tags:
   - Professionals
 summary: Deactivate a professional
 description: Marks a professional as inactive.
+
+parameters:
+  - in: path
+    name: professional_id
+    required: true
+    type: integer
+    description: ID of the professional to deactivate
+    example: 5
+
 responses:
   200:
     description: Professional deactivated successfully
+  404:
+    description: Professional not found

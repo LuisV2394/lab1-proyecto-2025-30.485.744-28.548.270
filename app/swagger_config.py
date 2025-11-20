@@ -5,7 +5,7 @@ def init_swagger(app):
         "swagger": "2.0",
         "info": {
             "title": "Healthcare API",
-            "description": "API para gestión de profesionales y unidades médicas",
+            "description": "API documentation for Professionals and Medical Units management.",
             "version": "1.0.0"
         },
         "schemes": ["http"],
@@ -14,9 +14,14 @@ def init_swagger(app):
                 "type": "apiKey",
                 "name": "Authorization",
                 "in": "header",
-                "description": "JWT Authorization header usando el esquema Bearer. Ejemplo: 'Bearer {token}'"
+                "description": "Insert your JWT token here. Example: 'Bearer {token}'"
             }
-        }
+        },
+        "security": [
+            {
+                "Bearer": []
+            }
+        ]
     }
 
     app.config["SWAGGER"] = {
