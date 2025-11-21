@@ -1,0 +1,68 @@
+tags:
+  - Professionals
+
+summary: Get a professional by ID
+description: Retrieve detailed information of an existing professional by its ID.
+
+parameters:
+  - in: path
+    name: professional_id
+    required: true
+    schema:
+      type: integer
+    description: ID of the professional to retrieve
+    example: 5
+
+responses:
+  200:
+    description: Professional retrieved successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Professional retrieved successfully"
+            professional:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 5
+                person_id:
+                  type: integer
+                  example: 12
+                registration_number:
+                  type: string
+                  example: "REG-001234"
+                specialty:
+                  type: string
+                  example: "Cardiología"
+                sub_specialty:
+                  type: string
+                  nullable: true
+                  example: "Cardiología Pediátrica"
+                is_active:
+                  type: boolean
+                  example: true
+                schedule_enabled:
+                  type: boolean
+                  example: false
+                created_at:
+                  type: string
+                  example: "2025-11-21T14:20:01"
+                updated_at:
+                  type: string
+                  example: "2025-11-21T14:20:01"
+
+  404:
+    description: Professional not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: "Professional not found"

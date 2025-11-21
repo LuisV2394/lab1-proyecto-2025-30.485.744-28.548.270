@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models.user import User
+from app.models.person import Person
 from app import db
 from app.utils.middleware import role_required
 from flask_jwt_extended import jwt_required
@@ -47,6 +48,19 @@ def create_user():
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    person = Person.query.get(data["person_id"])
+    if not person:
+        return jsonify({"error": "Person not found"}), 404
+
+    if User.query.filter_by(username=data["username"]).first():
+        return jsonify({"error": "Username already exists"}), 409
+
+    # Validar que la persona no tenga ya un usuario
+    if User.query.filter_by(person_id=data["person_id"]).first():
+        return jsonify({"error": "This person already has a user"}), 409
+    
+    
+    
     new_user = User(
         person_id=data["person_id"],
         username=data["username"],

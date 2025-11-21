@@ -1,31 +1,43 @@
 tags:
   - Units
 summary: Update an existing unit
+description: Updates fields of an existing unit.
 parameters:
   - in: path
     name: unit_id
     required: true
     schema:
       type: integer
-requestBody:
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          name:
-            type: string
-          type:
-            type: string
-          description:
-            type: string
-          phone:
-            type: string
-          is_active:
-            type: boolean
+    description: ID of the unit to update
+    example: 3
+
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Unidad de Pediatría"
+        type:
+          type: string
+          example: "Especialidad"
+        description:
+          type: string
+          example: "Área dedicada a la atención pediátrica"
+        phone:
+          type: string
+          example: "+58-212-5551234"
+        is_active:
+          type: boolean
+          example: true
+      description: "Any of the fields may be updated. All fields are optional."
+
 responses:
   200:
     description: Unit updated successfully
   404:
     description: Unit not found
+  400:
+    description: Invalid data

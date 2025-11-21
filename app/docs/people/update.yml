@@ -1,12 +1,39 @@
 tags:
   - People
 summary: Update an existing person
+description: Updates fields of an existing person.
 parameters:
   - in: path
     name: person_id
     required: true
     schema:
       type: integer
+    description: ID of the person to update
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        document_number:
+          type: string
+        gender:
+          type: string
+        birth_date:
+          type: string
+          format: date
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        active:
+          type: boolean
 responses:
   200:
     description: Person updated successfully

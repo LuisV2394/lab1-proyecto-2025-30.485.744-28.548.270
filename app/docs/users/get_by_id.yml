@@ -1,17 +1,19 @@
 tags:
-  - Users
-summary: Get a user by ID
-description: Retrieve a single user by their ID.
+  - Professionals
+summary: Get a professional by ID
+description: Retrieve a single professional by their ID.
+
 parameters:
   - in: path
-    name: user_id
+    name: professional_id
     required: true
     schema:
       type: integer
-    description: ID of the user
+    description: ID of the professional
+
 responses:
   200:
-    description: User found
+    description: Professional found
     content:
       application/json:
         schema:
@@ -19,21 +21,41 @@ responses:
           properties:
             id:
               type: integer
-            username:
+            person_id:
+              type: integer
+            registration_number:
               type: string
-            email:
+            specialty:
               type: string
+            sub_specialty:
+              type: string
+              nullable: true
             is_active:
+              type: boolean
+            schedule_enabled:
               type: boolean
             person:
               type: object
               nullable: true
+              properties:
+                id:
+                  type: integer
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                birth_date:
+                  type: string
+                  format: date
             created_at:
               type: string
+              format: date-time
             updated_at:
               type: string
+              format: date-time
+
   404:
-    description: User not found
+    description: Professional not found
     content:
       application/json:
         schema:

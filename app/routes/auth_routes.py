@@ -5,6 +5,7 @@ from app import db
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
+# Login de usuario
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -31,6 +32,7 @@ def login():
 
     return jsonify({"error": "Invalid credentials"}), 401
 
+# Token refresh
 @auth_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh_token():

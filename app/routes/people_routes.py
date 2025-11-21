@@ -5,6 +5,7 @@ from app.utils.middleware import role_required
 from flask_jwt_extended import jwt_required
 from flasgger.utils import swag_from
 import os
+from datetime import datetime
 
 people_bp = Blueprint("people", __name__, url_prefix="/people")
 
@@ -76,8 +77,17 @@ def update_person(person_id):
         return jsonify({"error": "Person not found"}), 404
 
     data = request.get_json()
+
     for key, value in data.items():
         if hasattr(person, key):
+
+            if key == "birth_date":
+                if value:
+                    # Convertir string "YYYY-MM-DD" -> date
+                    value = datetime.strptime(value, "%Y-%m-%d").date()
+                else:
+                    value = None
+
             setattr(person, key, value)
 
     db.session.commit()

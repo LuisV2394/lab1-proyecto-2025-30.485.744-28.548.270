@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app.models.professional import Professional
+from app.models.person import Person
 from app import db
 from app.utils.middleware import role_required
 from flask_jwt_extended import jwt_required
@@ -23,15 +24,21 @@ def get_all_professionals():
     data = [p.to_dict() for p in professionals]
     return jsonify(data), 200
 
-#Obtener profesional por ID
+#Buscar profesionales por ID
 @professionals_bp.route("/<int:professional_id>", methods=["GET"])
 @jwt_required()
 @role_required(["admin"])
+@swag_from(os.path.join(BASE_DOCS, 'get_by_id.yml'))
 def get_professional_by_id(professional_id):
     professional = Professional.query.get(professional_id)
+
     if not professional:
         return jsonify({"error": "Professional not found"}), 404
-    return jsonify(professional.to_dict()), 200
+
+    return jsonify({
+        "message": "Professional retrieved successfully",
+        "professional": professional.to_dict()
+    }), 200
 
 #Crear nuevo profesional
 @professionals_bp.route("/", methods=["POST"])
@@ -46,6 +53,12 @@ def create_professional():
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    person = Person.query.get(data["person_id"])
+    if not person:
+        return jsonify({
+            "error": "Invalid person_id: Person does not exist"
+        }), 400
+        
     new_professional = Professional(
         person_id=data["person_id"],
         registration_number=data["registration_number"],
@@ -96,3 +109,4 @@ def deactivate_professional(professional_id):
     professional.is_active = False
     db.session.commit()
     return jsonify({"message": "Professional deactivated successfully"}), 200
+
