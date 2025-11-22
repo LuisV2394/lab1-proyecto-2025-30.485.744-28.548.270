@@ -1,0 +1,37 @@
+Crear bloque de agenda
+---
+tags:
+  - Agenda
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - professionalId
+        - start
+        - end
+      properties:
+        professionalId:
+          type: integer
+          example: 101
+        unitId:
+          type: integer
+          example: 5
+        start:
+          type: string
+          format: date-time
+          example: "2023-11-25T08:00:00"
+        end:
+          type: string
+          format: date-time
+          example: "2023-11-25T12:00:00"
+        ability:
+          type: integer
+          example: 2
+responses:
+  201:
+    description: Bloque creado exitosamente
+  409:
+    description: Conflicto de horario (solapamiento)
