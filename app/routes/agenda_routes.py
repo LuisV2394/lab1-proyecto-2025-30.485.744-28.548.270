@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.agenda import db, Block
+from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
 from datetime import datetime

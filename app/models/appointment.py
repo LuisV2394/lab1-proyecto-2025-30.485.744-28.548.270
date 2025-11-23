@@ -1,4 +1,4 @@
-from agenda import db, Block
+from app import db
 from datetime import datetime
 
 class Appointment(db.Model):

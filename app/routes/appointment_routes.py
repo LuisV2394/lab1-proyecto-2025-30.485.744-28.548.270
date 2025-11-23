@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.appointment import db, Appointment, AppointmentHistory
 from models.agenda import Block
+from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime

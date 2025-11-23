@@ -1,7 +1,8 @@
+from app import db
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-db = SQLAlchemy() # Asumiendo que inicializas db en app.py
+db = SQLAlchemy() 
 
 class Block(db.Model):
     __tablename__ = 'blocks'

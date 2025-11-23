@@ -39,12 +39,24 @@ def create_app():
         from app.routes.users_routes import users_bp
         from app.routes.people_routes import people_bp
         from app.routes.units_routes import units_bp
+        from app.routes.episodes_rote import episode_bp
+        from app.routes.note_rotes import note_bp
+        from app.routes.diagnosis_routes import diagnosis_bp
+        from app.routes.concent_routes import consent_bp
+        from app.routes.agenda_routes import agenda_bp
+        from app.routes.appointment_routes import appt_bp
     
         app.register_blueprint(auth_bp)
         app.register_blueprint(professionals_bp)
         app.register_blueprint(users_bp)
         app.register_blueprint(people_bp)
         app.register_blueprint(units_bp)
+        app.register_blueprint(episode_bp)
+        app.register_blueprint(note_bp)
+        app.register_blueprint(diagnosis_bp)
+        app.register_blueprint(consent_bp)
+        app.register_blueprint(agenda_bp)
+        app.register_blueprint(appt_bp)
 
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
