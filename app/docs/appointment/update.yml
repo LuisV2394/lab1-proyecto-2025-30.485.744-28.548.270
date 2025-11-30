@@ -1,0 +1,79 @@
+swagger: "2.0"
+tags:
+  - Appointments
+summary: Update appointment status
+description: >
+  Updates the status of an existing appointment.  
+  Validates allowed state transitions and records history logs.  
+  If the status change involves rescheduling (returning to 'request' with a new date), 
+  the system must validate block availability and capacity again.
+operationId: updateAppointmentStatus
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - name: id
+    in: path
+    required: true
+    type: integer
+    description: Appointment ID
+    example: 44
+
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        state:
+          type: string
+          description: New appointment state
+          enum: ["request", "confirmed", "cancelled", "completed"]
+          example: "confirmed"
+        observations:
+          type: string
+          description: Additional notes about the status change
+          example: "Paciente confirmó la asistencia"
+        start:
+          type: string
+          format: date-time
+          description: >
+            Optional. Only used when rescheduling.  
+            Requires revalidation of availability and block capacity.
+          example: "2025-01-15T14:00:00"
+        end:
+          type: string
+          format: date-time
+          description: >
+            Optional. Only used when rescheduling.
+          example: "2025-01-15T15:00:00"
+
+responses:
+  200:
+    description: Appointment status updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Estado actualizado"
+        state:
+          type: string
+          example: "confirmed"
+
+  400:
+    description: Invalid status transition or invalid input
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Transición inválida de request a completed"
+
+  404:
+    description: Appointment not found
+
+  500:
+    description: Server error

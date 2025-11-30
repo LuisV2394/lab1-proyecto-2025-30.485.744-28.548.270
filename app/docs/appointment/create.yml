@@ -1,0 +1,88 @@
+swagger: "2.0"
+tags:
+  - Appointments
+summary: Create a new appointment request
+description: >
+  Creates a new appointment for a person within an open schedule block.  
+  Validates availability, block state, capacity, and time overlap.
+operationId: createAppointment
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - start
+        - end
+        - professionalId
+        - personId
+        - unitId
+        - reason
+      properties:
+        start:
+          type: string
+          format: date-time
+          example: "2025-01-15T14:00:00"
+        end:
+          type: string
+          format: date-time
+          example: "2025-01-15T15:00:00"
+        professionalId:
+          type: integer
+          example: 3
+        personId:
+          type: integer
+          example: 12
+        unitId:
+          type: integer
+          example: 5
+        reason:
+          type: string
+          example: "Consulta general"
+        channel:
+          type: string
+          enum: ["presential", "phone", "video"]
+          example: "presential"
+        observations:
+          type: string
+          example: "Paciente solicita ser atendido temprano"
+
+responses:
+  201:
+    description: Appointment created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Cita solicitada con éxito"
+        id:
+          type: integer
+          example: 44
+
+  400:
+    description: Block not found or invalid time range
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No existe agenda abierta para este horario"
+
+  409:
+    description: Block capacity exceeded
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No hay cupo disponible en este bloque"
+
+  500:
+    description: Server error

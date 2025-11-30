@@ -24,7 +24,6 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
     
-    init_swagger(app)
     @app.before_request
     def fix_swagger_authorization_header():
         auth = request.headers.get("Authorization", "")
@@ -34,15 +33,14 @@ def create_app():
 
     try:
         from app.routes.auth_routes import auth_bp
-        from app.models.person import Person
         from app.routes.professionals_routes import professionals_bp
         from app.routes.users_routes import users_bp
         from app.routes.people_routes import people_bp
         from app.routes.units_routes import units_bp
-        from app.routes.episodes_rote import episode_bp
-        from app.routes.note_rotes import note_bp
+        from app.routes.episodes_routes import episode_bp
+        from app.routes.note_routes import note_bp
         from app.routes.diagnosis_routes import diagnosis_bp
-        from app.routes.concent_routes import consent_bp
+        from app.routes.consent_routes import consent_bp
         from app.routes.agenda_routes import agenda_bp
         from app.routes.appointment_routes import appt_bp
     
@@ -57,7 +55,7 @@ def create_app():
         app.register_blueprint(consent_bp)
         app.register_blueprint(agenda_bp)
         app.register_blueprint(appt_bp)
-
+        init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
 

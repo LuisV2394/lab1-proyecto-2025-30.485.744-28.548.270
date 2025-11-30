@@ -1,12 +1,16 @@
 from flask import Blueprint, request, jsonify
-from models.appointment import db, Appointment, AppointmentHistory
-from models.agenda import Block
+from app.models.appointment import db, Appointment, AppointmentHistory
+from app.models.agenda import Block
 from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
+import os
+appt_bp = Blueprint('appointments', __name__,url_prefix="/appointments")
 
-appt_bp = Blueprint('appointment', __name__)
+BASE_DOCS = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "docs", "appointment")
+)
 
 # Diccionario de transiciones válidas
 VALID_TRANSITIONS = {
@@ -17,9 +21,9 @@ VALID_TRANSITIONS = {
     'unassisted': [] # Estado final
 }
 
-@appt_bp.route('/appointment', methods=['POST'])
+@appt_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/appointment_create.yml')
+@swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_appointment():
     data = request.json
     start = datetime.fromisoformat(data.get('start'))
@@ -72,9 +76,9 @@ def create_appointment():
     db.session.commit()
     return jsonify({"message": "Cita solicitada con éxito", "id": new_appt.id}), 201
 
-@appt_bp.route('/appointment/<int:id>/status', methods=['PUT'])
+@appt_bp.route('/<int:id>/status', methods=['PUT'])
 @jwt_required()
-@swag_from('../docs/appointment_update.yml')
+@swag_from(os.path.join(BASE_DOCS, 'update.yml'))
 def update_appointment_status(id):
     data = request.json
     new_state = data.get('state')

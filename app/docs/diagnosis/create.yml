@@ -1,0 +1,66 @@
+swagger: "2.0"
+tags:
+  - Diagnoses
+summary: Add a diagnosis to an episode
+description: >
+  Creates a new diagnosis record associated with a medical episode.  
+  If the diagnosis is marked as 'main', any previous main diagnosis in the same episode 
+  will automatically be updated to `main: false`.
+operationId: addDiagnosis
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - episode_id
+        - code
+        - description
+        - type
+      properties:
+        episode_id:
+          type: integer
+          description: ID of the medical episode
+          example: 25
+        code:
+          type: string
+          description: Diagnosis code (ICD-10 or custom)
+          example: "J45.9"
+        description:
+          type: string
+          description: Human-readable name of the diagnosis
+          example: "Asthma, unspecified"
+        type:
+          type: string
+          description: Diagnosis category or type
+          enum: ["primary", "secondary", "suspected", "rule-out"]
+          example: "primary"
+        main:
+          type: boolean
+          description: Flag indicating whether this is the main diagnosis
+          example: true
+
+responses:
+  201:
+    description: Diagnosis added successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Diagnóstico añadido"
+        id:
+          type: integer
+          example: 110
+
+  400:
+    description: Invalid input
+
+  500:
+    description: Server error

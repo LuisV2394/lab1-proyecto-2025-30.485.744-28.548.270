@@ -1,0 +1,60 @@
+swagger: "2.0"
+tags:
+  - Consents
+summary: Register a new consent
+description: >
+  Creates a new consent record for a person.  
+  Generates an internal file reference associated with the consent document.
+operationId: createConsent
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - person_id
+        - processTipe
+        - method
+      properties:
+        person_id:
+          type: integer
+          description: ID of the person providing consent
+          example: 12
+        processTipe:
+          type: string
+          description: Type of process for which consent is given
+          example: "data_processing"
+        method:
+          type: string
+          description: Method by which consent was obtained
+          enum: ["digital", "written", "verbal"]
+          example: "digital"
+
+responses:
+  201:
+    description: Consent registered successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Consentimiento registrado"
+        id:
+          type: integer
+          example: 88
+        file_reference:
+          type: string
+          description: Auto-generated file identifier associated with the consent PDF
+          example: "file_20251129153022_12.pdf"
+
+  400:
+    description: Invalid input
+
+  500:
+    description: Server error
