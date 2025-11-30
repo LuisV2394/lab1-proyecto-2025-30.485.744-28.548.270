@@ -5,10 +5,10 @@ from flasgger import swag_from
 from flask_jwt_extended import jwt_required
 from datetime import datetime
 import os
-consent_bp = Blueprint('concents', __name__, url_prefix="/concents")
+consent_bp = Blueprint('consents', __name__, url_prefix="/consents")
 
 BASE_DOCS = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "docs", "concent")
+    os.path.join(os.path.dirname(__file__), "..", "docs", "consent")
 )
 
 @consent_bp.route('/', methods=['POST'])
