@@ -1,0 +1,56 @@
+tags:
+  - Episodes
+summary: Open a new episode
+description: >
+  Creates a new medical episode for a person.  
+  Episodes are created with status "open" and the current date/time as the opening date.
+operationId: createEpisode
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - person_id
+        - reason
+        - kind
+      properties:
+        person_id:
+          type: integer
+          description: ID of the person to whom the episode belongs
+          example: 42
+        reason:
+          type: string
+          description: Reason or motive for opening the episode
+          example: "Dolor abdominal persistente"
+        kind:
+          type: string
+          description: >
+            Type or classification of the episode  
+            (e.g., emergency, outpatient, control)
+          example: "emergency"
+
+responses:
+  201:
+    description: Episode created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Episodio abierto"
+        id:
+          type: integer
+          example: 77
+
+  400:
+    description: Invalid input
+
+  500:
+    description: Server error

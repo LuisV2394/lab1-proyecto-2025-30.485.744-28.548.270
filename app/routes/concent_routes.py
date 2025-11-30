@@ -1,15 +1,19 @@
 from flask import Blueprint, request, jsonify
-from models.consets import Consent
+from app.models.consets import Consent
 from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
 from datetime import datetime
+import os
+consent_bp = Blueprint('concents', __name__, url_prefix="/concents")
 
-consent_bp = Blueprint('consents', __name__)
+BASE_DOCS = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "docs", "concent")
+)
 
-@consent_bp.route('/consents', methods=['POST'])
+@consent_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/consent_create.yml')
+@swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_consent():
     data = request.json
     

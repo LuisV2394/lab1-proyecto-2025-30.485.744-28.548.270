@@ -1,0 +1,23 @@
+tags:
+  - Auth
+summary: Refresh access token
+description: Generates a new access token using a valid refresh token.
+operationId: refreshAccessToken
+consumes:
+  - application/json
+produces:
+  - application/json
+security:
+  - bearerAuth: []
+parameters: []
+responses:
+  200:
+    description: New access token generated
+    schema:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  401:
+    description: Invalid or expired refresh token

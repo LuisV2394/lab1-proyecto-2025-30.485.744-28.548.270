@@ -1,15 +1,20 @@
 from flask import Blueprint, request, jsonify
-from models.note import ClinicalNote
-from models.episodes import Episode
+from app.models.note import ClinicalNote
+from app.models.episodes import Episode
 from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
+import os
 
-note_bp = Blueprint('notes', __name__)
+note_bp = Blueprint('notes', __name__, url_prefix="/notes")
 
-@note_bp.route('/note', methods=['POST'])
+BASE_DOCS = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "docs", "note")
+)
+
+@note_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/note_create.yml')
+@swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_note():
     data = request.json
     episode_id = data.get('episode_id')

@@ -1,0 +1,45 @@
+tags:
+  - Episodes
+summary: Close an episode
+description: >
+  Closes an existing medical episode.  
+  Before closing, the system validates that all associated orders are completed.  
+  If pending orders exist, the episode cannot be closed.
+operationId: closeEpisode
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - name: id
+    in: path
+    required: true
+    type: integer
+    description: Episode ID
+    example: 77
+
+responses:
+  200:
+    description: Episode closed successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Episodio cerrado exitosamente"
+
+  409:
+    description: Episode has pending orders and cannot be closed
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Existen órdenes pendientes."
+
+  404:
+    description: Episode not found
+
+  500:
+    description: Server error

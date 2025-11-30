@@ -1,15 +1,20 @@
 from flask import Blueprint, request, jsonify
-from models.agenda import db, Block
+from app.models.agenda import db, Block
 from app import db
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
 from datetime import datetime
+import os
 
-agenda_bp = Blueprint('agenda', __name__)
+agenda_bp = Blueprint('agenda', __name__, url_prefix="/agenda")
 
-@agenda_bp.route('/agenda', methods=['POST'])
+BASE_DOCS = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "docs", "agenda")
+)
+
+@agenda_bp.route('/', methods=['POST'])
 @jwt_required()
-@swag_from('../docs/agenda.yml')
+@swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_block():
     data = request.json
     prof_id = data.get('professionalId')
