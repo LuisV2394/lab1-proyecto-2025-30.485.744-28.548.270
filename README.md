@@ -30,6 +30,18 @@ The API follows clean architecture principles, route modularization, and consist
   * Unit testing and functional test development.
   * Route adjustments and validation logic.
 
+### **William Alfonso Molina Riera**
+
+* **ID:** 28.548.270
+* **Email:** [1001.28548270.ucla@gmail.com](mailto:1001.28548270.ucla@gmail.com)
+* **Role:** Backend Developer
+* **Responsibilities:**
+
+* Implementation of multiple core routes.
+* creation of multiple modules.
+* udate of routes and models.
+
+  
 *(Add other team members here as needed.)*
 
 ---
