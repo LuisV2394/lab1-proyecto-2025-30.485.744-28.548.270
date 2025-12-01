@@ -6,11 +6,17 @@ class Episode(db.Model):
     __tablename__ = 'episodes'
     id = db.Column(db.Integer, primary_key=True)
     person_id = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
-    opening_date = db.Column(db.DateTime, default=datetime.utcnow)
-    reason = db.Column(db.String(255))
-    # kind: consultation, process, check, outpatient_emergency
-    kind = db.Column(db.String(50), nullable=False) 
-    status = db.Column(db.String(10), default='open') # open, close
+    professional_id = db.Column(db.Integer)
+    unit_id = db.Column(db.Integer)
+    type = db.Column(
+        db.Enum('CONSULTATION', 'EMERGENCY', 'ADMISSION', 'PROCEDURE'),
+        nullable=False
+    )
+    started_at = db.Column(db.DateTime, default=datetime.utcnow)
+    closed_at = db.Column(db.DateTime)
+    status = db.Column(db.Enum('OPEN', 'CLOSED'), default='OPEN')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-# Relationships
-    person = db.relationship("Person", backref=db.backref("episodes", lazy=True))   
+    # Relaciones
+    person = db.relationship("Person", backref=db.backref("episodes", lazy=True))

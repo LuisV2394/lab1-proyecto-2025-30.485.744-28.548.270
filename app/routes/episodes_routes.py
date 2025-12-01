@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required
 from datetime import datetime
 import os
 
-episode_bp = Blueprint('episodes',__name__, url_prefix="/episodes")
+episode_bp = Blueprint('episodes', __name__, url_prefix="/episodes")
 
 BASE_DOCS = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "docs", "episodes")
@@ -14,7 +14,7 @@ BASE_DOCS = os.path.abspath(
 
 # Función auxiliar para regla de negocio futura
 def check_orders_completed(episode_id):
-    # Lógica futura: return Order.query.filter...count() == 0
+    # Lógica futura: return Order.query.filter(...).count() == 0
     return True 
 
 @episode_bp.route('/', methods=['POST'])
@@ -24,10 +24,9 @@ def create_episode():
     data = request.json
     new_episode = Episode(
         person_id=data.get('person_id'),
-        reason=data.get('reason'),
-        kind=data.get('kind'),
-        status='open',
-        opening_date=datetime.utcnow()
+        type=data.get('type'),              # Debe ser CONSULTATION, EMERGENCY, etc.
+        status='OPEN',                       # Valor inicial del ENUM
+        started_at=datetime.utcnow()         # Fecha de inicio
     )
     db.session.add(new_episode)
     db.session.commit()
@@ -42,6 +41,7 @@ def close_episode(id):
     if not check_orders_completed(episode.id):
         return jsonify({"error": "Existen órdenes pendientes."}), 409
     
-    episode.status = 'close'
+    episode.status = 'CLOSED'              # Coincide con el ENUM de la tabla
+    episode.closed_at = datetime.utcnow()  # Guardar fecha de cierre
     db.session.commit()
     return jsonify({"message": "Episodio cerrado exitosamente"})

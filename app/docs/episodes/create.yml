@@ -3,7 +3,7 @@ tags:
 summary: Open a new episode
 description: >
   Creates a new medical episode for a person.  
-  Episodes are created with status "open" and the current date/time as the opening date.
+  Episodes are created with status "OPEN" and the current date/time as the start date.
 operationId: createEpisode
 consumes:
   - application/json
@@ -18,23 +18,19 @@ parameters:
       type: object
       required:
         - person_id
-        - reason
-        - kind
+        - type
       properties:
         person_id:
           type: integer
           description: ID of the person to whom the episode belongs
           example: 42
-        reason:
-          type: string
-          description: Reason or motive for opening the episode
-          example: "Dolor abdominal persistente"
-        kind:
+        type:
           type: string
           description: >
             Type or classification of the episode  
-            (e.g., emergency, outpatient, control)
-          example: "emergency"
+            (e.g., CONSULTATION, EMERGENCY, ADMISSION, PROCEDURE)
+          enum: ["CONSULTATION", "EMERGENCY", "ADMISSION", "PROCEDURE"]
+          example: "EMERGENCY"
 
 responses:
   201:
