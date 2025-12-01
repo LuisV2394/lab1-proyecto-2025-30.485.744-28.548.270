@@ -37,9 +37,9 @@ The API follows clean architecture principles, route modularization, and consist
 * **Role:** Backend Developer
 * **Responsibilities:**
 
-* Implementation of multiple core routes.
-* creation of multiple modules.
-* udate of routes and models.
+  * Implementation of multiple core routes.
+  * creation of multiple modules.
+  * udate of routes and models.
 
   
 *(Add other team members here as needed.)*
