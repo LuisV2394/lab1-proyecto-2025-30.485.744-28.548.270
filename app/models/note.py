@@ -6,7 +6,7 @@ class ClinicalNote(db.Model):
     __tablename__ = 'clinical_notes'
     id = db.Column(db.Integer, primary_key=True)
     episode_id = db.Column(db.Integer, db.ForeignKey('episodes.id'), nullable=False)
-    professional_id = db.Column(db.Integer, nullable=False)
+    professional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Similar structure to SOAP but with your fields

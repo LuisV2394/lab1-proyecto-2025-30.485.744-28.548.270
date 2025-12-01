@@ -16,6 +16,11 @@ migrate = Migrate()
 jwt = JWTManager()
 
 def create_app():
+    from app.models.professional import Professional
+    from app.models.agenda import Block
+    from app.models.unit import Unit
+    from app.models.episodes import Episode
+    from app.models.note import ClinicalNote
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
 
