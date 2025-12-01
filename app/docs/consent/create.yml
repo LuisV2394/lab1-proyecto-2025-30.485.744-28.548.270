@@ -1,4 +1,3 @@
-swagger: "2.0"
 tags:
   - Consents
 summary: Register a new consent
@@ -10,10 +9,10 @@ consumes:
   - application/json
 produces:
   - application/json
-
 parameters:
   - in: body
     name: body
+    description: Consent data
     required: true
     schema:
       type: object
@@ -33,8 +32,11 @@ parameters:
         method:
           type: string
           description: Method by which consent was obtained
-          enum: ["digital", "written", "verbal"]
-          example: "digital"
+          enum:
+            - digital
+            - written
+            - verbal
+          example: digital
 
 responses:
   201:
@@ -55,6 +57,18 @@ responses:
 
   400:
     description: Invalid input
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid data"
 
   500:
     description: Server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error"

@@ -12,7 +12,7 @@ BASE_DOCS = os.path.abspath(
 )
 
 @consent_bp.route('/', methods=['POST'])
-@jwt_required()
+#@jwt_required()
 @swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_consent():
     data = request.json
