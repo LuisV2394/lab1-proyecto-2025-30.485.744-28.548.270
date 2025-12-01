@@ -3,8 +3,9 @@ from app.models.appointment import db, Appointment, AppointmentHistory
 from app.models.agenda import Block
 from app import db
 from flasgger import swag_from
+from sqlalchemy import func, text
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 appt_bp = Blueprint('appointments', __name__,url_prefix="/appointments")
 
@@ -14,11 +15,13 @@ BASE_DOCS = os.path.abspath(
 
 # Diccionario de transiciones válidas
 VALID_TRANSITIONS = {
-    'request': ['confirmed', 'canceled'],
-    'confirmed': ['fulfilled', 'canceled', 'unassisted', 'request'], # request si se reprograma
-    'fulfilled': [], # Estado final
-    'canceled': [],  # Estado final
-    'unassisted': [] # Estado final
+    "PENDING": ["CONFIRMED", "CANCELLED", "RESCHEDULED", "NO_SHOW"],
+    "CONFIRMED": ["IN_PROGRESS", "CANCELLED", "RESCHEDULED", "NO_SHOW"],
+    "IN_PROGRESS": ["COMPLETED", "CANCELLED", "NO_SHOW"],
+    "COMPLETED": [],
+    "CANCELLED": [],
+    "RESCHEDULED": ["PENDING", "CONFIRMED"],
+    "NO_SHOW": []
 }
 
 @appt_bp.route('/', methods=['POST'])
@@ -26,88 +29,102 @@ VALID_TRANSITIONS = {
 @swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_appointment():
     data = request.json
-    start = datetime.fromisoformat(data.get('start'))
-    end = datetime.fromisoformat(data.get('end'))
-    prof_id = data.get('professionalId')
-    
-    # REGLA 1: Validar que la cita esté dentro de un bloque abierto
-    target_block = Block.query.filter(
-        Block.professional_id == prof_id,
-        Block.start <= start,
-        Block.end >= end,
-        Block.state == 'open'
-    ).first()
-    
-    if not target_block:
-        return jsonify({"error": "No existe agenda abierta para este horario"}), 400
 
-    # REGLA 2: Validar capacidad (ability)
-    # Contar citas activas en ese bloque que se solapen con el horario solicitado
-    current_appts = Appointment.query.filter(
-        Appointment.block_id == target_block.id,
-        Appointment.state.in_(['request', 'confirmed']),
-        Appointment.start < end,
-        Appointment.end > start
-    ).count()
-    
-    if current_appts >= target_block.ability:
-        return jsonify({"error": "No hay cupo disponible en este bloque"}), 409
+    try:
+        # Datos de la cita
+        scheduled_at = datetime.fromisoformat(data.get('start'))
+        duration = int(data.get('duration_minutes', 30))  # valor por defecto 30 min
+        end_time = scheduled_at + timedelta(minutes=duration)
+        prof_id = data.get('professionalId')
 
-    # Crear cita
-    new_appt = Appointment(
-        person_id=data.get('personId'),
-        professional_id=prof_id,
-        unit_id=data.get('unitId'),
-        block_id=target_block.id,
-        start=start,
-        end=end,
-        reason=data.get('reason'),
-        channel=data.get('channel'),
-        state='request', # Estado inicial
-        observations=data.get('observations')
-    )
-    
-    db.session.add(new_appt)
-    
-    # Log Historial (Creación)
-    log = AppointmentHistory(appointment=new_appt, old_state=None, new_state='request', changed_by=get_jwt_identity())
-    db.session.add(log)
-    
-    db.session.commit()
-    return jsonify({"message": "Cita solicitada con éxito", "id": new_appt.id}), 201
+        # Buscar bloque disponible
+        target_block = Block.query.filter(
+            Block.professional_id == prof_id,
+            Block.date == scheduled_at.date(),
+            Block.start_time <= scheduled_at.time(),
+            Block.end_time >= end_time.time(),
+            Block.state == 'AVAILABLE'
+        ).first()
 
+        if not target_block:
+            return jsonify({"error": "No existe agenda abierta para este horario"}), 400
+
+        # Validar capacidad: contar citas que se solapen usando SQL
+        current_appts = Appointment.query.filter(
+            Appointment.agenda_block_id == target_block.id,
+            Appointment.status.in_(['PENDING', 'CONFIRMED']),
+            Appointment.scheduled_at < end_time,
+            func.timestampadd(text('MINUTE'), Appointment.duration_minutes, Appointment.scheduled_at) > scheduled_at
+        ).count()
+
+        if current_appts >= target_block.capacity:
+            return jsonify({"error": "No hay cupo disponible en este bloque"}), 409
+
+        # Crear cita
+        new_appt = Appointment(
+            person_id=data.get('personId'),
+            professional_id=prof_id,
+            unit_id=data.get('unitId'),
+            agenda_block_id=target_block.id,
+            scheduled_at=scheduled_at,
+            duration_minutes=duration,
+            type=data.get('type', 'CONSULTATION'),
+            reason=data.get('reason'),
+            status='PENDING'
+        )
+
+        db.session.add(new_appt)
+
+        # Registrar historial
+        log = AppointmentHistory(
+            appointment=new_appt,
+            old_state=None,
+            new_state='PENDING',
+            changed_by=get_jwt_identity()
+        )
+        db.session.add(log)
+
+        db.session.commit()
+
+        return jsonify({"message": "Cita solicitada con éxito", "id": new_appt.id}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
 @appt_bp.route('/<int:id>/status', methods=['PUT'])
 @jwt_required()
 @swag_from(os.path.join(BASE_DOCS, 'update.yml'))
 def update_appointment_status(id):
     data = request.json
-    new_state = data.get('state')
+    new_status = data.get('status')
     appt = Appointment.query.get_or_404(id)
     
     # REGLA 3: Transiciones válidas
-    if new_state not in VALID_TRANSITIONS.get(appt.state, []):
+    if new_status not in VALID_TRANSITIONS.get(appt.status, []):
         return jsonify({
-            "error": f"Transición inválida de {appt.state} a {new_state}"
+            "error": f"Transición inválida de {appt.status} a {new_status}"
         }), 400
         
     # Si es reprogramación (cambio de fecha), verificar disponibilidad nuevamente
-    if new_state == 'request' and 'start' in data:
-        # ... Aquí repetirías la lógica de validación de bloque y capacidad ...
+    if new_status == 'PENDING' and 'start' in data:
+        # Aquí puedes repetir la lógica de validación de bloque y capacidad
         pass
 
     # REGLA 4: Registro de historial
     history = AppointmentHistory(
         appointment_id=appt.id,
-        old_state=appt.state,
-        new_state=new_state,
-        changed_by=get_jwt_identity() # ID del usuario JWT
+        old_state=appt.status,
+        new_state=new_status,
+        changed_by=get_jwt_identity()  # ID del usuario JWT
     )
     
-    appt.state = new_state
+    # Actualizar el estado de la cita
+    appt.status = new_status
     if 'observations' in data:
         appt.observations = data['observations']
         
     db.session.add(history)
     db.session.commit()
     
-    return jsonify({"message": "Estado actualizado", "state": appt.state})
+    return jsonify({"message": "Estado actualizado", "status": appt.status})
