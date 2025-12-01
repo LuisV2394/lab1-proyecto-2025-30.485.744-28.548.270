@@ -1,8 +1,10 @@
-flask
-flask_sqlalchemy
-flask_migrate
-flask_jwt_extended
-flask_cors
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-JWT-Extended
+Flask-Cors
 python-dotenv
 bcrypt
-pymysql
+passlib
+PyMySQL
+Flasgger

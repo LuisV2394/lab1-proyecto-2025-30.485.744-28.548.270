@@ -31,6 +31,9 @@ def create_app():
         if auth and not auth.startswith("Bearer "):
             request.environ["HTTP_AUTHORIZATION"] = "Bearer " + auth
 
+    from app.main import main_bp
+    app.register_blueprint(main_bp)
+    
     try:
         from app.routes.auth_routes import auth_bp
         from app.routes.professionals_routes import professionals_bp
