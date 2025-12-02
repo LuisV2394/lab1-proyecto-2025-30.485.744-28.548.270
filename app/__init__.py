@@ -68,13 +68,13 @@ def create_app():
         print(f"Blueprint registration warning: {e}")
 
     
-    @app.route("/ping")
-    def ping():
-        return {"status": "ok", "database": app.config["SQLALCHEMY_DATABASE_URI"]}
+    # @app.route("/ping")
+    # def ping():
+    #     return {"status": "ok", "database": app.config["SQLALCHEMY_DATABASE_URI"]}
     
-    print("=== REGISTERED ROUTES ===")
-    for rule in app.url_map.iter_rules():
-        print(rule)
-    print("==========================")
+    # print("=== REGISTERED ROUTES ===")
+    # for rule in app.url_map.iter_rules():
+    #     print(rule)
+    # print("==========================")
     
     return app

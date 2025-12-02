@@ -1,18 +1,22 @@
-# Project-API-Platform-for-Medical-Services-Management
-Project developed as part of the Laboratory I course at Universidad Centroccidental Lisandro Alvarado (UCLA). The goal is to implement a RESTful API for managing medical services, including modules for authentication, patients, healthcare professionals, scheduling, and appointments — built with Python (Flask) and MySQL.
-
 # lab1-proyecto-2025-30.485.744-28.548.270
+Project developed as part of the Laboratory I course at Universidad Centroccidental Lisandro Alvarado (UCLA). The goal is to implement a RESTful API for managing medical services, including modules for authentication, patients, healthcare professionals, scheduling, and appointments — built with Python (Flask) and MySQL.
 
 **Backend API – Medical Services Platform (Laboratory I – 2025)**
 
----
+# 🏥 **Healthcare API – Medical Backend in Flask**
 
-## 📘 General Overview
+A modular medical API built with **Flask**, **SQLAlchemy**, **JWT**, and **Swagger**, following a clean layered architecture (routes → services → repositories → models), with full YAML-based documentation.
 
-This project implements a **RESTful API** designed to support a medical services management platform.
-The system provides modules for **authentication**, **patients**, **health professionals**, **appointments**, **clinical episodes**, **diagnosis**, **agenda management**, and **clinical notes**, forming the backend foundation for an integrated medical information system.
+Designed to manage:
 
-The API follows clean architecture principles, route modularization, and consistent response formatting, allowing it to serve as a solid backend for future mobile or web applications.
+* Authentication (JWT)
+* Users & profiles
+* People registry
+* Healthcare professionals
+* Medical units
+* Clinical episodes
+* Agenda & appointments
+* Consent records
 
 ---
 
@@ -41,345 +45,287 @@ The API follows clean architecture principles, route modularization, and consist
   * creation of multiple modules.
   * udate of routes and models.
 
-  
-*(Add other team members here as needed.)*
+---
+
+## 📌 **Key Features**
+
+* 🔐 Secure authentication using **JWT**
+* 🧩 Clean modular architecture
+* 📚 Swagger documentation using **YAML** files
+* 🗂 Database migrations with **Flask-Migrate**
+* 🏗 MySQL as the primary database
+* 🧪 Ready-to-use testing structure
+* 📦 Production-ready project organization
 
 ---
 
-## ⭐ Main Features
+# 🚀 **Installation & Setup**
 
-* User authentication with **JWT tokens**
-* Secure password hashing
-* Role-based access (if enabled)
-* Patient management module
-* Health professional management
-* Appointment scheduling
-* Medical agenda and availability
-* Diagnosis and clinical episode management
-* Clinical notes
-* MySQL relational database
-* Organized modular route structure (Blueprint-based)
-* Ready for deployment and containerization
-
----
-
-## 🏗️ Technologies Used
-
-| Component              | Technology                     |
-| ---------------------- | ------------------------------ |
-| Programming Language   | Python 3.x                     |
-| Backend Framework      | Flask                          |
-| Database               | MySQL                          |
-| Authentication         | JWT                            |
-| ORM / SQL Layer        | Direct MySQL connector         |
-| Testing                | PyTest                         |
-| Environment Management | python-dotenv                  |
-| Routing Style          | Blueprint Modular Architecture |
-
----
-
-## 📂 Project Structure
-
-```
-/                        # Project root  
-│── app/                 
-│   ├── routes/          # Modular route files  
-│   ├── models/          # Database models / logic  
-│   ├── utils/           # Hashing, validation, helpers  
-│   └── __init__.py      # App initialization  
-│
-│── config.py            # Global configuration  
-│── Hashear.py           # Password hashing utilities  
-│── run.py               # Application entrypoint  
-│── migrations/          # SQL or Alembic migrations  
-│── test/                # Unit and integration tests  
-│── requirements.txt     # Dependencies  
-│── README.md            # Documentation  
-│── .gitignore
-```
-
----
-
-## 🛠️ Installation & Setup
-
-### 1. Clone the repository
+### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/LuisV2394/lab1-proyecto-2025-30.485.744-28.548.270.git
-cd lab1-proyecto-2025-30.485.744-28.548.270
+git clone https://github.com/your-user/healthcare_api.git
+cd healthcare_api
 ```
 
-### 2. Create a virtual environment
+### 2️⃣ Create and activate a virtual environment
 
 ```bash
 python -m venv venv
-source venv/bin/activate        # Mac/Linux
+source venv/bin/activate        # Linux / macOS
 venv\Scripts\activate           # Windows
 ```
 
-### 3. Install dependencies
+### 3️⃣ Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment variables
-
-Create a `.env` file with:
+### 4️⃣ Configure environment variables (`.env`)
 
 ```
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=password
-DB_NAME=medical_system
-JWT_SECRET_KEY=your_secret_key
 FLASK_ENV=development
+SECRET_KEY=your_secret_key
+JWT_SECRET_KEY=your_jwt_secret
+DATABASE_URL=mysql+pymysql://user:password@localhost/healthcare
+SWAGGER_TITLE=Healthcare API
 ```
 
----
-
-## 🔄 Database Migrations
-
-If migrations are included:
+### 5️⃣ Run database migrations
 
 ```bash
-alembic revision --autogenerate -m "initial migration"
-alembic upgrade head
+flask db upgrade
 ```
 
-Or run manual SQL scripts inside `/migrations`.
-
----
-
-## ▶️ Running the Server
+### 6️⃣ Start the server
 
 ```bash
 python run.py
 ```
 
+### ✔ If everything loads correctly:
+
+```
+Medical API running
+```
+
+---
+
 Default URL:
 
 ```
-http://localhost:5000
+http://127.0.0.1:5000 o http://192.168.0.111:5000
+
 ```
 
 ---
 
-# 📚 COMPLETE ENDPOINT DOCUMENTATION
+# 📘 **Swagger API Documentation**
 
-Below is a full, human-friendly, well-structured documentation of all routes typically present in your project modules.
+This API uses **Flasgger**, with Swagger definitions stored in modular `.yml` files.
 
----
+Open the docs at:
 
-# 🔑 Authentication Module
+👉 **[http://localhost:5000/apidocs/](http://localhost:5000/apidocs/)**
 
-### **POST /auth/register**
+All documentation files are stored in:
 
-Creates a new user account.
-
-**Body Example**
-
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "123456"
-}
+```
+app/docs/
 ```
 
-**Response**
+Organized by module:
 
-```json
-{
-  "message": "User registered successfully"
-}
+```
+docs/auth/
+docs/users/
+docs/professionals/
+docs/people/
+docs/units/
+docs/episodes/
+docs/agenda/
+docs/consent/
+docs/common/
 ```
 
----
+The main Swagger loader is:
 
-### **POST /auth/login**
-
-Authenticates a user and returns a JWT token.
-
-**Body**
-
-```json
-{
-  "email": "john@example.com",
-  "password": "123456"
-}
 ```
-
-**Response**
-
-```json
-{
-  "token": "<jwt_token>",
-  "user": {
-    "id": 1,
-    "email": "john@example.com"
-  }
-}
+app/swagger.py
 ```
 
 ---
 
-### **GET /auth/profile**
+# 📂 **Project Structure**
 
-Requires JWT. Returns authenticated user information.
+Complete and accurate structure based on your real project:
 
----
-
-# 🧑 Patients Module
-
-### **POST /patients/**
-
-Creates a new patient.
-
-```json
-{
-  "name": "Ana Perez",
-  "age": 32,
-  "gender": "female",
-  "phone": "0412-1234567"
-}
+```
+healthcare_api/
+│
+├── app/
+│   ├── __init__.py
+│   ├── swagger.py
+│   ├── config.py
+│   │
+│   ├── docs/
+│   │   ├── auth/
+│   │   ├── users/
+│   │   ├── professionals/
+│   │   ├── people/
+│   │   ├── units/
+│   │   ├── episodes/
+│   │   ├── agenda/
+│   │   ├── consent/
+│   │   └── common/
+│   │
+│   ├── routes/
+│   │   ├── auth.py
+│   │   ├── users.py
+│   │   ├── professionals.py
+│   │   ├── people.py
+│   │   ├── units.py
+│   │   ├── episodes.py
+│   │   ├── agenda.py
+│   │   └── consent.py
+│   │
+│   ├── models/
+│   │   ├── user.py
+│   │   ├── person.py
+│   │   ├── professional.py
+│   │   ├── unit.py
+│   │   ├── episode.py
+│   │   ├── appointment.py
+│   │   ├── agenda_block.py
+│   │   └── consent.py
+│   │
+│   ├── repositories/
+│   ├── services/
+│   ├── middlewares/
+│   ├── utils/
+│   └── database/
+│
+├── migrations/
+├── scripts/
+├── tests/
+├── requirements.txt
+├── run.py
+└── README.md
 ```
 
 ---
 
-### **GET /patients/**
+# 🔑 **Authentication**
 
-Returns all patients.
+The API uses JWT with **Bearer tokens**.
 
----
+### Login
 
-### **GET /patients/{id}**
+```
+POST /auth/login
+```
 
-Returns a specific patient.
+### Register
 
----
+```
+POST /auth/register
+```
 
-### **PUT /patients/{id}**
+### Protected endpoints require:
 
-Updates a patient.
-
----
-
-### **DELETE /patients/{id}**
-
-Removes a patient.
-
----
-
-# 🩺 Doctors Module
-
-### **POST /doctors/**
-
-Creates a health professional.
+```
+Authorization: Bearer <token>
+```
 
 ---
 
-### **GET /doctors/**
+# 🧩 **Available Modules**
 
-Returns all doctors.
+## 🔐 Authentication
 
----
+* Register new user
+* Login
+* Token handling
 
-### **GET /doctors/{id}**
+## 👤 Users
 
-Returns a specific doctor.
+* Get authenticated profile
+* Update user
 
----
+## 🧍 People
 
-# 📅 Agenda Module
+* Create a person
+* Update person
+* Link person to users or professionals
 
-### **GET /agenda/**
+## 🧑‍⚕️ Professionals
 
-Returns all available schedules.
+* Create/update professionals
+* List all
+* Association with medical units
 
----
+## 🏢 Units
 
-### **POST /agenda/**
+* Full CRUD
 
-Creates a schedule entry for a doctor.
+## 📅 Agenda & Appointments
 
----
+* Create agenda blocks
+* Create medical appointments
+* Update appointment status
+* Validate status transitions
+* Appointment history tracking
 
-# 📆 Appointments Module
+## 🗂 Consent
 
-### **POST /appointments/**
+* Register patient consent
+* Audit logs
 
-Schedules a new appointment.
+## 🧾 Clinical Episodes
 
----
-
-### **GET /appointments/**
-
-Returns all appointments.
-
----
-
-### **PUT /appointments/{id}**
-
-Updates appointment details.
-
----
-
-### **DELETE /appointments/{id}**
-
-Cancels an appointment.
+* Create episodes
+* Link to patients/people
 
 ---
 
-# 🧬 Diagnosis Module
+# 🧪 **Testing**
 
-### **POST /diagnosis/**
+Tests are stored in:
 
-Registers a diagnosis for a patient.
+```
+tests/
+```
 
----
-
-### **GET /diagnosis/{id}**
-
-Returns a specific diagnosis.
-
----
-
-# 🩻 Clinical Episodes Module
-
-### **POST /episodes/**
-
-Creates a new clinical episode.
-
----
-
-### **GET /episodes/{id}**
-
-Returns episode details.
-
----
-
-# 📝 Clinical Notes Module
-
-### **POST /notes/**
-
-Creates a note linked to an episode.
-
----
-
-### **GET /notes/{id}**
-
-Returns a clinical note.
-
----
-
-# 🧪 Testing
-
-Run all tests:
+Run them with:
 
 ```bash
 pytest
+```
+
+---
+
+# 🛠 **Useful Scripts**
+
+```
+scripts/seed_data.py        # Initial database data
+scripts/generate_docs.py    # Build static swagger documentation
+```
+
+---
+
+# 📦 **Database Migrations**
+
+Create a migration:
+
+```bash
+flask db migrate -m "message"
+```
+
+Apply migrations:
+
+```bash
+flask db upgrade
 ```
 
 ---
