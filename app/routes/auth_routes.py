@@ -14,7 +14,7 @@ print("BASE_DOCS:", BASE_DOCS)
 
 # Login de usuario
 @auth_bp.route("/login", methods=["POST"])
-#@swag_from(os.path.join(BASE_DOCS, 'login.yml'))
+@swag_from(os.path.join(BASE_DOCS, 'login.yml'))
 def login():
     data = request.get_json()
     username = data.get("username")
