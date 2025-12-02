@@ -1,11 +1,18 @@
 tags:
   - Clinical Notes
+
 summary: Create a clinical note
+
 description: >
   Registers a new clinical note associated with an open episode.  
   Notes cannot be added to closed episodes.  
-  Attachments can be included as a list of references (mocked in this version).
+  If `content` is provided, it will be stored directly.  
+  If SOAP fields (`sub_objective`, `objective`, `test`, `plan`) are provided,
+  they will be automatically merged into the content field in the format:
+  S: ... / O: ... / A: ... / P: ....
+
 operationId: createClinicalNote
+
 consumes:
   - application/json
 produces:
@@ -25,32 +32,48 @@ parameters:
           type: integer
           description: "ID of the episode where the note is added"
           example: 55
+
         professional_id:
           type: integer
           description: "ID of the healthcare professional who writes the note"
           example: 9
+
+        note_type:
+          type: string
+          description: "Type of clinical note"
+          enum: [EVOLUTION, NURSING_NOTE, INTERCONSULTATION, OTHER]
+          example: "EVOLUTION"
+
+        content:
+          type: string
+          description: "Full note text. If not provided, SOAP fields will be combined."
+          example: "Paciente refiere dolor abdominal de 3 días de evolución."
+
+        version:
+          type: integer
+          description: "Version number for note record"
+          example: 1
+
+        # SOAP (optional)
         sub_objective:
           type: string
           description: "Subjective findings (S: Subjective)"
           example: "El paciente refiere dolor abdominal desde hace 3 días"
+
         objective:
           type: string
           description: "Objective findings (O: Objective)"
           example: "TA 120/80, FC 78, abdomen sensible en cuadrante inferior derecho"
+
         test:
           type: string
           description: "Clinical analysis or assessment (A: Assessment)"
           example: "Sospecha de apendicitis"
+
         plan:
           type: string
           description: "Diagnostic or therapeutic plan (P: Plan)"
           example: "Solicitar ecografía abdominal y exámenes de laboratorio"
-        attachments:
-          type: array
-          description: "List of attachment references (mocked)"
-          items:
-            type: string
-          example: ["image_001.png", "lab_2025_11.pdf"]
 
 responses:
   201:
