@@ -35,7 +35,7 @@ def create_app():
 
         if auth and not auth.startswith("Bearer "):
             request.environ["HTTP_AUTHORIZATION"] = "Bearer " + auth
-
+    
     from app.main import main_bp
     app.register_blueprint(main_bp)
     
@@ -66,7 +66,6 @@ def create_app():
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
-
     
     # @app.route("/ping")
     # def ping():
