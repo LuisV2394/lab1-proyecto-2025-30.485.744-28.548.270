@@ -1,0 +1,38 @@
+tags:
+  - Appointments
+summary: Cancel an appointment
+description: >
+  Cancels an appointment by updating its status to "CANCELLED".
+  The record is not removed from the database.
+parameters:
+  - name: id
+    in: path
+    required: true
+    type: integer
+    description: ID of the appointment to cancel
+
+responses:
+  200:
+    description: Appointment cancelled successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Cita cancelada"
+  404:
+    description: Appointment not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Cita no encontrada"
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Error interno del servidor"

@@ -1,0 +1,49 @@
+tags:
+  - Appointments
+summary: Update appointment status
+description: Changes the status of an appointment and logs the transition.
+parameters:
+  - name: id
+    in: path
+    required: true
+    type: integer
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - PENDING
+            - CONFIRMED
+            - IN_PROGRESS
+            - COMPLETED
+            - CANCELLED
+            - RESCHEDULED
+            - NO_SHOW
+          example: CONFIRMED
+        observations:
+          type: string
+          example: "Patient confirmed attendance"
+responses:
+  200:
+    description: Status updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Estado actualizado"
+        status:
+          type: string
+          example: "CONFIRMED"
+  400:
+    description: Invalid status transition
+  404:
+    description: Appointment not found
+  500:
+    description: Server error
