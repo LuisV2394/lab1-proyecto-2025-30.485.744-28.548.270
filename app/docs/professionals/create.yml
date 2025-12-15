@@ -9,14 +9,64 @@ parameters:
     schema:
       type: object
       properties:
-        person_id:
-          type: integer
+        first_name:
+          type: string
+          description: First name of the professional
+        last_name:
+          type: string
+          description: Last name of the professional
         registration_number:
           type: string
+          description: Professional registration number
         specialty:
           type: string
-        sub_specialty:
+          description: Professional specialty
+        email:
           type: string
+          format: email
+          description: Email of the professional
+        phone:
+          type: string
+          description: Phone number of the professional
+        status:
+          type: string
+          description: Status of the professional
+        schedule_enabled:
+          type: boolean
+          description: Whether the professional's schedule is enabled
+      required:
+        - first_name
+        - last_name
+        - registration_number
+        - specialty
 responses:
   201:
     description: Professional created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+        professional:
+          type: object
+          properties:
+            id:
+              type: integer
+            first_name:
+              type: string
+            last_name:
+              type: string
+            registration_number:
+              type: string
+            specialty:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            status:
+              type: string
+            is_active:
+              type: boolean
+            schedule_enabled:
+              type: boolean

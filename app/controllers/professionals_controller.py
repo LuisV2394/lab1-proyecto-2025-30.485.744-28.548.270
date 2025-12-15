@@ -25,23 +25,19 @@ def get_professional_by_id_controller(professional_id):
 def create_professional_controller():
     data = request.get_json()
 
-    required_fields = ["person_id", "registration_number", "specialty"]
+    required_fields = ["first_name", "last_name", "registration_number", "specialty"]
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
-    # Validar persona existente
-    person = Person.query.get(data["person_id"])
-    if not person:
-        return jsonify({
-            "error": "Invalid person_id: Person does not exist"
-        }), 400
-
     new_professional = Professional(
-        person_id=data["person_id"],
+        first_name=data["first_name"],
+        last_name=data["last_name"],
         registration_number=data["registration_number"],
         specialty=data["specialty"],
-        sub_specialty=data.get("sub_specialty"),
+        email=data.get("email"),
+        phone=data.get("phone"),
+        status=data.get("status"),
         is_active=True,
         schedule_enabled=data.get("schedule_enabled", False)
     )
@@ -53,7 +49,6 @@ def create_professional_controller():
         "message": "Professional created successfully",
         "professional": new_professional.to_dict()
     }), 201
-
 
 # Actualizar profesional existente
 def update_professional_controller(professional_id):

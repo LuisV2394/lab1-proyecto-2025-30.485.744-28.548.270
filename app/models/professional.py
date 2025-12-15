@@ -6,25 +6,28 @@ class Professional(db.Model):
     __tablename__ = "professionals"
 
     id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
-    registration_number = db.Column(db.String(80), nullable=False)  
-    specialty = db.Column(db.String(120), nullable=False)
-    sub_specialty = db.Column(db.String(120))
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    professional_registry = db.Column(db.String(100), nullable=False)
+    specialty = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
+    status = db.Column(db.String(20), nullable=True)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     schedule_enabled = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    person = db.relationship("Person", backref=db.backref("professional", uselist=False))
 
     def to_dict(self):
         return {
             "id": self.id,
-            "person_id": self.person_id,
-            "registration_number": self.registration_number,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "professional_registry": self.professional_registry,
             "specialty": self.specialty,
-            "sub_specialty": self.sub_specialty,
+            "email": self.email,
+            "phone": self.phone,
+            "status": self.status,
             "is_active": self.is_active,
             "schedule_enabled": self.schedule_enabled,
-            "person": self.person.to_dict() if self.person else None
         }
