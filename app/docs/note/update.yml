@@ -1,0 +1,75 @@
+tags:
+  - Clinical Notes
+summary: Update a clinical note
+description: >
+  Updates an existing clinical note.
+  Notes belonging to a closed episode cannot be modified.
+operationId: updateClinicalNote
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: path
+    name: note_id
+    required: true
+    type: integer
+    description: Clinical note ID
+    example: 120
+
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        content:
+          type: string
+          example: "Updated clinical content"
+        note_type:
+          type: string
+          example: EVOLUTION
+        version:
+          type: integer
+          example: 2
+
+responses:
+  200:
+    description: Clinical note updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Nota clínica actualizada"
+        id:
+          type: integer
+          example: 120
+
+  404:
+    description: Clinical note not found
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Nota clínica no encontrada"
+
+  409:
+    description: Episode closed
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No se puede modificar una nota de un episodio cerrado"
+
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error"
