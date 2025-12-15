@@ -13,6 +13,7 @@ class Person(db.Model):
     email = db.Column(db.String(255), unique=True)
     phone = db.Column(db.String(50))
     address = db.Column(db.String(255))
+    emergency_contact = db.Column(db.String(100), nullable=True)
     active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -30,6 +31,7 @@ class Person(db.Model):
             "email": self.email,
             "phone": self.phone,
             "address": self.address,
+            "emergency_contact": self.emergency_contact,
             "active": self.active,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),

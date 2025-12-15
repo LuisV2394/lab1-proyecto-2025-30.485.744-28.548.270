@@ -1,0 +1,48 @@
+tags:
+  - Clinical Notes
+summary: Get all clinical notes
+description: >
+  Retrieves all clinical notes registered in the system.
+operationId: getAllClinicalNotes
+produces:
+  - application/json
+
+responses:
+  200:
+    description: List of clinical notes
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 120
+          episode_id:
+            type: integer
+            example: 55
+          professional_id:
+            type: integer
+            example: 9
+          note_type:
+            type: string
+            example: EVOLUTION
+          content:
+            type: string
+            example: "S: ... O: ... A: ... P: ..."
+          version:
+            type: integer
+            example: 1
+          created_at:
+            type: string
+            format: date-time
+            example: "2025-11-29T16:20:00Z"
+
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error"

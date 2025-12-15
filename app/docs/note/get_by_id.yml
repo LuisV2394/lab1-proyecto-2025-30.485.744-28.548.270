@@ -1,0 +1,63 @@
+tags:
+  - Clinical Notes
+summary: Get clinical note by ID
+description: >
+  Retrieves a clinical note by its unique identifier.
+operationId: getClinicalNoteById
+produces:
+  - application/json
+
+parameters:
+  - in: path
+    name: note_id
+    required: true
+    type: integer
+    description: Clinical note ID
+    example: 120
+
+responses:
+  200:
+    description: Clinical note found
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 120
+        episode_id:
+          type: integer
+          example: 55
+        professional_id:
+          type: integer
+          example: 9
+        note_type:
+          type: string
+          example: EVOLUTION
+        content:
+          type: string
+          example: "S: ... O: ... A: ... P: ..."
+        version:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-11-29T16:20:00Z"
+
+  404:
+    description: Clinical note not found
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Nota clínica no encontrada"
+
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error"

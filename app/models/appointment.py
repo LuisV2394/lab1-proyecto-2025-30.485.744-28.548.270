@@ -10,10 +10,13 @@ class Appointment(db.Model):
     unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
     agenda_block_id = db.Column(db.Integer, db.ForeignKey("agenda_blocks.id"), nullable=True)
 
-    scheduled_at = db.Column(db.DateTime, nullable=False)
+    start = db.Column(db.DateTime, nullable=False)
+    end = db.Column(db.DateTime, nullable=False)
     duration_minutes = db.Column(db.Integer, nullable=False, default=30)
-    type = db.Column(db.String(50), default='CONSULTATION')
-    reason = db.Column(db.String(255))
+    motivo = db.Column(db.Text, nullable=False)
+    canal = db.Column(db.String(50), nullable=False)
+    observations = db.Column(db.Text, nullable=True)
+    
     status = db.Column(
         db.Enum(
             'PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 
@@ -23,8 +26,8 @@ class Appointment(db.Model):
         nullable=False
     )
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     # Relaciones
     person = db.relationship("Person", backref=db.backref("appointments", lazy=True))

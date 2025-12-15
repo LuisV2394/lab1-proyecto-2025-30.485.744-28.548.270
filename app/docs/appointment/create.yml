@@ -14,11 +14,11 @@ parameters:
       type: object
       required:
         - start
-        - end
         - professionalId
         - personId
         - unitId
-        - reason
+        - motivo
+        - canal
       properties:
         start:
           type: string
@@ -37,10 +37,10 @@ parameters:
         unitId:
           type: integer
           example: 5
-        reason:
+        motivo:
           type: string
           example: "Consulta general"
-        channel:
+        canal:
           type: string
           enum:
             - presential
@@ -50,6 +50,9 @@ parameters:
         observations:
           type: string
           example: "Paciente solicita ser atendido temprano"
+        duration_minutes:
+          type: integer
+          example: 60
 
 responses:
   201:
@@ -62,7 +65,7 @@ responses:
           example: 44
         message:
           type: string
-          example: "Cita solicitada con éxito"
+          example: "Cita creada con éxito"
 
   400:
     description: Block not found or invalid time range

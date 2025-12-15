@@ -1,37 +1,47 @@
-from flask import Blueprint, request, jsonify
-from app.models.consets import Consent
-from app import db
+from flask import Blueprint
 from flasgger import swag_from
-from flask_jwt_extended import jwt_required
-from datetime import datetime
 import os
-consent_bp = Blueprint('consents', __name__, url_prefix="/consents")
+
+from app.controllers.consent_controller import (
+    create_consent_controller,
+    get_all_consents_controller,
+    get_consent_by_id_controller,
+    update_consent_controller,
+    delete_consent_controller
+)
+
+consent_bp = Blueprint("consents", __name__, url_prefix="/consents")
 
 BASE_DOCS = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "docs", "consent")
 )
 
-@consent_bp.route('/', methods=['POST'])
-#@jwt_required()
-@swag_from(os.path.join(BASE_DOCS, 'create.yml'))
+# CREATE
+@consent_bp.route("/", methods=["POST"])
+@swag_from(os.path.join(BASE_DOCS, "create.yml"))
 def create_consent():
-    data = request.json
-    
-    # Mock de generación de ID de archivo
-    mock_file_id = f"file_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{data.get('person_id')}.pdf"
-    
-    new_consent = Consent(
-        person_id=data.get('person_id'),
-        process_type=data.get('processTipe'),
-        method=data.get('method'),
-        file_id=mock_file_id, 
-        date=datetime.utcnow()
-    )
-    
-    db.session.add(new_consent)
-    db.session.commit()
-    return jsonify({
-        "message": "Consentimiento registrado", 
-        "id": new_consent.id,
-        "file_reference": mock_file_id
-    }), 201
+    return create_consent_controller()
+
+# READ ALL
+@consent_bp.route("/", methods=["GET"])
+@swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
+def get_all_consents():
+    return get_all_consents_controller()
+
+# READ BY ID
+@consent_bp.route("/<int:consent_id>", methods=["GET"])
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
+def get_consent_by_id(consent_id):
+    return get_consent_by_id_controller(consent_id)
+
+# UPDATE
+@consent_bp.route("/<int:consent_id>", methods=["PUT"])
+@swag_from(os.path.join(BASE_DOCS, "update.yml"))
+def update_consent(consent_id):
+    return update_consent_controller(consent_id)
+
+# DELETE
+@consent_bp.route("/<int:consent_id>", methods=["DELETE"])
+@swag_from(os.path.join(BASE_DOCS, "delete.yml"))
+def delete_consent(consent_id):
+    return delete_consent_controller(consent_id)
