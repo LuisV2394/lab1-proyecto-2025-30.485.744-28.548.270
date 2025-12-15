@@ -37,6 +37,7 @@ def create_person_controller():
         email=data.get("email"),
         phone=data.get("phone"),
         address=data.get("address"),
+        emergency_contact=data.get("emergency_contact"),
         active=data.get("active", True)
     )
 

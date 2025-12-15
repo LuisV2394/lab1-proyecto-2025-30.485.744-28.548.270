@@ -1,4 +1,3 @@
-# routes/people_create.yml
 tags:
   - People
 summary: Create a new person
@@ -42,10 +41,16 @@ parameters:
         address:
           type: string
           example: "Calle Falsa 123, Caracas, Venezuela"
+        emergency_contact:
+          type: string
+          example: "+584123987654"
         active:
           type: integer
           enum: [0, 1]
           example: 1
+      required:
+        - first_name
+        - last_name
 responses:
   201:
     description: Person created successfully
@@ -79,6 +84,9 @@ responses:
         address:
           type: string
           example: "Calle Falsa 123, Caracas, Venezuela"
+        emergency_contact:
+          type: string
+          example: "+584123987654"
         active:
           type: integer
           example: 1
