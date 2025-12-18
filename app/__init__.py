@@ -21,6 +21,9 @@ def create_app():
     from app.models.unit import Unit
     from app.models.episodes import Episode
     from app.models.note import ClinicalNote
+    from app.models.insurer import Insurer
+    from app.models.invoice import Invoice
+    from app.models.invoice_item import InvoiceItem
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
 
@@ -51,6 +54,8 @@ def create_app():
         from app.routes.diagnosis_routes import diagnosis_bp
         from app.routes.consent_routes import consent_bp
         from app.routes.appointment_routes import appt_bp
+        from app.routes.invoice_routes import invoice_bp
+        from app.routes.invoice_item_routes import invoice_item_bp
     
         app.register_blueprint(auth_bp)
         app.register_blueprint(professionals_bp)
@@ -63,6 +68,8 @@ def create_app():
         app.register_blueprint(consent_bp)
         app.register_blueprint(agenda_bp)
         app.register_blueprint(appt_bp)
+        app.register_blueprint(invoice_bp)
+        app.register_blueprint(invoice_item_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")

@@ -1,0 +1,41 @@
+tags:
+  - Invoices
+summary: Update invoice status
+description: Updates the status of a specific invoice.
+operationId: updateInvoiceStatus
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: invoice_id
+    type: integer
+    required: true
+    description: ID of the invoice to update
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        estado:
+          type: string
+          enum: ["pendiente","emitida","pagada","anulada"]
+          example: "emitida"
+responses:
+  200:
+    description: Status updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invoice status updated successfully"
+        estado:
+          type: string
+          example: "emitida"
+  400:
+    description: Invalid input or cannot modify cancelled invoice
+  404:
+    description: Invoice not found

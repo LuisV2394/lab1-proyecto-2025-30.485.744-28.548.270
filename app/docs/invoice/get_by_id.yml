@@ -1,0 +1,77 @@
+tags:
+  - Invoices
+summary: Get invoice by ID
+description: Retrieves a single invoice with all its items by ID.
+operationId: getInvoiceById
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: invoice_id
+    type: integer
+    required: true
+    description: ID of the invoice to retrieve
+responses:
+  200:
+    description: Invoice found
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        numero:
+          type: string
+          example: "FAC-000123"
+        fechaEmision:
+          type: string
+          example: "2025-01-10"
+        personaId:
+          type: integer
+          example: 45
+        aseguradoraId:
+          type: integer
+          example: null
+        moneda:
+          type: string
+          example: "USD"
+        subtotal:
+          type: number
+          format: float
+          example: 50.00
+        total:
+          type: number
+          format: float
+          example: 55.00
+        estado:
+          type: string
+          example: "pendiente"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              prestacionCodigo:
+                type: integer
+                example: 1
+              descripcion:
+                type: string
+                example: "Consulta médica"
+              cantidad:
+                type: number
+                format: float
+                example: 1
+              valorUnitario:
+                type: number
+                format: float
+                example: 50.00
+              impuestos:
+                type: number
+                format: float
+                example: 5.00
+              total:
+                type: number
+                format: float
+                example: 55.00
+  404:
+    description: Invoice not found
