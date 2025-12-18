@@ -2,7 +2,22 @@ from flask import jsonify, request
 from app.models.notification import Notification
 from app import db
 from datetime import datetime
+from app.services.email_service import send_email
 
+def send_notification(notification):
+    if notification.type.upper() == "EMAIL":
+        result = send_email(
+            recipient=notification.recipient,
+            subject=notification.template, 
+            html_content=notification.payload.get("message", "")
+        )
+        if result.get("error"):
+            notification.status = "FAILED"
+        else:
+            notification.status = "SENT"
+
+        notification.timestamp = datetime.utcnow()
+        db.session.commit()
 
 # Obtener todas las notificaciones
 def get_all_notifications_controller():
@@ -41,6 +56,8 @@ def create_notification_controller():
     db.session.add(new_notification)
     db.session.commit()
 
+    send_notification(new_notification)
+    
     return jsonify({
         "message": "Notification created successfully",
         "notification": new_notification.to_dict()
