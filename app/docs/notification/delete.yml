@@ -1,0 +1,17 @@
+tags:
+  - Notifications
+summary: Delete a notification
+description: Deletes a notification by ID.
+operationId: deleteNotification
+produces:
+  - application/json
+parameters:
+  - name: notification_id
+    in: path
+    required: true
+    type: integer
+responses:
+  200:
+    description: Notification deleted successfully
+  404:
+    description: Notification not found

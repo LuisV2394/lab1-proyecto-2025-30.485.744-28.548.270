@@ -1,0 +1,47 @@
+tags:
+  - Notifications
+summary: Get notification by ID
+description: Retrieve a single notification by its ID.
+operationId: getNotificationById
+produces:
+  - application/json
+parameters:
+  - name: notification_id
+    in: path
+    required: true
+    type: integer
+responses:
+  200:
+    description: Notification found
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        type:
+          type: string
+          example: "EMAIL"
+        template:
+          type: string
+          example: "password_reset"
+        recipient:
+          type: string
+          example: "user@example.com"
+        payload:
+          type: object
+          example: { "reset_link": "https://example.com/reset" }
+        status:
+          type: string
+          example: "SENT"
+        timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+  404:
+    description: Notification not found

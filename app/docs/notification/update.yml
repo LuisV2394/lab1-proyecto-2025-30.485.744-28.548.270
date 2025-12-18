@@ -1,0 +1,30 @@
+tags:
+  - Notifications
+summary: Update a notification
+description: Updates an existing notification.
+operationId: updateNotification
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: notification_id
+    in: path
+    required: true
+    type: integer
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["PENDING", "SENT", "FAILED"]
+        payload:
+          type: object
+responses:
+  200:
+    description: Notification updated successfully
+  404:
+    description: Notification not found

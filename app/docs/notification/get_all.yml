@@ -1,0 +1,42 @@
+tags:
+  - Notifications
+summary: Get all notifications
+description: Retrieve a list of all notifications.
+operationId: getAllNotifications
+produces:
+  - application/json
+responses:
+  200:
+    description: List of notifications
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          type:
+            type: string
+            example: "EMAIL"
+          template:
+            type: string
+            example: "welcome_email"
+          recipient:
+            type: string
+            example: "user@example.com"
+          payload:
+            type: object
+            example: { "name": "John" }
+          status:
+            type: string
+            example: "PENDING"
+          timestamp:
+            type: string
+            format: date-time
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
