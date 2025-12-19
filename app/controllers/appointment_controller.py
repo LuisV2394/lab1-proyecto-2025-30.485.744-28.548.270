@@ -5,6 +5,9 @@ from flask_jwt_extended import get_jwt_identity
 
 from app.models.appointment import db, Appointment, AppointmentHistory
 from app.models.agenda import Block
+from app.models.professional import Professional
+from app.models.unit import Unit
+from app.models.person import Person
 
 VALID_TRANSITIONS = {
     "PENDING": ["CONFIRMED", "CANCELLED", "RESCHEDULED", "NO_SHOW"],
@@ -17,17 +20,48 @@ VALID_TRANSITIONS = {
 }
 
 def create_appointment_controller():
-    data = request.json
+    data = request.json or {}
 
     try:
-        start = datetime.fromisoformat(data.get('start'))
-        duration = int(data.get('duration_minutes', 30))
-        end = start + timedelta(minutes=duration)
-        prof_id = data.get('professionalId')
+        # 1️⃣ Campos obligatorios
+        if not all([
+            data.get('start'),
+            data.get('professionalId'),
+            data.get('unitId'),
+            data.get('personId')
+        ]):
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
 
-        # Buscar bloque disponible
+        # 2️⃣ Fecha y duración
+        try:
+            start = datetime.fromisoformat(data.get('start'))
+        except ValueError:
+            return jsonify({"error": "Formato de fecha/hora inválido"}), 400
+
+        duration = int(data.get('duration_minutes', 30))
+        if duration <= 0:
+            return jsonify({"error": "La duración debe ser mayor a 0"}), 400
+
+        end = start + timedelta(minutes=duration)
+
+        prof_id = data.get('professionalId')
+        unit_id = data.get('unitId')
+        person_id = data.get('personId')
+
+        # 3️⃣ Validar existencia FK
+        if not Professional.query.get(prof_id):
+            return jsonify({"error": "El profesional no existe"}), 404
+
+        if not Unit.query.get(unit_id):
+            return jsonify({"error": "La unidad no existe"}), 404
+
+        if not Person.query.get(person_id):
+            return jsonify({"error": "La persona no existe"}), 404
+
+        # 4️⃣ Buscar bloque disponible
         target_block = Block.query.filter(
             Block.professional_id == prof_id,
+            Block.unit_id == unit_id,
             Block.date == start.date(),
             Block.start_time <= start.time(),
             Block.end_time >= end.time(),
@@ -35,24 +69,32 @@ def create_appointment_controller():
         ).first()
 
         if not target_block:
-            return jsonify({"error": "No existe agenda abierta para este horario"}), 400
+            return jsonify({
+                "error": "No existe agenda abierta para este horario"
+            }), 400
 
-        # Verificar disponibilidad en el bloque
+        # 5️⃣ Verificar cupo
         current_appts = Appointment.query.filter(
             Appointment.agenda_block_id == target_block.id,
             Appointment.status.in_(['PENDING', 'CONFIRMED']),
             Appointment.start < end,
-            func.timestampadd(text('MINUTE'), Appointment.duration_minutes, Appointment.start) > start
+            func.timestampadd(
+                text('MINUTE'),
+                Appointment.duration_minutes,
+                Appointment.start
+            ) > start
         ).count()
 
         if current_appts >= target_block.capacity:
-            return jsonify({"error": "No hay cupo disponible en este bloque"}), 409
+            return jsonify({
+                "error": "No hay cupo disponible en este bloque"
+            }), 409
 
-        # Crear la cita
+        # 6️⃣ Crear cita
         new_appt = Appointment(
-            person_id=data.get('personId'),
+            person_id=person_id,
             professional_id=prof_id,
-            unit_id=data.get('unitId'),
+            unit_id=unit_id,
             agenda_block_id=target_block.id,
             start=start,
             end=end,
@@ -62,9 +104,10 @@ def create_appointment_controller():
             observations=data.get('observations'),
             status='PENDING'
         )
+
         db.session.add(new_appt)
 
-        # Registrar historial
+        # 7️⃣ Historial
         log = AppointmentHistory(
             appointment=new_appt,
             old_state=None,
@@ -72,14 +115,19 @@ def create_appointment_controller():
             changed_by=get_jwt_identity()
         )
         db.session.add(log)
+
         db.session.commit()
 
-        return jsonify({"message": "Cita creada con éxito", "id": new_appt.id}), 201
+        return jsonify({
+            "message": "Cita creada con éxito",
+            "id": new_appt.id
+        }), 201
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
+        return jsonify({
+            "error": str(e)
+        }), 500
 
 def list_appointments_controller():
     appts = Appointment.query.all()

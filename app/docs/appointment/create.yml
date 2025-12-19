@@ -24,10 +24,6 @@ parameters:
           type: string
           format: date-time
           example: "2025-01-15T14:00:00"
-        end:
-          type: string
-          format: date-time
-          example: "2025-01-15T15:00:00"
         professionalId:
           type: integer
           example: 3
@@ -68,13 +64,22 @@ responses:
           example: "Cita creada con éxito"
 
   400:
-    description: Block not found or invalid time range
+    description: Validation error (missing fields or invalid data)
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "No existe agenda abierta para este horario"
+          example: "Faltan campos obligatorios"
+
+  404:
+    description: Related resource not found (professional, unit or person)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional no existe"
 
   409:
     description: Block capacity exceeded
