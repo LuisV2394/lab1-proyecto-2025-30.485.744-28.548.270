@@ -1,11 +1,8 @@
-swagger: "2.0"
 tags:
   - Diagnoses
 summary: Add a diagnosis to an episode
 description: >
-  Creates a new diagnosis record associated with a medical episode.  
-  If the diagnosis is marked as 'main', any previous main diagnosis in the same episode 
-  will automatically be updated to `main: false`.
+  Creates a new diagnosis record associated with a medical episode.
 operationId: addDiagnosis
 consumes:
   - application/json
@@ -60,7 +57,28 @@ responses:
           example: 110
 
   400:
-    description: Invalid input
+    description: Invalid input (missing required fields)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Faltan campos obligatorios"
+
+  404:
+    description: Episode not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El episodio no existe"
 
   500:
     description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"

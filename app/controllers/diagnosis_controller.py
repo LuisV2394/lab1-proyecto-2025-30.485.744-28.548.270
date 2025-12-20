@@ -1,34 +1,42 @@
 from flask import request, jsonify
 from app.models.diagnoses import Diagnosis
 from app import db
+from app.models.episodes import Episode
 
 def add_diagnosis_controller():
-    data = request.json
-    episode_id = data.get("episode_id")
+    data = request.json or {}
 
-    # Regla: si es diagnóstico principal, desmarcar otros del mismo episodio
-    if data.get("main") is True:
-        Diagnosis.query.filter_by(
+    try:
+        # 1️⃣ Campos obligatorios
+        if not all([data.get("episode_id"), data.get("code"), data.get("description"), data.get("type")]):
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
+
+        episode_id = data.get("episode_id")
+
+        # 2️⃣ Validar existencia del episodio
+        if not Episode.query.get(episode_id):
+            return jsonify({"error": "El episodio no existe"}), 404
+
+        # 3️⃣ Crear nuevo diagnóstico
+        new_diag = Diagnosis(
             episode_id=episode_id,
-            main=True
-        ).update({"main": False})
+            code=data.get("code"),
+            description=data.get("description"),
+            type=data.get("type"),
+            main=data.get("main", False)
+        )
 
-    new_diag = Diagnosis(
-        episode_id=episode_id,
-        code=data.get("code"),
-        description=data.get("description"),
-        type=data.get("type"),
-        main=data.get("main", False)
-    )
+        db.session.add(new_diag)
+        db.session.commit()
 
-    db.session.add(new_diag)
-    db.session.commit()
+        return jsonify({
+            "message": "Diagnóstico añadido",
+            "id": new_diag.id
+        }), 201
 
-    return jsonify({
-        "message": "Diagnóstico añadido",
-        "id": new_diag.id
-    }), 201
-
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 def get_all_diagnoses_controller():
     diagnoses = Diagnosis.query.all()
