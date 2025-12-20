@@ -1,55 +1,81 @@
 from flask import request, jsonify
 from app.models.note import ClinicalNote
 from app.models.episodes import Episode
+from app.models.professional import Professional
 from app import db
 
 def create_note_controller():
-    data = request.json
+    data = request.json or {}
 
-    episode_id = data.get('episode_id')
-    professional_id = data.get('professional_id')
+    try:
+        # 1️⃣ Validar campos obligatorios
+        episode_id = data.get('episode_id')
+        if not episode_id:
+            return jsonify({"error": "Debe enviar 'episode_id'"}), 400
 
-    # Validar episodio
-    episode = Episode.query.get(episode_id)
-    if not episode or episode.status == 'CLOSED':
-        return jsonify({"error": "El episodio no existe o está cerrado"}), 400
+        # 2️⃣ Validar existencia del episodio y que esté abierto
+        episode = Episode.query.get(episode_id)
+        if not episode or episode.status == 'CLOSED':
+            return jsonify({"error": "El episodio no existe o está cerrado"}), 400
 
-    # Determinar contenido
-    content = data.get('content')
+        # 3️⃣ Validar existencia del profesional si se envía
+        professional_id = data.get('professional_id')
+        if professional_id and not Professional.query.get(professional_id):
+            return jsonify({"error": "El profesional no existe"}), 404
 
-    # Si no envían content, generar desde SOAP
-    if not content:
-        sub = data.get('sub_objective', "")
-        obj = data.get('objective', "")
-        test = data.get('test', "")
-        plan = data.get('plan', "")
+        # 4️⃣ Determinar contenido
+        content = data.get('content')
+        if not content:
+            sub = data.get('sub_objective', "")
+            obj = data.get('objective', "")
+            test = data.get('test', "")
+            plan = data.get('plan', "")
 
-        if any([sub, obj, test, plan]):
-            content = (
-                f"S: {sub}\n"
-                f"O: {obj}\n"
-                f"A: {test}\n"
-                f"P: {plan}"
-            )
-        else:
-            return jsonify({"error": "Debe enviar 'content' o campos SOAP"}), 400
+            if any([sub, obj, test, plan]):
+                content = (
+                    f"S: {sub}\n"
+                    f"O: {obj}\n"
+                    f"A: {test}\n"
+                    f"P: {plan}"
+                )
+            else:
+                return jsonify({"error": "Debe enviar 'content' o campos SOAP"}), 400
 
-    new_note = ClinicalNote(
-        episode_id=episode_id,
-        professional_id=professional_id,
-        note_type=data.get('note_type', 'EVOLUTION'),
-        content=content,
-        version=data.get('version', 1)
-    )
+        # 5️⃣ Validar note_type (opcional, ejemplo de enum)
+        note_type = data.get('note_type', 'EVOLUTION')
+        allowed_types = ['EVOLUTION', 'INITIAL', 'DISCHARGE']
+        if note_type not in allowed_types:
+            return jsonify({"error": f"note_type inválido. Valores permitidos: {allowed_types}"}), 400
 
-    db.session.add(new_note)
-    db.session.commit()
+        # 6️⃣ Validar version
+        version = data.get('version', 1)
+        try:
+            version = int(version)
+            if version < 1:
+                raise ValueError
+        except ValueError:
+            return jsonify({"error": "version debe ser un entero positivo"}), 400
 
-    return jsonify({
-        "message": "Nota clínica registrada",
-        "id": new_note.id
-    }), 201
+        # 7️⃣ Crear nota clínica
+        new_note = ClinicalNote(
+            episode_id=episode_id,
+            professional_id=professional_id,
+            note_type=note_type,
+            content=content,
+            version=version
+        )
 
+        db.session.add(new_note)
+        db.session.commit()
+
+        return jsonify({
+            "message": "Nota clínica registrada",
+            "id": new_note.id
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 def get_all_notes_controller():
     notes = ClinicalNote.query.all()

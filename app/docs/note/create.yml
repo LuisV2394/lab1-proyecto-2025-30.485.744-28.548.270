@@ -1,8 +1,6 @@
 tags:
   - Clinical Notes
-
 summary: Create a clinical note
-
 description: >
   Registers a new clinical note associated with an open episode.  
   Notes cannot be added to closed episodes.  
@@ -12,7 +10,6 @@ description: >
   S: ... / O: ... / A: ... / P: ....
 
 operationId: createClinicalNote
-
 consumes:
   - application/json
 produces:
@@ -54,7 +51,6 @@ parameters:
           description: "Version number for note record"
           example: 1
 
-        # SOAP (optional)
         sub_objective:
           type: string
           description: "Subjective findings (S: Subjective)"
@@ -89,13 +85,28 @@ responses:
           example: 120
 
   400:
-    description: Episode does not exist or is closed
+    description: Invalid input or episode closed
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "El episodio no existe o está cerrado"
+          example: "Debe enviar 'content' o campos SOAP"
+
+  404:
+    description: Professional not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional no existe"
 
   500:
     description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"
