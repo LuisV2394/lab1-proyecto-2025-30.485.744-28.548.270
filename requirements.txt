@@ -4,7 +4,8 @@ Flask-Migrate
 Flask-JWT-Extended
 Flask-Cors
 python-dotenv
-bcrypt
-passlib
+passlib==1.7.4
+bcrypt==4.0.1
 PyMySQL
 Flasgger
+sendgrid

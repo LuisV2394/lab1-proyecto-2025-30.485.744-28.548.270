@@ -1,0 +1,91 @@
+# ========================================
+# Docker y Flask - Comandos útiles
+# Proyecto: API de citas médicas
+# ========================================
+
+# -----------------------------
+# 1️⃣ Verificar Docker
+# -----------------------------
+docker --version
+# Muestra la versión de Docker instalada.
+
+docker info
+# Muestra información sobre Docker y confirma que está corriendo.
+
+# -----------------------------
+# 2️⃣ Arrancar contenedores
+# -----------------------------
+docker-compose up -d
+# Levanta todos los servicios definidos en docker-compose.yml en segundo plano.
+
+docker-compose up
+# Levanta los servicios en primer plano (muestra logs en tiempo real).
+
+# -----------------------------
+# 3️⃣ Detener contenedores
+# -----------------------------
+docker-compose down
+# Detiene y elimina los contenedores, redes y volúmenes creados por docker-compose.
+
+docker stop <nombre_del_contenedor>
+# Detiene un contenedor específico.
+
+docker start <nombre_del_contenedor>
+# Arranca un contenedor detenido.
+
+# -----------------------------
+# 4️⃣ Listar contenedores
+# -----------------------------
+docker ps
+# Lista todos los contenedores corriendo.
+
+docker ps -a
+# Lista todos los contenedores, incluyendo los detenidos.
+
+# -----------------------------
+# 5️⃣ Acceder a un contenedor
+# -----------------------------
+docker exec -it <nombre_del_contenedor> bash
+# Abre una terminal dentro del contenedor (útil para ejecutar comandos Flask o revisar archivos).
+
+# -----------------------------
+# 6️⃣ Reconstruir contenedores
+# -----------------------------
+docker-compose build
+# Reconstruye las imágenes de los servicios (útil si cambias dependencias o Dockerfile).
+
+docker-compose up -d --build
+# Reconstruye y levanta los contenedores en segundo plano.
+
+# -----------------------------
+# 7️⃣ Ver logs
+# -----------------------------
+docker-compose logs
+# Muestra los logs de todos los servicios.
+
+docker-compose logs -f
+# Muestra los logs en tiempo real (seguimiento continuo).
+
+docker logs -f <nombre_del_contenedor>
+# Muestra los logs en tiempo real de un contenedor específico.
+
+# -----------------------------
+# 8️⃣ Flask comandos dentro del contenedor
+# -----------------------------
+flask run
+# Levanta el servidor Flask (si no está corriendo desde Docker).
+
+flask db migrate -m "mensaje"
+# Crea una migración de base de datos con SQLAlchemy.
+
+flask db upgrade
+# Aplica las migraciones pendientes a la base de datos.
+
+# -----------------------------
+# 9️⃣ Limpiar recursos (opcional)
+# -----------------------------
+docker system prune -f
+# Limpia contenedores, imágenes y volúmenes no usados.
+
+docker volume prune -f
+# Limpia volúmenes no utilizados.
