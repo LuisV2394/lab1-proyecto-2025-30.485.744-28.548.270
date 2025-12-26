@@ -2,23 +2,34 @@ from flask import jsonify, request
 from app.models.notification import Notification
 from app import db
 from datetime import datetime
+from app.models.invoice import Invoice
 from app.services.email_service import send_email
+from app.services.invoice_service import generate_invoice_pdf
 
 def send_notification(notification):
-    if notification.type.upper() == "EMAIL":
-        result = send_email(
-            recipient=notification.recipient,
-            subject=notification.template, 
-            html_content=notification.payload.get("message", "")
-        )
-        if result.get("error"):
-            notification.status = "FAILED"
-        else:
-            notification.status = "SENT"
+    if notification.type.upper() != "EMAIL":
+        return
 
-        notification.timestamp = datetime.utcnow()
-        db.session.commit()
+    payload = notification.payload or {}
+    attachment_path = None
 
+    invoice_id = payload.get("invoice_id")
+    if invoice_id:
+        invoice = Invoice.query.get(invoice_id)
+        if invoice:
+            attachment_path = generate_invoice_pdf(invoice)
+
+    result = send_email(
+        recipient=notification.recipient,
+        subject=notification.template,
+        html_content=payload.get("message", ""),
+        attachment_path=attachment_path
+    )
+
+    notification.status = "FAILED" if result.get("error") else "SENT"
+    notification.timestamp = datetime.utcnow()
+    db.session.commit()
+    
 # Obtener todas las notificaciones
 def get_all_notifications_controller():
     notifications = Notification.query.all()

@@ -15,6 +15,7 @@ services:
       - db
     volumes:
       - ..:/app
+    command: ["./wait-for-db.sh", "flask", "run", "--host=0.0.0.0"]
 
   db:
     image: mysql:8.0
