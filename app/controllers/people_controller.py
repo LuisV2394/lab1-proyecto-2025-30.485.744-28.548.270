@@ -3,6 +3,7 @@ from app.models.person import Person
 from app import db
 from datetime import datetime
 import re
+from app.models.person import Person
 
 
 # Obtener todas las personas
@@ -22,7 +23,7 @@ def get_person_by_id_controller(person_id):
 def create_person_controller():
     data = request.get_json()
     required_fields = ["first_name", "last_name"]
-
+    
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
@@ -32,6 +33,10 @@ def create_person_controller():
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         if not re.match(email_regex, email):
             return jsonify({"error": "Invalid email format"}), 400
+        
+        existing_person = Person.query.filter_by(email=email).first()
+        if existing_person:
+            return jsonify({"error": "Email already in use"}), 400
 
     new_person = Person(
         document_number=data.get("document_number"),
@@ -53,7 +58,6 @@ def create_person_controller():
         "message": "Person created successfully",
         "person": new_person.to_dict()
     }), 201
-
 
 # Actualizar persona
 def update_person_controller(person_id):
