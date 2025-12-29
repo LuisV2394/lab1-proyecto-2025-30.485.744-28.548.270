@@ -2,6 +2,7 @@ from flask import jsonify, request
 from app.models.person import Person
 from app import db
 from datetime import datetime
+import re
 
 
 # Obtener todas las personas
@@ -18,8 +19,6 @@ def get_person_by_id_controller(person_id):
     
     return jsonify(person.to_dict()), 200
 
-
-# Crear persona nueva
 def create_person_controller():
     data = request.get_json()
     required_fields = ["first_name", "last_name"]
@@ -28,13 +27,19 @@ def create_person_controller():
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    email = data.get("email")
+    if email:
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_regex, email):
+            return jsonify({"error": "Invalid email format"}), 400
+
     new_person = Person(
         document_number=data.get("document_number"),
         first_name=data["first_name"],
         last_name=data["last_name"],
         gender=data.get("gender"),
         birth_date=data.get("birth_date"),
-        email=data.get("email"),
+        email=email,
         phone=data.get("phone"),
         address=data.get("address"),
         emergency_contact=data.get("emergency_contact"),
