@@ -11,25 +11,33 @@ services:
       - "5000:5000"
     env_file:
       - ../.env
-    depends_on:
-      - db
-    volumes:
-      - ..:/app
-    command: ["./wait-for-db.sh", "flask", "run", "--host=0.0.0.0"]
 
-  db:
+    depends_on:
+      - mysql
+    volumes:
+      - ../:/app
+    networks:
+      - healthcare_net
+
+  mysql:
     image: mysql:8.0
     container_name: healthcare_mysql
     restart: always
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: healthcare
+      MYSQL_DATABASE: healthcare_api
       MYSQL_USER: healthcare_user
       MYSQL_PASSWORD: healthcare_pass
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - healthcare_net
 
 volumes:
   mysql_data:
+
+networks:
+  healthcare_net:
