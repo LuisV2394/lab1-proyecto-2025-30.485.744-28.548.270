@@ -17,19 +17,16 @@ parameters:
     schema:
       type: object
       properties:
-        registration_number:
+        professional_registry:
           type: string
           example: "REG-9087"
         specialty:
           type: string
           example: "Cardiología"
-        subspecialty:
-          type: string
-          example: "Cardiología Pediátrica"
         is_active:
           type: boolean
           example: true
-        agenda_enabled:
+        schedule_enabled:
           type: boolean
           example: false
       description: "Any of the fields may be updated. All fields are optional."
