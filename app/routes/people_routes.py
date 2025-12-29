@@ -28,8 +28,8 @@ def get_all_people():
 
 # Obtener persona por ID
 @people_bp.route("/<int:person_id>", methods=["GET"])
-@jwt_required()
-@role_required(["admin"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_person_by_id(person_id):
     return get_person_by_id_controller(person_id)
@@ -44,16 +44,16 @@ def create_person():
 
 # Actualizar persona
 @people_bp.route("/<int:person_id>", methods=["PATCH"])
-@jwt_required()
-@role_required(["admin"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_person(person_id):
     return update_person_controller(person_id)
 
 # Desactivar persona
 @people_bp.route("/<int:person_id>", methods=["DELETE"])
-@jwt_required()
-@role_required(["admin"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "delete.yml"))
 def deactivate_person(person_id):
     return deactivate_person_controller(person_id)
