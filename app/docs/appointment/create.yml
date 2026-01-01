@@ -1,9 +1,9 @@
 tags:
   - Appointments
-summary: Create a new appointment request
+summary: Create a new appointment
 description: >
-  Creates a new appointment for a person within an open schedule block.
-  Validates availability, block state, capacity, and time overlap.
+  Creates a new appointment for a person with a professional in a unit.
+  Validates required fields, foreign keys, and date format.
 operationId: createAppointment
 
 parameters:
@@ -39,10 +39,9 @@ parameters:
         canal:
           type: string
           enum:
-            - presential
-            - phone
-            - video
-          example: presential
+            - PRESENCIAL
+            - VIRTUAL
+          example: PRESENCIAL
         observations:
           type: string
           example: "Paciente solicita ser atendido temprano"
@@ -80,15 +79,6 @@ responses:
         error:
           type: string
           example: "El profesional no existe"
-
-  409:
-    description: Block capacity exceeded
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "No hay cupo disponible en este bloque"
 
   500:
     description: Server error

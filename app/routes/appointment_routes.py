@@ -19,7 +19,7 @@ BASE_DOCS = os.path.abspath(
 )
 
 @appt_bp.route('/', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 @swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_appointment():
     return create_appointment_controller()
@@ -40,14 +40,14 @@ def get_appointment(id):
 
 
 @appt_bp.route('/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 @swag_from(os.path.join(BASE_DOCS, 'update.yml'))
 def update_appointment(id):
     return update_appointment_controller(id)
 
 
 @appt_bp.route('/<int:id>/status', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 @swag_from(os.path.join(BASE_DOCS, 'update_status.yml'))
 def update_status(id):
     return update_appointment_status_controller(id)
