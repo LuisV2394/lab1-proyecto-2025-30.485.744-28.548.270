@@ -165,40 +165,125 @@ def update_appointment_controller(id):
     if not appt:
         return jsonify({"error": "Cita no encontrada"}), 404
 
-    data = request.json
+    data = request.json or {}
 
+    # Validar duración si viene
+    if "duration_minutes" in data:
+        try:
+            duration = int(data["duration_minutes"])
+            if duration <= 0:
+                return jsonify({"error": "La duración debe ser mayor a 0"}), 400
+            appt.duration_minutes = duration
+        except ValueError:
+            return jsonify({"error": "Duración inválida"}), 400
+
+    # Validar fecha/hora si viene
     if "start" in data:
         try:
-            appt.start = datetime.fromisoformat(data["start"])
-            if "duration_minutes" in data:
-                appt.duration_minutes = int(data["duration_minutes"])
-            appt.end = appt.start + timedelta(minutes=appt.duration_minutes)
+            start = datetime.fromisoformat(data["start"])
+            appt.start = start
         except ValueError:
-            return jsonify({"error": "Fecha/hora inválida"}), 400
+            return jsonify({"error": "Formato de fecha/hora inválido"}), 400
 
-    appt.motivo = data.get("motivo", appt.motivo)
+    # Recalcular end si se modificó start o duration
+    if "start" in data or "duration_minutes" in data:
+        appt.end = appt.start + timedelta(minutes=appt.duration_minutes)
+
+        # 🔥 Validar colisión por profesional
+        prof_conflict = Appointment.query.filter(
+            Appointment.professional_id == appt.professional_id,
+            Appointment.id != appt.id,
+            Appointment.start < appt.end,
+            Appointment.end > appt.start
+        ).first()
+
+        if prof_conflict:
+            return jsonify({
+                "error": "El profesional ya tiene una cita en ese horario",
+                "conflict_id": prof_conflict.id
+            }), 409
+
+        # Validar colisión por unidad
+        unit_conflict = Appointment.query.filter(
+            Appointment.unit_id == appt.unit_id,
+            Appointment.id != appt.id,
+            Appointment.start < appt.end,
+            Appointment.end > appt.start
+        ).first()
+
+        if unit_conflict:
+            return jsonify({
+                "error": "La unidad ya está ocupada en ese horario",
+                "conflict_id": unit_conflict.id
+            }), 409
+
+    # Motivo
+    if "motivo" in data:
+        appt.motivo = data["motivo"]
+
+    # Canal
     if "canal" in data:
-        canal = data.get("canal").upper()
+        canal = data["canal"].upper()
         if canal not in VALID_CHANNELS:
-            return jsonify({"error": f"Canal inválido. Debe ser {VALID_CHANNELS}"}), 400
+            return jsonify({
+                "error": f"Canal inválido. Debe ser {VALID_CHANNELS}"
+            }), 400
         appt.canal = canal
-    appt.observations = data.get("observations", appt.observations)
-    appt.duration_minutes = data.get("duration_minutes", appt.duration_minutes)
+
+    # Observaciones
+    if "observations" in data:
+        appt.observations = data["observations"]
 
     db.session.commit()
 
-    return jsonify({"message": "Cita actualizada correctamente"}), 200
+    return jsonify({
+        "message": "Cita actualizada correctamente",
+        "id": appt.id
+    }), 200
 
 def update_appointment_status_controller(id):
-    data = request.json
-    new_status = data.get('status')
-    appt = Appointment.query.get_or_404(id)
+    data = request.json or {}
 
-    if new_status not in VALID_TRANSITIONS.get(appt.status, []):
+    # Validar body
+    if 'status' not in data:
         return jsonify({
-            "error": f"Transición inválida de {appt.status} a {new_status}"
+            "error": "El campo 'status' es obligatorio"
         }), 400
 
+    new_status = data.get('status')
+
+    if not isinstance(new_status, str):
+        return jsonify({
+            "error": "El campo 'status' debe ser un string"
+        }), 400
+
+    new_status = new_status.upper()
+
+    # Obtener cita
+    appt = Appointment.query.get_or_404(id)
+
+    # Evitar actualizar si ya está en estado final
+    if appt.status in ["CUMPLIDA", "CANCELADA", "NO_ASISTIDA"]:
+        return jsonify({
+            "error": f"No se puede modificar una cita en estado {appt.status}"
+        }), 409
+
+    # Evitar transición redundante
+    if new_status == appt.status:
+        return jsonify({
+            "error": f"La cita ya se encuentra en estado {appt.status}"
+        }), 400
+
+    # Validar transición permitida
+    allowed_transitions = VALID_TRANSITIONS.get(appt.status, [])
+
+    if new_status not in allowed_transitions:
+        return jsonify({
+            "error": f"Transición inválida de {appt.status} a {new_status}",
+            "allowed": allowed_transitions
+        }), 400
+
+    # Guardar historial
     history = AppointmentHistory(
         appointment_id=appt.id,
         old_state=appt.status,
@@ -206,6 +291,7 @@ def update_appointment_status_controller(id):
         changed_by=get_jwt_identity()
     )
 
+    # Actualizar estado
     appt.status = new_status
 
     if 'observations' in data:
@@ -214,8 +300,10 @@ def update_appointment_status_controller(id):
     db.session.add(history)
     db.session.commit()
 
-    return jsonify({"message": "Estado actualizado", "status": appt.status})
-
+    return jsonify({
+        "message": "Estado actualizado correctamente",
+        "status": appt.status
+    }), 200
 
 def delete_appointment_controller(id):
     appt = Appointment.query.get(id)
