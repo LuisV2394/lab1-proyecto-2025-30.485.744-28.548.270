@@ -1,8 +1,7 @@
-# routes/units_create.yml
 tags:
   - Units
 summary: Create a new unit
-description: Creates a new medical unit record.
+description: Creates a new unit (sede, consultorio or service).
 parameters:
   - in: body
     name: body
@@ -16,24 +15,39 @@ parameters:
         name:
           type: string
           description: Name of the unit
-          example: "Consulting Room 101"
+          example: "Consultorio 101"
+
         type:
           type: string
-          description: Type of the unit (CONSULTING_ROOM, LAB, IMAGING)
-          example: "CONSULTING_ROOM"
+          description: Type of the unit
+          enum: [SEDE, CONSULTORIO, SERVICIO]
+          example: "CONSULTORIO"
+
         description:
           type: string
           description: Optional description of the unit
-          example: "First floor consulting room for general check-ups"
+          example: "Consultorio equipado para medicina general"
+
+        address:
+          type: string
+          description: Physical address of the unit
+          example: "Av. Principal, Edificio Salud, Piso 1"
+
         phone:
           type: string
-          description: Optional contact phone number
+          description: Contact phone number
           example: "+1 555-123-4567"
+
+        schedule_reference:
+          type: string
+          description: Informative working hours reference
+          example: "Lunes a Viernes 8:00 AM - 4:00 PM"
+
         is_active:
-          type: integer
-          enum: [0, 1]
-          description: Whether the unit is active
-          example: 1
+          type: boolean
+          description: Indicates whether the unit is active
+          example: true
+
 responses:
   201:
     description: Unit created successfully
@@ -51,20 +65,28 @@ responses:
               example: 1
             name:
               type: string
-              example: "Consulting Room 101"
+              example: "Consultorio 101"
             type:
               type: string
-              example: "CONSULTING_ROOM"
+              example: "CONSULTORIO"
             description:
               type: string
-              example: "First floor consulting room for general check-ups"
+              example: "Consultorio equipado para medicina general"
+            address:
+              type: string
+              example: "Av. Principal, Edificio Salud, Piso 1"
             phone:
               type: string
               example: "+1 555-123-4567"
+            schedule_reference:
+              type: string
+              example: "Lunes a Viernes 8:00 AM - 4:00 PM"
             is_active:
-              type: integer
-              example: 1
+              type: boolean
+              example: true
+
   400:
-    description: Missing required fields
+    description: Invalid request or missing required fields
+
   500:
-    description: Server error
+    description: Internal server error
