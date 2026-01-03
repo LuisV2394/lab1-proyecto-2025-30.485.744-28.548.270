@@ -1,8 +1,12 @@
 from flask import jsonify, request
+from datetime import datetime
+from app import db
 from app.models.invoice import Invoice
 from app.models.invoice_item import InvoiceItem
-from app import db
-from datetime import datetime
+from app.models.person import Person
+from app.models.insurer import Insurer
+# Descomentar cuando exista el modelo de prestaciones
+# from app.models.prestation import Prestation
 
 
 def get_all_invoices_controller():
@@ -21,27 +25,57 @@ def get_invoice_by_id_controller(invoice_id):
 def create_invoice_controller():
     data = request.get_json()
 
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
     required_fields = ["numero", "fechaEmision", "moneda", "items"]
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
-    if not data.get("personaId") and not data.get("aseguradoraId"):
+    # items debe ser una lista no vacía
+    if not isinstance(data["items"], list) or not data["items"]:
+        return jsonify({"error": "items must be a non-empty list"}), 400
+
+    persona_id = data.get("personaId")
+    aseguradora_id = data.get("aseguradoraId")
+
+    if not persona_id and not aseguradora_id:
         return jsonify({"error": "personaId or aseguradoraId is required"}), 400
 
-    if data.get("personaId") and data.get("aseguradoraId"):
+    if persona_id and aseguradora_id:
         return jsonify({"error": "Only one of personaId or aseguradoraId is allowed"}), 400
+    
+    # Validar número de factura único
+    existing = Invoice.query.filter_by(invoice_number=data["numero"]).first()
+    if existing:
+        return jsonify({"error": "Invoice number already exists"}), 409
 
+    
+    # Validación de fecha
     try:
         issue_date = datetime.strptime(data["fechaEmision"], "%Y-%m-%d").date()
     except ValueError:
         return jsonify({"error": "Invalid fechaEmision format (YYYY-MM-DD)"}), 400
 
+    # Validar existencia de persona
+    if persona_id:
+        person = Person.query.get(persona_id)
+        if not person:
+            return jsonify({"error": "Persona not found"}), 404
+
+    # Validar existencia de aseguradora
+    if aseguradora_id:
+        insurer = Insurer.query.get(aseguradora_id)
+        if not insurer:
+            return jsonify({"error": "Aseguradora not found"}), 404
+
+    # Crear factura
     invoice = Invoice(
         invoice_number=data["numero"],
         issue_date=issue_date,
-        patient_id=data.get("personaId"),
-        insurer_id=data.get("aseguradoraId"),
+        patient_id=persona_id,
+        insurer_id=aseguradora_id,
         currency=data["moneda"],
         status="PENDING"
     )
@@ -52,16 +86,35 @@ def create_invoice_controller():
     total_tax = 0
 
     for item in data["items"]:
-        quantity = item.get("cantidad", 0)
-        unit_price = item.get("valorUnitario", 0)
+        quantity = item.get("cantidad")
+        unit_price = item.get("valorUnitario")
         tax_amount = item.get("impuestos", 0)
+        prestation_id = item.get("prestacionId")
+
+        # Validaciones defensivas
+        if quantity is None or quantity <= 0:
+            return jsonify({"error": "cantidad must be greater than 0"}), 400
+
+        if unit_price is None or unit_price < 0:
+            return jsonify({"error": "valorUnitario must be >= 0"}), 400
+
+        if tax_amount < 0:
+            return jsonify({"error": "impuestos must be >= 0"}), 400
+
+        # Descomentar cuando exista el modelo de prestaciones
+        # if prestation_id:
+        #     prestation = Prestation.query.get(prestation_id)
+        #     if not prestation:
+        #         return jsonify({
+        #             "error": f"Prestacion not found (id: {prestation_id})"
+        #         }), 404
 
         line_subtotal = quantity * unit_price
         line_total = line_subtotal + tax_amount
 
         invoice_item = InvoiceItem(
             invoice=invoice,
-            prestation_id=item.get("prestacionId"),
+            prestation_id=prestation_id,
             description=item.get("descripcion"),
             quantity=quantity,
             unit_price=unit_price,
@@ -77,13 +130,21 @@ def create_invoice_controller():
     invoice.subtotal = subtotal
     invoice.total = subtotal + total_tax
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+        "error": "Error creating invoice",
+        "details": str(e)
+        }), 500
 
     return jsonify({
         "message": "Invoice created successfully",
-        "invoice": invoice.to_dict(include_items=True)
+        "invoice_id": invoice.id,
+        "subtotal": invoice.subtotal,
+        "total": invoice.total
     }), 201
-
 
 def update_invoice_status_controller(invoice_id):
     invoice = Invoice.query.get(invoice_id)
