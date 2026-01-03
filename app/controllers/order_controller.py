@@ -1,10 +1,9 @@
 from flask import jsonify, request
 from app.models.orders import Order
-from app.models.episodes import Episode # Asumiendo que el modelo se llama Episode
+from app.models.episodes import Episode 
 from app import db
 from datetime import datetime
 
-# Listas de validación
 VALID_TYPES = ['laboratory', 'imaging', 'procedure']
 VALID_PRIORITIES = ['normal', 'urgent']
 VALID_STATUSES = ['issued', 'authorized', 'in_progress', 'completed', 'canceled']
@@ -12,51 +11,45 @@ VALID_STATUSES = ['issued', 'authorized', 'in_progress', 'completed', 'canceled'
 def create_order_controller():
     data = request.get_json()
     
-    # 1. Validar campos obligatorios
     required_fields = ['episodeId', 'type', 'details']
     for field in required_fields:
         if field not in data:
-            return jsonify({"error": f"Falta el campo requerido: {field}"}), 400
+            return jsonify({"error": f"missin required fiels: {field}"}), 400
 
-    # 2. Validar existencia del episodio
     episode = Episode.query.get(data['episodeId'])
     if not episode:
-        return jsonify({"error": "Episodio no encontrado"}), 404
+        return jsonify({"error": "Episode not found"}), 404
         
-    # 3. Validar que el episodio esté abierto (Regla de negocio lógica)
     if episode.status == 'close':
-        return jsonify({"error": "No se pueden crear órdenes para un episodio cerrado"}), 409
+        return jsonify({"error": "Orders cannot be created for a closed episode"}), 409
 
-    # 4. Validar enumeraciones
     if data['type'] not in VALID_TYPES:
-        return jsonify({"error": f"Tipo inválido. Opciones: {VALID_TYPES}"}), 400
+        return jsonify({"error": f"Tipe invaid. Options: {VALID_TYPES}"}), 400
         
     priority = data.get('priority', 'normal')
     if priority not in VALID_PRIORITIES:
-         return jsonify({"error": f"Prioridad inválida. Opciones: {VALID_PRIORITIES}"}), 400
+         return jsonify({"error": f"invalid priority. options: {VALID_PRIORITIES}"}), 400
 
-    # Crear la orden
     new_order = Order(
         episode_id=data['episodeId'],
         type=data['type'],
-        details=data['details'], # Espera una lista de objetos [{...}]
+        details=data['details'], 
         priority=priority,
-        status='issued' # Estado inicial por defecto
+        status='issued' 
     )
 
     db.session.add(new_order)
     db.session.commit()
 
     return jsonify({
-        "message": "Orden médica creada exitosamente",
+        "message": "medical order created successfully",
         "order": new_order.to_dict()
     }), 201
 
 def get_orders_by_episode_controller(episode_id):
-    # Verificar si el episodio existe
     episode = Episode.query.get(episode_id)
     if not episode:
-         return jsonify({"error": "Episodio no encontrado"}), 404
+         return jsonify({"error": "Episode not found"}), 404
 
     orders = Order.query.filter_by(episode_id=episode_id).all()
     return jsonify([order.to_dict() for order in orders]), 200
@@ -67,17 +60,36 @@ def update_order_status_controller(order_id):
 
     order = Order.query.get(order_id)
     if not order:
-        return jsonify({"error": "Orden no encontrada"}), 404
+        return jsonify({"error": "Order not found"}), 404
 
     if new_status not in VALID_STATUSES:
-        return jsonify({"error": f"Estado inválido. Opciones: {VALID_STATUSES}"}), 400
+        return jsonify({"error": f"invalid estate. Opctions: {VALID_STATUSES}"}), 400
 
-    # Aquí podrías agregar lógica de transiciones (ej: no pasar de canceled a issued)
     
     order.status = new_status
     db.session.commit()
 
     return jsonify({
-        "message": "Estado de orden actualizado",
+        "message": "Order status updated successfully",
         "order": order.to_dict()
     }), 200
+
+def delete_order_controller(order_id):
+    order = Order.query.get(order_id)
+    
+    if not order:
+        return jsonify({"error: order not found"}), 404
+
+    if order.status not in ['issued', 'authorized']:
+        return jsonify({
+            "error": f"An order with status cannot be deleted'{order.status}'. "
+                     "Try to cancel it instead."
+        }), 409
+
+    try:
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify({"message": "order delete sussefuly"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
