@@ -25,6 +25,9 @@ def create_app():
     from app.models.consets import Consent
     from app.models.appointment import Appointment
     from app.models.orders import Order    
+    from app.models.user import User
+    from app.models.person import Person
+    from app.models.prescription import Prescription
 
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
@@ -57,6 +60,7 @@ def create_app():
         from app.routes.consent_routes import consent_bp
         from app.routes.appointment_routes import appt_bp
         from app.routes.order_routes import orders_bp
+        from app.routes.prescription_routes import prescription_bp
     
         app.register_blueprint(auth_bp)
         app.register_blueprint(professionals_bp)
@@ -70,6 +74,7 @@ def create_app():
         app.register_blueprint(agenda_bp)
         app.register_blueprint(appt_bp)
         app.register_blueprint(orders_bp)
+        app.register_blueprint(prescription_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
