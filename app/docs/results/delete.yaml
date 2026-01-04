@@ -1,0 +1,40 @@
+tags:
+ - results
+description: Delete a result by its ID.
+summary: Delete a result
+operationId: deleteResult
+produces:
+ - application/json
+
+parameters:
+ - in: path
+   name: result_id
+   required: true
+   type: integer
+   description: Result ID
+   example: 202
+responses:
+  200: 
+   description: Result deleted successfully
+   schema:
+     type: object
+     properties:
+       message:
+         type: string
+         example: "Resultado eliminado"
+  404:
+    description: Result not found
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Resultado no encontrado"
+  500:
+    description: Server error 
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Internal server error"
