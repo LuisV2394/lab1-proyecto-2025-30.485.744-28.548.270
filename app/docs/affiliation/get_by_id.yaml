@@ -1,0 +1,43 @@
+tags:
+- affiliations
+summary: Get affiliation by ID
+description: Retrieve affiliation details using the affiliation ID.
+operationId: getAffiliationById
+parameters:
+- name: affiliation_id
+  in: path
+  required: true
+  description: ID of the affiliation to retrieve.
+  schema:
+    type: integer
+responses:
+  200:
+    description: Affiliation details retrieved successfully
+    schema:
+      type: object
+      properties:
+        affiliation_id:
+          type: integer
+          example: 9012
+        person_id:
+          type: integer
+          example: 1234
+        insurance_company_id:
+          type: integer
+          example: 5678
+  400:
+    description: Invalid affiliation ID
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid affiliation ID"
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Server error occurred"
