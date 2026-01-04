@@ -1,0 +1,16 @@
+tags:
+- insurance_company
+summary: Get all insurance companies
+description: Retrieve a list of all insurance companies.
+operationId: getAllInsuranceCompanies
+produces:
+- application/json
+responses:
+  200:
+    description: A list of insurance companies
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/InsuranceCompany'
+  500:
+    description: Internal server error

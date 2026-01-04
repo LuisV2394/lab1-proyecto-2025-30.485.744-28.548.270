@@ -4,7 +4,8 @@ from flasgger import swag_from
 from app.controllers.result_controller import (
     create_result_controller,
     update_result_controller,
-    delete_result_controller
+    delete_result_controller,
+    get_result_controller
 )
 import os
 
@@ -19,6 +20,13 @@ BASE_DOCS = os.path.abspath(
 @swag_from(os.path.join(BASE_DOCS, "create.yml"))
 def create_result():
     return create_result_controller()
+
+@results_bp.route("/<int:result_id>", methods=["GET"])
+@jwt_required()
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
+def get_result(result_id):
+    return get_result_controller(result_id)
+
 
 @results_bp.route("/<int:result_id>", methods=["PUT"])
 @jwt_required()

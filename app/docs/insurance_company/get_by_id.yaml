@@ -1,0 +1,22 @@
+tags:
+  - insurance_company
+summary: Get insurance company by ID
+description: Retrieve an insurance company by its unique ID.
+operationId: getInsuranceCompanyById
+produces:
+  - application/json  
+parameters:
+  - name: id
+    in: path
+    description: ID of the insurance company to retrieve
+    required: true
+    type: integer
+responses:  
+  200:
+    description: An insurance company object
+    schema:
+      $ref: '#/definitions/InsuranceCompany'
+  404:
+    description: Insurance company not found
+  500:
+    description: Internal server error

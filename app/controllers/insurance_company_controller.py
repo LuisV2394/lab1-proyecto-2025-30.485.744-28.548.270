@@ -33,6 +33,12 @@ def create_insurance_controller():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
+def get_insurance_by_id_controller(insurance_id):
+    insurance = InsuranceCompany.query.get(insurance_id)
+    if not insurance:
+        return jsonify({"error": "insurance company not found"}), 404
+    return jsonify(insurance.to_dict()), 200
+
 def update_insurance_controller(insurance_id):
     insurance = InsuranceCompany.query.get(insurance_id)
     if not insurance:

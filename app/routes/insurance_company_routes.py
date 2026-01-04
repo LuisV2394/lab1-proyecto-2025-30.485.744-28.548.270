@@ -5,7 +5,8 @@ from app.controllers.insurance_company_controller import (
     get_all_insurances_controller,
     create_insurance_controller,
     update_insurance_controller,
-    delete_insurance_controller
+    delete_insurance_controller,
+    get_insurance_by_id_controller
 )
 import os
 
@@ -20,6 +21,12 @@ BASE_DOCS = os.path.abspath(
 @swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
 def get_all():
     return get_all_insurances_controller()
+
+@insurance_bp.route("/<int:insurance_id>", methods=["GET"])
+@jwt_required()
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
+def get_by_id(insurance_id):
+    return get_insurance_by_id_controller(insurance_id)
 
 @insurance_bp.route("/", methods=["POST"])
 @jwt_required()

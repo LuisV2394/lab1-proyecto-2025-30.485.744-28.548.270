@@ -33,6 +33,12 @@ def create_result_controller():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+    
+def get_result_controller(result_id):
+    result = Result.query.get(result_id)
+    if not result:
+        return jsonify({"error": "Resultado no encontrado"}), 404
+    return jsonify(result.to_dict()), 200
 
 def update_result_controller(result_id):
     data = request.get_json()
