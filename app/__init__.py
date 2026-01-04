@@ -29,6 +29,7 @@ def create_app():
     from app.models.person import Person
     from app.models.prescription import Prescription
     from app.models.result import Result
+    from app.models.insurance_company import InsuranceCompany
 
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
@@ -63,6 +64,7 @@ def create_app():
         from app.routes.order_routes import orders_bp
         from app.routes.prescription_routes import prescription_bp
         from app.routes.result_routes import results_bp
+        from app.routes.insurance_company_routes import insurance_bp
     
         
     
@@ -80,6 +82,7 @@ def create_app():
         app.register_blueprint(orders_bp)
         app.register_blueprint(prescription_bp)
         app.register_blueprint(results_bp)
+        app.register_blueprint(insurance_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
