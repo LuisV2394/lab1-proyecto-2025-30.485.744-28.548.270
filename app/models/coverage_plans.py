@@ -2,11 +2,11 @@ from app import db
 from datetime import datetime
 
 class CoveragePlan(db.Model):
-    __tablename__ = 'coverage_plans'
+    __tablename__ = 'plans'
 
     id = db.Column(db.Integer, primary_key=True)
     
-    insurer_company_id = db.Column(db.Integer, db.ForeignKey('insurance_companies.id'), nullable=False)
+    insurer_id = db.Column(db.Integer, db.ForeignKey('insurance.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     general_conditions = db.Column(db.Text) 
     
@@ -17,7 +17,7 @@ class CoveragePlan(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "insurer_company_id": self.insurer_company_id,
+            "insurer_id": self.insurer_id,
             "name": self.name,
             "general_conditions": self.general_conditions,
             "active": self.active,
