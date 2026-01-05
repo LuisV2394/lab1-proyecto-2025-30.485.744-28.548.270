@@ -1,0 +1,65 @@
+tags:
+- affiliations
+summary: Create a new affiliation
+description: Create a new affiliation between a person and an insurance company with a specific coverage plan.
+operationId: createAffiliation
+
+parameters:
+- name: affiliation.id 
+  in: path  
+  required: true
+  description: ID of the affiliation to be created.
+  schema:
+    type: integer
+- in: body
+  name: body
+  description: Affiliation data
+  required: true
+  schema:
+    type: object
+    required:
+      - person_id
+      - insurance_company_id
+      - coverage_plan
+    properties:
+      person_id:
+        type: integer
+        description: ID of the person to be affiliated.
+        example: 1234
+      insurance_company_id:
+        type: integer
+        description: ID of the insurance company.
+        example: 5678
+      coverage_plan:
+        type: string
+        description: Name of the coverage plan.
+        example: "Premium Health Plan"
+
+responses:
+  201:
+    description: Affiliation created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Affiliation created successfully"
+        affiliation_id:
+          type: integer
+          example: 9012
+  400:
+    description: Invalid input
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid input data"
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"

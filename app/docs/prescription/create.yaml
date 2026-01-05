@@ -1,0 +1,64 @@
+tags :
+  - Prescriptions
+summary: Create a new prescription
+description: Endpoint to create a new prescription associated with a specific episode.
+operationId: createPrescription
+parameters:
+  - name: episode_id
+    in: path
+    required: true
+    description: ID of the episode to associate the prescription with.
+    schema:
+      type: integer
+  - in: body
+    name: body
+    description: Prescription data
+    required: true
+    schema:
+      type: object
+      required:
+        - medication
+        - dosage
+        - frequency
+      properties:
+        medication:
+          type: string
+          description: Name of the medication prescribed.
+          example: "Amoxicillin"
+        dosage:
+          type: string
+          description: Dosage of the medication.
+          example: "500mg"
+        frequency:
+          type: string
+          description: Frequency of administration.
+          example: "Three times a day"
+
+responses:
+  201:
+    description: Prescription created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prescription created successfully"
+        prescription_id:
+          type: integer
+          example: 5678
+  400:
+    description: Invalid input
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid input data"
+500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "An unexpected error occurred"

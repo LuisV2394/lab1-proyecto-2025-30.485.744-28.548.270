@@ -1,0 +1,39 @@
+tags:
+- results
+summary: Get Result by ID
+description: Retrieve a specific Result by its ID.
+operationId: getResultById
+parameters:
+- name: id
+  in: path
+  description: ID of the Result to retrieve
+  required: true
+  schema:
+    type: integer
+responses:
+  200: 
+    description: Successful retrieval of Result
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Result'
+  404:
+    description: Result not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Result not found
+  500:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: An error occurred while retrieving the Result

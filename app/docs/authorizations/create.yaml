@@ -1,0 +1,38 @@
+tags:
+- authorizations
+summary: Create Authorization
+description: Endpoint to create a new authorization record.
+operationId: createAuthorization
+consumes:
+- application/json
+produces:
+- application/json
+parameters:
+- in: body
+  name: authorization
+  description: Authorization object that needs to be added
+  required: true
+  schema:
+    $ref: '#/definitions/Authorization'
+responses:
+  201:  
+    description: Authorization created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Authorization created successfully"
+        id:
+          type: integer
+          example: 101
+  400:
+    description: Invalid input
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid input data"
+  500:
+    description: Server error

@@ -1,0 +1,63 @@
+tags:
+- result
+summary: Update an existing result
+description: Endpoint to update an existing result associated with a specific episode.
+operationId: updateResult
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: path
+    name: result_id
+    required: true
+    type: integer
+    description: ID of the result to be updated
+    example: 201
+  - in: body
+    name: body
+    required: true  
+    schema|:
+      type: object
+      properties:
+        value:
+          type: string
+          example: "Positive"
+        unit:
+          type: string
+          example: "mg/dL"
+        reference_range:
+          type: string
+          example: "70-110 mg/dL"
+        notes:
+          type: string
+          example: "Fasting sample"
+responses:
+  200:  
+    description: Result updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Result updated successfully"
+        id:
+          type: integer
+          example: 201
+  404:
+    description: Result not found
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Result not found"
+  500:
+    description: Internal server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "An error occurred while updating the result"

@@ -1,0 +1,35 @@
+tags:
+- prescriptions
+summary: Delete Prescription by ID
+description: Remove a prescription from the system using its unique identifier.
+operationId: deletePrescriptionById
+parameters:
+- name: prescriptionId
+  in: path
+  required: true
+  description: The unique identifier of the prescription to be deleted.
+  schema:
+    type: string
+responses:
+  '200':
+    description: Successful deletion of the prescription.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Prescription deleted successfully.
+  '404':
+    description: Prescription not found.
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
+  '500':
+    description: Internal server error.
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Error'
