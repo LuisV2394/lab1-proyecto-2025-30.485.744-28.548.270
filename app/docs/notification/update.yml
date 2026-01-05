@@ -20,7 +20,7 @@ parameters:
       properties:
         status:
           type: string
-          enum: ["PENDING", "SENT", "FAILED"]
+          enum: ["PENDING", "SENT", "FAILED", "RETRYING"]
         payload:
           type: object
 responses:

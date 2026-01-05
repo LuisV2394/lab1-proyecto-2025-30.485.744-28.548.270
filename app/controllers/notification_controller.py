@@ -1,10 +1,20 @@
+import re
 from flask import jsonify, request
-from app.models.notification import Notification
-from app import db
 from datetime import datetime
+from app import db
+from app.models.notification import Notification
 from app.models.invoice import Invoice
 from app.services.email_service import send_email
 from app.services.invoice_service import generate_invoice_pdf
+
+EMAIL_REGEX = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+
+ALLOWED_TYPES = {"EMAIL", "SMS", "WHATSAPP"}
+ALLOWED_STATUS = {"PENDING", "SENT", "FAILED", "RETRYING"}
+
+
+def is_valid_email(email: str) -> bool:
+    return re.match(EMAIL_REGEX, email) is not None
 
 def send_notification(notification):
     if notification.type.upper() != "EMAIL":
@@ -16,8 +26,12 @@ def send_notification(notification):
     invoice_id = payload.get("invoice_id")
     if invoice_id:
         invoice = Invoice.query.get(invoice_id)
-        if invoice:
-            attachment_path = generate_invoice_pdf(invoice)
+        if not invoice:
+            notification.status = "FAILED"
+            db.session.commit()
+            return
+
+        attachment_path = generate_invoice_pdf(invoice)
 
     result = send_email(
         recipient=notification.recipient,
@@ -29,14 +43,11 @@ def send_notification(notification):
     notification.status = "FAILED" if result.get("error") else "SENT"
     notification.timestamp = datetime.utcnow()
     db.session.commit()
-    
-# Obtener todas las notificaciones
+
 def get_all_notifications_controller():
     notifications = Notification.query.all()
     return jsonify([n.to_dict() for n in notifications]), 200
 
-
-# Obtener notificación por ID
 def get_notification_by_id_controller(notification_id):
     notification = Notification.query.get(notification_id)
     if not notification:
@@ -44,23 +55,51 @@ def get_notification_by_id_controller(notification_id):
 
     return jsonify(notification.to_dict()), 200
 
-
-# Crear notificación nueva
 def create_notification_controller():
     data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Invalid JSON body"}), 400
 
     required_fields = ["type", "template", "recipient"]
 
     for field in required_fields:
-        if field not in data:
+        if field not in data or not data[field]:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    # Validar tipo
+    if data["type"].upper() not in ALLOWED_TYPES:
+        return jsonify({
+            "error": f"Invalid notification type. Allowed: {list(ALLOWED_TYPES)}"
+        }), 400
+
+    # Validar correo
+    if not is_valid_email(data["recipient"]):
+        return jsonify({
+            "error": "Invalid email format"
+        }), 400
+
+    # Validar payload
+    payload = data.get("payload")
+    if payload is not None and not isinstance(payload, dict):
+        return jsonify({
+            "error": "Payload must be a JSON object"
+        }), 400
+
+    # Validar invoice_id si existe
+    if payload and payload.get("invoice_id"):
+        invoice = Invoice.query.get(payload["invoice_id"])
+        if not invoice:
+            return jsonify({
+                "error": "Invoice not found"
+            }), 404
+
     new_notification = Notification(
-        type=data["type"],
+        type=data["type"].upper(),
         template=data["template"],
         recipient=data["recipient"],
-        payload=data.get("payload"),
-        status=data.get("status", "PENDING"),
+        payload=payload,
+        status="PENDING",
         timestamp=datetime.utcnow()
     )
 
@@ -68,14 +107,12 @@ def create_notification_controller():
     db.session.commit()
 
     send_notification(new_notification)
-    
+
     return jsonify({
         "message": "Notification created successfully",
         "notification": new_notification.to_dict()
     }), 201
 
-
-# Actualizar notificación
 def update_notification_controller(notification_id):
     notification = Notification.query.get(notification_id)
     if not notification:
@@ -83,10 +120,33 @@ def update_notification_controller(notification_id):
 
     data = request.get_json()
 
-    for key, value in data.items():
-        if hasattr(notification, key):
-            setattr(notification, key, value)
+    if "recipient" in data:
+        if not is_valid_email(data["recipient"]):
+            return jsonify({"error": "Invalid email format"}), 400
 
+    if "type" in data:
+        if data["type"].upper() not in ALLOWED_TYPES:
+            return jsonify({
+                "error": f"Invalid notification type. Allowed: {list(ALLOWED_TYPES)}"
+            }), 400
+        notification.type = data["type"].upper()
+
+    if "status" in data:
+        if data["status"].upper() not in ALLOWED_STATUS:
+            return jsonify({
+                "error": f"Invalid status. Allowed: {list(ALLOWED_STATUS)}"
+            }), 400
+        notification.status = data["status"].upper()
+
+    if "payload" in data:
+        if not isinstance(data["payload"], dict):
+            return jsonify({"error": "Payload must be a JSON object"}), 400
+        notification.payload = data["payload"]
+
+    if "template" in data:
+        notification.template = data["template"]
+
+    notification.updated_at = datetime.utcnow()
     db.session.commit()
 
     return jsonify({
@@ -94,8 +154,6 @@ def update_notification_controller(notification_id):
         "notification": notification.to_dict()
     }), 200
 
-
-# Cambiar estado de la notificación
 def update_notification_status_controller(notification_id):
     notification = Notification.query.get(notification_id)
     if not notification:
@@ -103,12 +161,17 @@ def update_notification_status_controller(notification_id):
 
     data = request.get_json()
 
-    if "status" not in data:
+    status = data.get("status")
+    if not status:
         return jsonify({"error": "Missing status field"}), 400
 
-    notification.status = data["status"]
-    notification.timestamp = datetime.utcnow()
+    if status.upper() not in ALLOWED_STATUS:
+        return jsonify({
+            "error": f"Invalid status. Allowed: {list(ALLOWED_STATUS)}"
+        }), 400
 
+    notification.status = status.upper()
+    notification.timestamp = datetime.utcnow()
     db.session.commit()
 
     return jsonify({

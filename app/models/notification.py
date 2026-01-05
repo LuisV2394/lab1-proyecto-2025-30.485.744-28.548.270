@@ -10,7 +10,7 @@ class Notification(db.Model):
     recipient = db.Column(db.String(255), nullable=False)
     payload = db.Column(db.JSON, nullable=True)
     status = db.Column(
-        db.Enum('PENDING', 'SENT', 'FAILED'),
+        db.Enum('PENDING', 'SENT', 'FAILED', 'RETRYING'),
         default='PENDING',
         nullable=False
     )
