@@ -10,17 +10,17 @@ class Order(db.Model):
 
     requires_authorization = db.Column(db.tinyint, default=False)
     # type: laboratory, imaging, procedure
-    type = db.Column(db.String(50), nullable=False)
+    type = db.Column(db.varchar(50), nullable=False)
     
     # details: array of objects {code, description, instructions}
     # En MySQL esto se guarda como JSON nativo
     details = db.Column(db.JSON, nullable=False)
     
     # priority: normal/urgent
-    priority = db.Column(db.String(20), default='normal')
+    priority = db.Column(db.varchar(20), default='normal')
     
     # status: issued, authorized, in progress, completed, canceled
-    status = db.Column(db.String(20), default='issued')
+    status = db.Column(db.varchar(20), default='issued')
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
