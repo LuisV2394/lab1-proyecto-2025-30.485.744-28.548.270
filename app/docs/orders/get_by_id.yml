@@ -1,20 +1,15 @@
 tags:
- - orders
-summary: Get order by ID  
-description: >
-  Retrieves a single order record by its unique identifier. 
-
+  - Orders
+summary: Get order by ID
+description: Retrieves a single order by its ID.
 operationId: getOrderById
 produces:
- - application/json 
-
+  - application/json
 parameters:
   - in: path
     name: order_id
     required: true
     type: integer
-    description: ID of the order
-    example: 101
 responses:
   200:
     description: Order found
@@ -23,36 +18,37 @@ responses:
       properties:
         id:
           type: integer
-          example: 101
-        customer_id:
+        episode_id:
           type: integer
-          example: 45
-        order_date:
+        professional_id:
+          type: integer
+          nullable: true
+        requires_authorization:
+          type: boolean
+        type:
           type: string
-          format: date-time
-          example: "2025-12-01T10:15:30Z"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              description:
+                type: string
+              instructions:
+                type: string
+        priority:
+          type: string
+          enum: ["normal", "urgent"]
         status:
           type: string
-          example: "shipped"
-        total_amount:
-          type: number
-          format: float
-          example: 250.75
-
+          enum: ["issued", "authorized", "in_progress", "completed", "canceled"]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
   404:
     description: Order not found
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Order not found"
-
-  500:
-    description: Server error
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Internal server error"

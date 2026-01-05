@@ -1,83 +1,70 @@
 tags:
   - Affiliations
-summary: Create a new affiliation
+summary: Update an affiliation
 description: >
-  Creates a new affiliation between a person, a payer, and a coverage plan.
-  Validates required fields, foreign keys, dates, and unique policy number.
-operationId: createAffiliation
+  Updates details of an existing affiliation. Validates foreign keys, dates, and policy number uniqueness.
+operationId: updateAffiliation
 
 parameters:
+  - name: affiliationId
+    in: path
+    required: true
+    description: ID of the affiliation to update
+    schema:
+      type: integer
+      example: 9012
   - name: body
     in: body
     required: true
     schema:
       type: object
-      required:
-        - personId
-        - planId
-        - payerId   # <--- agregado
-        - policyNumber
-        - validFrom
       properties:
-        personId:
-          type: integer
-          example: 1234
         planId:
           type: integer
-          example: 5678
-        payerId:
-          type: integer
-          example: 4321
+          description: New coverage plan ID
         policyNumber:
           type: string
-          example: "POL123456"
+          description: New policy number
         validFrom:
           type: string
           format: date
-          example: "2026-01-01"
         validUntil:
           type: string
           format: date
-          example: "2026-12-31"
         copayment:
           type: number
           format: float
-          example: 20.0
         deductible:
           type: number
           format: float
-          example: 100.0
 
 responses:
-  201:
-    description: Affiliation created successfully
+  200:
+    description: Affiliation updated successfully
     schema:
       type: object
       properties:
-        affiliation_id:
-          type: integer
-          example: 9012
         message:
           type: string
-          example: "Affiliation created successfully"
+          example: "Affiliation updated successfully"
+        affiliation:
+          type: object
 
   400:
-    description: Validation error (missing fields or invalid data)
+    description: Validation error (invalid data)
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "Faltan campos obligatorios"
 
   404:
-    description: Related resource not found (person, payer, or coverage plan)
+    description: Affiliation or CoveragePlan not found
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "Person, Payer o CoveragePlan no encontrados"
 
   409:
     description: Duplicate policy number

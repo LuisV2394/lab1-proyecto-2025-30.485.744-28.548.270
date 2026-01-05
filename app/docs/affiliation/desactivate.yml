@@ -1,16 +1,18 @@
 tags:
-- affiliations
+  - Affiliations
 summary: Deactivate an affiliation
-description: Deactivate an existing affiliation instead of deleting it.
+description: >
+  Marks an affiliation as inactive instead of deleting it.
 operationId: deactivateAffiliation
 
 parameters:
-- name: id
-  in: path
-  required: true
-  description: ID of the affiliation to deactivate
-  schema:
-    type: integer
+  - name: affiliationId
+    in: path
+    required: true
+    description: ID of the affiliation to deactivate
+    schema:
+      type: integer
+      example: 9012
 
 responses:
   200:
@@ -21,6 +23,7 @@ responses:
         message:
           type: string
           example: "Affiliation deactivated successfully"
+
   404:
     description: Affiliation not found
     schema:
@@ -29,6 +32,7 @@ responses:
         error:
           type: string
           example: "Affiliation not found"
+
   500:
     description: Server error
     schema:
@@ -36,4 +40,4 @@ responses:
       properties:
         error:
           type: string
-          example: "Internal server error"
+          example: "Error interno del servidor"

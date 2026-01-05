@@ -1,38 +1,57 @@
 tags:
-- affiliations
-summary: Get affiliation by ID
-description: Retrieve affiliation details using the affiliation ID.
-operationId: getAffiliationById
+  - Affiliations
+summary: Get active affiliations for a person
+description: >
+  Retrieves all active affiliations for a specific person.
+operationId: getPersonAffiliations
+
 parameters:
-- name: affiliation_id
-  in: path
-  required: true
-  description: ID of the affiliation to retrieve.
-  schema:
-    type: integer
+  - name: personId
+    in: path
+    required: true
+    description: ID of the person
+    schema:
+      type: integer
+      example: 1234
+
 responses:
   200:
-    description: Affiliation details retrieved successfully
+    description: List of active affiliations
     schema:
-      type: object
-      properties:
-        affiliation_id:
-          type: integer
-          example: 9012
-        person_id:
-          type: integer
-          example: 1234
-        insurance_company_id:
-          type: integer
-          example: 5678
-  400:
-    description: Invalid affiliation ID
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          personId:
+            type: integer
+          planId:
+            type: integer
+          policyNumber:
+            type: string
+          validFrom:
+            type: string
+            format: date
+          validUntil:
+            type: string
+            format: date
+          copayment:
+            type: number
+          deductible:
+            type: number
+          active:
+            type: boolean
+
+  404:
+    description: Person not found
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "Invalid affiliation ID"
+          example: "Person not found"
+
   500:
     description: Server error
     schema:
@@ -40,4 +59,4 @@ responses:
       properties:
         error:
           type: string
-          example: "Server error occurred"
+          example: "Error interno del servidor"

@@ -1,85 +1,40 @@
 tags:
-  - orders
-summary: Update order
-description: This endpoint allows updating an existing order.
-operationId: updateOrder
-
+  - Orders
+summary: Update order status
+description: Updates the status of an existing order.
+operationId: updateOrderStatus
 consumes:
   - application/json
 produces:
   - application/json
-
 parameters:
   - in: path
     name: order_id
-    type: integer
     required: true
-    description: ID of the order to update
-    example: 1234
-
+    type: integer
   - in: body
     name: body
-    description: Updated order data
     required: true
     schema:
       type: object
       properties:
-        customer_id:
-          type: integer
-          description: Updated customer ID
-          example: 50
         status:
           type: string
-          description: Order status
-          example: pending
-        items:
-          type: array
-          description: Updated list of order items
-          items:
-            type: object
-            properties:
-              product_id:
-                type: integer
-                description: ID of the product
-                example: 101
-              quantity:
-                type: integer
-                description: Quantity of the product
-                example: 3
-
+          enum: ["issued", "authorized", "in_progress", "completed", "canceled"]
+          example: "in_progress"
 responses:
   200:
-    description: Order updated successfully
+    description: Order status updated successfully
     schema:
       type: object
       properties:
         message:
           type: string
-          example: "Order updated successfully"
-        order_id:
-          type: integer
-          example: 1234
+          example: "Order status updated successfully"
+        status:
+          type: string
+          example: "in_progress"
   400:
-    description: Invalid input
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Invalid order data"
+    description: Invalid status
   404:
     description: Order not found
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Order not found"
-  500:
-    description: Server error
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "An unexpected error occurred"

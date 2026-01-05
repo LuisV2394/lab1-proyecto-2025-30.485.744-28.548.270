@@ -1,12 +1,15 @@
 tags:
-- affiliations
+  - Affiliations
 summary: Get all affiliations
-description: Retrieve a list of all affiliations with optional details about the person, insurance company, and coverage plan.
+description: >
+  Retrieves all affiliations in the system, both active and inactive.
 operationId: getAllAffiliations
+
+parameters: []
 
 responses:
   200:
-    description: List of affiliations
+    description: List of all affiliations
     schema:
       type: array
       items:
@@ -14,19 +17,27 @@ responses:
         properties:
           id:
             type: integer
-            example: 9012
-          person_id:
+          personId:
             type: integer
-            example: 1234
-          insurance_company_id:
+          planId:
             type: integer
-            example: 5678
-          coverage_plan:
+          policyNumber:
             type: string
-            example: "Premium Health Plan"
+          validFrom:
+            type: string
+            format: date
+          validUntil:
+            type: string
+            format: date
+          copayment:
+            type: number
+            format: float
+          deductible:
+            type: number
+            format: float
           active:
             type: boolean
-            example: true
+
   500:
     description: Server error
     schema:
@@ -34,4 +45,4 @@ responses:
       properties:
         error:
           type: string
-          example: "Internal server error"
+          example: "Error interno del servidor"

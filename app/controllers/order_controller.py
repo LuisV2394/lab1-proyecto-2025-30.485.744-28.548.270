@@ -1,97 +1,102 @@
 from flask import jsonify, request
-from app.models.orders import Order
-from app.models.episodes import Episode 
-from app import db
 from datetime import datetime
+from app import db
+from app.models.orders import Order
+from app.models.episodes import Episode
+from app.models.professional import Professional
 
-VALID_TYPES = ['laboratory', 'imaging', 'procedure']
-VALID_PRIORITIES = ['normal', 'urgent']
-VALID_STATUSES = ['issued', 'authorized', 'in_progress', 'completed', 'canceled']
+def get_all_orders_controller():
+    orders = Order.query.all()
+    return jsonify([o.to_dict() for o in orders]), 200
 
-def create_order_controller():
-    data = request.get_json()
-    
-    required_fields = ['episodeId', 'type', 'details']
-    for field in required_fields:
-        if field not in data:
-            return jsonify({"error": f"missin required fiels: {field}"}), 400
-
-    episode = Episode.query.get(data['episodeId'])
-    if not episode:
-        return jsonify({"error": "Episode not found"}), 404
-        
-    if episode.status == 'close':
-        return jsonify({"error": "Orders cannot be created for a closed episode"}), 409
-
-    if data['type'] not in VALID_TYPES:
-        return jsonify({"error": f"Tipe invaid. Options: {VALID_TYPES}"}), 400
-        
-    priority = data.get('priority', 'normal')
-    if priority not in VALID_PRIORITIES:
-         return jsonify({"error": f"invalid priority. options: {VALID_PRIORITIES}"}), 400
-
-    new_order = Order(
-        episode_id=data['episodeId'],
-        type=data['type'],
-        details=data['details'], 
-        priority=priority,
-        profesional_id=data.get('professionalId'),
-        requires_authorization=data.get('requiresAuthorization', False),
-        status='issued' 
-    )
-
-    db.session.add(new_order)
-    db.session.commit()
-
-    return jsonify({
-        "message": "medical order created successfully",
-        "order": new_order.to_dict()
-    }), 201
-
-def get_orders_by_episode_controller(episode_id):
-    episode = Episode.query.get(episode_id)
-    if not episode:
-         return jsonify({"error": "Episode not found"}), 404
-
-    orders = Order.query.filter_by(episode_id=episode_id).all()
-    return jsonify([order.to_dict() for order in orders]), 200
-
-def update_order_status_controller(order_id):
-    data = request.get_json()
-    new_status = data.get('status')
-
+def get_order_by_id_controller(order_id):
     order = Order.query.get(order_id)
     if not order:
         return jsonify({"error": "Order not found"}), 404
 
-    if new_status not in VALID_STATUSES:
-        return jsonify({"error": f"invalid estate. Opctions: {VALID_STATUSES}"}), 400
+    return jsonify(order.to_dict()), 200
 
-    
+def create_order_controller():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
+    required_fields = ["episode_id", "type", "details"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    # Validate episode
+    episode = Episode.query.get(data["episode_id"])
+    if not episode:
+        return jsonify({"error": "Episode not found"}), 404
+
+    # Validate professional if provided
+    professional_id = data.get("professional_id")
+    if professional_id:
+        professional = Professional.query.get(professional_id)
+        if not professional:
+            return jsonify({"error": "Professional not found"}), 404
+
+    # Validate type
+    valid_types = ["LABORATORY", "IMAGING", "PROCEDURE", "MEDICATION", "OTHER"]
+    if data["type"] not in valid_types:
+        return jsonify({"error": f"Invalid type. Must be one of {valid_types}"}), 400
+
+    # Validate details
+    if not isinstance(data["details"], list) or not data["details"]:
+        return jsonify({"error": "details must be a non-empty list"}), 400
+
+    # Validate priority
+    priority = data.get("priority", "normal")
+    if priority not in ["normal", "urgent"]:
+        return jsonify({"error": "priority must be 'normal' or 'urgent'"}), 400
+
+    order = Order(
+        episode_id=data["episode_id"],
+        professional_id=professional_id,
+        requires_authorization=data.get("requires_authorization", False),
+        type=data["type"],
+        details=data["details"],
+        priority=priority,
+        status="issued"
+    )
+
+    db.session.add(order)
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error creating order", "details": str(e)}), 500
+
+    return jsonify({"message": "Order created successfully", "order_id": order.id}), 201
+
+def update_order_status_controller(order_id):
+    order = Order.query.get(order_id)
+    if not order:
+        return jsonify({"error": "Order not found"}), 404
+
+    data = request.get_json()
+    new_status = data.get("status")
+
+    valid_status = ["issued", "authorized", "in_progress", "completed", "canceled"]
+    if new_status not in valid_status:
+        return jsonify({"error": f"Invalid status. Must be one of {valid_status}"}), 400
+
+    if order.status == "canceled":
+        return jsonify({"error": "Canceled orders cannot be modified"}), 400
+
     order.status = new_status
     db.session.commit()
 
-    return jsonify({
-        "message": "Order status updated successfully",
-        "order": order.to_dict()
-    }), 200
+    return jsonify({"message": "Order status updated successfully", "status": order.status}), 200
 
-def delete_order_controller(order_id):
+def cancel_order_controller(order_id):
     order = Order.query.get(order_id)
-    
     if not order:
-        return jsonify({"error: order not found"}), 404
+        return jsonify({"error": "Order not found"}), 404
 
-    if order.status not in ['issued', 'authorized']:
-        return jsonify({
-            "error": f"An order with status cannot be deleted'{order.status}'. "
-                     "Try to cancel it instead."
-        }), 409
+    order.status = "canceled"
+    db.session.commit()
 
-    try:
-        db.session.delete(order)
-        db.session.commit()
-        return jsonify({"message": "order delete sussefuly"}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+    return jsonify({"message": "Order canceled successfully"}), 200
