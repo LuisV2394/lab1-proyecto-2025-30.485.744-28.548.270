@@ -35,6 +35,8 @@ def create_order_controller():
         type=data['type'],
         details=data['details'], 
         priority=priority,
+        profesional_id=data.get('professionalId'),
+        requires_authorization=data.get('requiresAuthorization', False),
         status='issued' 
     )
 

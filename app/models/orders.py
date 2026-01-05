@@ -6,7 +6,9 @@ class Order(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     episode_id = db.Column(db.Integer, db.ForeignKey('episodes.id'), nullable=False)
-    
+    profesional_id = db.Column(db.Integer, db.ForeignKey('professionals.id'), nullable=True)
+
+    requires_authorization = db.Column(db.tinyint, default=False)
     # type: laboratory, imaging, procedure
     type = db.Column(db.String(50), nullable=False)
     
@@ -23,13 +25,15 @@ class Order(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relación opcional para acceder a info del episodio si fuera necesario
+    
     # episode = db.relationship("Episode", backref="orders")
 
     def to_dict(self):
         return {
             "id": self.id,
             "episode_id": self.episode_id,
+            "profesional_id": self.profesional_id,
+            "requires_authorization": self.requires_authorization,
             "type": self.type,
             "details": self.details, # SQLAlchemy lo convierte automáticamente a lista/dict de Python
             "priority": self.priority,
