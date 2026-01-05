@@ -33,6 +33,7 @@ def create_app():
     from app.models.coverage_plans import CoveragePlan
     from app.models.afilliation import Affiliation
     from app.models.order_item import OrderItem
+    from app.models.authorization import Authorization
 
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
@@ -71,6 +72,7 @@ def create_app():
         from app.routes.coverage_plan_routes import coverage_bp
         from app.routes.affiliations_routes import affiliation_bp
         from app.routes.order_item_routes import order_items_bp
+        from app.routes.authorization_routes import auth_request_bp
     
         
     
@@ -92,6 +94,7 @@ def create_app():
         app.register_blueprint(coverage_bp)
         app.register_blueprint(affiliation_bp)
         app.register_blueprint(order_items_bp)
+        app.register_blueprint(auth_request_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
