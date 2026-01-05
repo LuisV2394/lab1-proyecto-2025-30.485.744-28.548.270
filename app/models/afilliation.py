@@ -11,14 +11,15 @@ class Affiliation(db.Model):
     policy_number = db.Column(db.String(50), nullable=False)
     card_number = db.Column(db.varchar(50))
     valid_from = db.Column(db.Date, nullable=False)
-    valid_until = db.Column(db.Date)
+    valid_to = db.Column(db.Date)
     
     # Valores económicos
     copayment = db.Column(db.Numeric(10, 2), default=0.0) # Valor fijo por cita
     deductible = db.Column(db.Numeric(10, 2), default=0.0) # Porcentaje o valor base
     
-    active = db.Column(db.Boolean, default=True)
+    status = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         return {
@@ -27,8 +28,8 @@ class Affiliation(db.Model):
             "plan_id": self.plan_id,
             "policy_number": self.policy_number,
             "valid_from": self.valid_from.isoformat() if self.valid_from else None,
-            "valid_until": self.valid_until.isoformat() if self.valid_until else None,
+            "valid_until": self.valid_to.isoformat() if self.valid_to else None,
             "copayment": float(self.copayment),
             "deductible": float(self.deductible),
-            "active": self.active
+            "status": self.status
         }
