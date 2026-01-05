@@ -29,7 +29,7 @@ def create_app():
     from app.models.person import Person
     from app.models.prescription import Prescription
     from app.models.result import Result
-    from app.models.insurance_company import InsuranceCompany
+    from app.models.insurance import InsuranceCompany
     from app.models.coverage_plans import CoveragePlan
     from app.models.afilliation import Affiliation
     from app.models.order_item import OrderItem

@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app.models.insurance_company import InsuranceCompany
+from app.models.insurance import InsuranceCompany
 from app import db
 
 def get_all_insurances_controller():
