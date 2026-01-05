@@ -1,68 +1,65 @@
 tags:
-- coverage plan
+  - Coverage Plans
 summary: Update a coverage plan
-description: Update details of a specific coverage plan.
+description: Updates an existing coverage plan
 operationId: updateCoveragePlan
 parameters:
-- name: id
-  in: path
-  required: true
-  description: ID of the coverage plan to update
-  schema:
-    type: integer
-requestBody:
-  description: Fields to update
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          name:
-            type: string
-          coverage_percentage:
-            type: number
-            format: float
-          max_coverage_amount:
-            type: number
-            format: float
+  - in: path
+    name: plan_id
+    required: true
+    schema:
+      type: integer
+      example: 1
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        insurer_id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: "Updated Plan Name"
+        general_conditions:
+          type: string
+          example: "Updated conditions"
 responses:
   200:
     description: Coverage plan updated successfully
-    content:
-      application/json:
-        schema:
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Coverage plan updated successfully"
+        plan:
           type: object
           properties:
-            message:
+            id:
+              type: integer
+              example: 1
+            insurer_id:
+              type: integer
+              example: 3
+            name:
               type: string
-              example: "Coverage plan updated successfully"
-            coverage_plan:
-              $ref: '#/components/schemas/CoveragePlan'
+              example: "Updated Plan Name"
+            general_conditions:
+              type: string
+              example: "Updated conditions"
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T18:00:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T18:30:00Z"
   400:
     description: Invalid input
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
   404:
     description: Coverage plan not found
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
   500:
-    description: Internal server error
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
+    description: Server error

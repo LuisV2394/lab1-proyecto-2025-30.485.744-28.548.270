@@ -3,61 +3,110 @@ from app.models.coverage_plans import CoveragePlan
 from app.models.insurer import Insurer
 from app import db
 
+# Obtener todos los planes de cobertura
+def get_all_coverage_plans_controller():
+    plans = CoveragePlan.query.all()
+    data = [p.to_dict() for p in plans]
+    return jsonify(data), 200
+
+# Obtener plan por ID
+def get_coverage_plan_by_id_controller(plan_id):
+    plan = CoveragePlan.query.get(plan_id)
+    if not plan:
+        return jsonify({"error": "Coverage plan not found"}), 404
+
+    return jsonify({
+        "message": "Coverage plan retrieved successfully",
+        "plan": plan.to_dict()
+    }), 200
+
+# Crear un nuevo plan
 def create_coverage_plan_controller():
     data = request.get_json()
-    
-    # Validar campos obligatorios
-    if not data.get('insurer_company_id') or not data.get('name'):
-        return jsonify({"error": "insurer_company_id y name son obligatorios"}), 400
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
 
-    # Validar que la aseguradora existe
-    insurer = Insurer.query.get(data.get('insurer_company_id'))
+    required_fields = ["insurer_id", "name"]
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    # Validar que la aseguradora exista
+    insurer = Insurer.query.get(data["insurer_id"])
     if not insurer:
-        return jsonify({"error": "La aseguradora especificada no existe"}), 404
+        return jsonify({"error": "Insurer not found"}), 404
+
+    # Validar nombre no vacío y longitud
+    name = data["name"].strip()
+    if not name or len(name) > 100:
+        return jsonify({"error": "Invalid name"}), 400
 
     new_plan = CoveragePlan(
-        insurer_company_id=data.get('insurer_company_id'),
-        name=data.get('name'),
-        general_conditions=data.get('generalConditions'), # Adaptado del prompt
-        active=data.get('active', True)
+        insurer_id=data["insurer_id"],
+        name=name,
+        general_conditions=data.get("general_conditions")
     )
 
+    db.session.add(new_plan)
     try:
-        db.session.add(new_plan)
         db.session.commit()
-        return jsonify(new_plan.to_dict()), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Error creating coverage plan", "details": str(e)}), 500
 
-def get_plans_by_insurer_controller(insurer_id):
-    plans = CoveragePlan.query.filter_by(insurer_company_id=insurer_id).all()
-    return jsonify([p.to_dict() for p in plans]), 200
+    return jsonify({
+        "message": "Coverage plan created successfully",
+        "plan": new_plan.to_dict()
+    }), 201
 
+# Actualizar un plan existente
 def update_coverage_plan_controller(plan_id):
     plan = CoveragePlan.query.get(plan_id)
     if not plan:
-        return jsonify({"error": "Plan de cobertura no encontrado"}), 404
+        return jsonify({"error": "Coverage plan not found"}), 404
 
     data = request.get_json()
-    
-    # Actualización de campos
-    if 'name' in data: plan.name = data['name']
-    if 'generalConditions' in data: plan.general_conditions = data['generalConditions']
-    if 'active' in data: plan.active = data['active']
 
-    db.session.commit()
-    return jsonify(plan.to_dict()), 200
+    # Validar e intentar actualizar aseguradora si se proporciona
+    if "insurer_id" in data and data["insurer_id"] is not None:
+        insurer = Insurer.query.get(data["insurer_id"])
+        if not insurer:
+            return jsonify({"error": "Insurer not found"}), 404
+        plan.insurer_id = data["insurer_id"]
 
+    # Validar nombre si se proporciona
+    if "name" in data and data["name"]:
+        name = data["name"].strip()
+        if not name or len(name) > 100:
+            return jsonify({"error": "Invalid name"}), 400
+        plan.name = name
+
+    # Actualizar condiciones generales
+    if "general_conditions" in data:
+        plan.general_conditions = data["general_conditions"]
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": "Error updating coverage plan", "details": str(e)}), 500
+
+    return jsonify({
+        "message": "Coverage plan updated successfully",
+        "plan": plan.to_dict()
+    }), 200
+
+# Eliminar un plan (soft delete opcional o real delete)
 def delete_coverage_plan_controller(plan_id):
     plan = CoveragePlan.query.get(plan_id)
     if not plan:
-        return jsonify({"error": "Plan no encontrado"}), 404
+        return jsonify({"error": "Coverage plan not found"}), 404
 
+    db.session.delete(plan)
     try:
-        db.session.delete(plan)
         db.session.commit()
-        return jsonify({"message": "Plan eliminado exitosamente"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": "No se pudo eliminar el plan"}), 400
+        return jsonify({"error": "Error deleting coverage plan", "details": str(e)}), 500
+
+    return jsonify({"message": "Coverage plan deleted successfully"}), 200
