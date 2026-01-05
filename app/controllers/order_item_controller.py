@@ -7,12 +7,12 @@ def create_order_item_controller():
     data = request.get_json()
     
     if not data.get('order_id') or not data.get('prestation_code'):
-        return jsonify({"error": "order_id y prestation_code son obligatorios"}), 400
+        return jsonify({"error": "order_id y prestation_code are obligatory"}), 400
 
     # Verificar que la orden principal existe
     order = Order.query.get(data['order_id'])
     if not order:
-        return jsonify({"error": "La orden principal no existe"}), 404
+        return jsonify({"error": "the orden dosen't exist"}), 404
 
     new_item = OrderItem(
         order_id=data['order_id'],
@@ -34,7 +34,7 @@ def update_item_status_controller(item_id):
     item = OrderItem.query.get(item_id)
     
     if not item:
-        return jsonify({"error": "Ítem no encontrado"}), 404
+        return jsonify({"error": "Ítem not found"}), 404
 
     if 'status' in data:
         item.status = data['status']
