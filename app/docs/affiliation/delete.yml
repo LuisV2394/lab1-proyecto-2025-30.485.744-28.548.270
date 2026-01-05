@@ -1,0 +1,39 @@
+tags:
+- affiliations
+summary: Delete an affiliation
+description: Delete an existing affiliation by its ID.
+operationId: deleteAffiliation
+
+parameters:
+- name: id
+  in: path
+  required: true
+  description: ID of the affiliation to delete
+  schema:
+    type: integer
+
+responses:
+  200:
+    description: Affiliation deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Affiliation deleted successfully"
+  404:
+    description: Affiliation not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Affiliation not found"
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"

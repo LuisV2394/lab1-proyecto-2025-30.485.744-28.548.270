@@ -22,12 +22,12 @@ def create_item():
 
 @order_items_bp.route("/order/<int:order_id>", methods=["GET"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_order.yml"))
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_by_order(order_id):
     return get_items_by_order_controller(order_id)
 
 @order_items_bp.route("/<int:item_id>/status", methods=["PATCH"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "update_status.yml"))
+@swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_status(item_id):
     return update_item_status_controller(item_id)

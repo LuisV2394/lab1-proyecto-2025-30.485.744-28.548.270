@@ -1,0 +1,37 @@
+tags:
+- coverage plan
+summary: Get all coverage plans
+description: Retrieve a list of all coverage plans in the system.
+operationId: getAllCoveragePlans
+responses:
+  200:
+    description: List of coverage plans
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              coverage_percentage:
+                type: number
+                format: float
+              max_coverage_amount:
+                type: number
+                format: float
+              active:
+                type: boolean
+                example: true
+  500:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string

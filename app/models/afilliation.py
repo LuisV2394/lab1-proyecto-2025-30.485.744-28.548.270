@@ -9,7 +9,7 @@ class Affiliation(db.Model):
     plan_id = db.Column(db.Integer, db.ForeignKey('coverage_plans.id'), nullable=False)
     prayer_id = db.Column(db.Integer, db.ForeignKey('prayers.id'), nullable=True)
     policy_number = db.Column(db.String(50), nullable=False)
-    card_number = db.Column(db.varchar(50))
+    card_number = db.Column(db.String(50))
     valid_from = db.Column(db.Date, nullable=False)
     valid_to = db.Column(db.Date)
     

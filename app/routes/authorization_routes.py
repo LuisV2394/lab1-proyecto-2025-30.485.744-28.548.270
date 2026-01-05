@@ -22,12 +22,12 @@ def create_auth():
 
 @auth_request_bp.route("/<int:auth_id>/response", methods=["PATCH"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "update_response.yml"))
+@swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_response(auth_id):
     return update_authorization_response_controller(auth_id)
 
 @auth_request_bp.route("/order/<int:order_id>", methods=["GET"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_order.yml"))
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_by_order(order_id):
     return get_authorizations_by_order_controller(order_id)

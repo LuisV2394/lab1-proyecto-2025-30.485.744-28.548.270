@@ -11,7 +11,7 @@ import os
 affiliation_bp = Blueprint("affiliations", __name__, url_prefix="/affiliations")
 
 BASE_DOCS = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "docs", "affiliations")
+    os.path.join(os.path.dirname(__file__), "..", "docs", "affiliation")
 )
 
 @affiliation_bp.route("/", methods=["POST"])
@@ -22,12 +22,12 @@ def create_affiliation():
 
 @affiliation_bp.route("/person/<int:person_id>", methods=["GET"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_person.yml"))
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_by_person(person_id):
     return get_person_affiliations_controller(person_id)
 
 @affiliation_bp.route("/<int:affiliation_id>/deactivate", methods=["PATCH"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "deactivate.yml"))
+@swag_from(os.path.join(BASE_DOCS, "desactivate.yml"))
 def deactivate(affiliation_id):
     return deactivate_affiliation_controller(affiliation_id)

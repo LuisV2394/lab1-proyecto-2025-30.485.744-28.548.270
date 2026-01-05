@@ -1,0 +1,68 @@
+tags:
+- coverage plan
+summary: Update a coverage plan
+description: Update details of a specific coverage plan.
+operationId: updateCoveragePlan
+parameters:
+- name: id
+  in: path
+  required: true
+  description: ID of the coverage plan to update
+  schema:
+    type: integer
+requestBody:
+  description: Fields to update
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          coverage_percentage:
+            type: number
+            format: float
+          max_coverage_amount:
+            type: number
+            format: float
+responses:
+  200:
+    description: Coverage plan updated successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Coverage plan updated successfully"
+            coverage_plan:
+              $ref: '#/components/schemas/CoveragePlan'
+  400:
+    description: Invalid input
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+  404:
+    description: Coverage plan not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+  500:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string

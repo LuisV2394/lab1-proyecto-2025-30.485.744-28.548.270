@@ -29,7 +29,6 @@ def create_app():
     from app.models.person import Person
     from app.models.prescription import Prescription
     from app.models.result import Result
-    from app.models.insurance import InsuranceCompany
     from app.models.coverage_plans import CoveragePlan
     from app.models.afilliation import Affiliation
     from app.models.order_item import OrderItem
@@ -71,7 +70,6 @@ def create_app():
         from app.routes.order_routes import orders_bp
         from app.routes.prescription_routes import prescription_bp
         from app.routes.result_routes import results_bp
-        from app.routes.insurance_company_routes import insurance_bp
         from app.routes.coverage_plan_routes import coverage_bp
         from app.routes.affiliations_routes import affiliation_bp
         from app.routes.order_item_routes import order_items_bp
@@ -96,7 +94,6 @@ def create_app():
         app.register_blueprint(orders_bp)
         app.register_blueprint(prescription_bp)
         app.register_blueprint(results_bp)
-        app.register_blueprint(insurance_bp)
         app.register_blueprint(coverage_bp)
         app.register_blueprint(affiliation_bp)
         app.register_blueprint(order_items_bp)

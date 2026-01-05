@@ -1,0 +1,36 @@
+tags:
+  - order items
+summary: Delete order item
+description: Delete an order item by its ID.
+operationId: deleteOrderItem
+
+produces:
+  - application/json
+
+parameters:
+  - in: path
+    name: item_id
+    type: integer
+    required: true
+    description: ID of the order item to delete
+    example: 5
+
+responses:
+  200:
+    description: Order item deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Order item deleted successfully
+  404:
+    description: Item not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Item not found
+  500:
+    description: Server error

@@ -1,0 +1,37 @@
+tags:
+- affiliations
+summary: Get all affiliations
+description: Retrieve a list of all affiliations with optional details about the person, insurance company, and coverage plan.
+operationId: getAllAffiliations
+
+responses:
+  200:
+    description: List of affiliations
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 9012
+          person_id:
+            type: integer
+            example: 1234
+          insurance_company_id:
+            type: integer
+            example: 5678
+          coverage_plan:
+            type: string
+            example: "Premium Health Plan"
+          active:
+            type: boolean
+            example: true
+  500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"

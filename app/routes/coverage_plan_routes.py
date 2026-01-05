@@ -21,11 +21,11 @@ BASE_DOCS = os.path.abspath(
 def create_plan():
     return create_coverage_plan_controller()
 
-@coverage_bp.route("/insurer/<int:insurer_id>", methods=["GET"])
-@jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_insurer.yml"))
-def get_by_insurer(insurer_id):
-    return get_plans_by_insurer_controller(insurer_id)
+# @coverage_bp.route("/insurer/<int:insurer_id>", methods=["GET"])
+# @jwt_required()
+# @swag_from(os.path.join(BASE_DOCS, "get_by_insurer.yml"))
+# def get_by_insurer(insurer_id):
+#     return get_plans_by_insurer_controller(insurer_id)
 
 @coverage_bp.route("/<int:plan_id>", methods=["PUT"])
 @jwt_required()

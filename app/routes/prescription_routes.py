@@ -11,7 +11,7 @@ import os
 prescription_bp = Blueprint("prescriptions", __name__, url_prefix="/prescriptions")
 
 BASE_DOCS = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "docs", "prescriptions")
+    os.path.join(os.path.dirname(__file__), "..", "docs", "prescription")
 )
 
 # Crear receta
@@ -24,7 +24,7 @@ def create_prescription():
 # Obtener recetas de un episodio
 @prescription_bp.route("/episode/<int:episode_id>", methods=["GET"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_episode.yml"))
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_prescriptions_by_episode(episode_id):
     return get_prescriptions_by_episode_controller(episode_id)
 

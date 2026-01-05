@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from app.models.coverage_plans import CoveragePlan
-from app.models.insurance_company import InsuranceCompany
+from app.models.insurer import Insurer
 from app import db
 
 def create_coverage_plan_controller():
@@ -11,7 +11,7 @@ def create_coverage_plan_controller():
         return jsonify({"error": "insurer_company_id y name son obligatorios"}), 400
 
     # Validar que la aseguradora existe
-    insurer = InsuranceCompany.query.get(data.get('insurer_company_id'))
+    insurer = Insurer.query.get(data.get('insurer_company_id'))
     if not insurer:
         return jsonify({"error": "La aseguradora especificada no existe"}), 404
 

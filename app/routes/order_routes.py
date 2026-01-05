@@ -25,14 +25,14 @@ def create_order():
 # get a order by episode
 @orders_bp.route("/episode/<int:episode_id>", methods=["GET"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "get_by_episode.yml"))
+@swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_orders_by_episode(episode_id):
     return get_orders_by_episode_controller(episode_id)
 
 # update order status
 @orders_bp.route("/<int:order_id>/status", methods=["PATCH"])
 @jwt_required()
-@swag_from(os.path.join(BASE_DOCS, "update_status.yml"))
+@swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_order_status(order_id):
     return update_order_status_controller(order_id)
 

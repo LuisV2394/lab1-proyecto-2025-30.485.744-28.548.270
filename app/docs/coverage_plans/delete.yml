@@ -1,0 +1,41 @@
+tags:
+- coverage plan
+summary: Delete or deactivate a coverage plan
+description: Delete a coverage plan permanently or deactivate it.
+operationId: deleteCoveragePlan
+parameters:
+- name: id
+  in: path
+  required: true
+  description: ID of the coverage plan to delete
+  schema:
+    type: integer
+responses:
+  200:
+    description: Coverage plan deleted successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Coverage plan deleted successfully"
+  404:
+    description: Coverage plan not found
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+  500:
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
