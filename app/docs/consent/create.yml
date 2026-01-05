@@ -2,7 +2,7 @@ tags:
   - Consents
 summary: Register a new consent
 description: >
-  Creates a new consent record for a person.  
+  Creates a new consent record for a person.
   Generates an internal file reference associated with the consent document.
 operationId: createConsent
 consumes:
@@ -18,14 +18,14 @@ parameters:
       type: object
       required:
         - person_id
-        - processTipe
+        - process_type
         - method
       properties:
         person_id:
           type: integer
           description: ID of the person providing consent
           example: 12
-        processTipe:
+        process_type:
           type: string
           description: Type of process for which consent is given
           example: "data_processing"
@@ -33,10 +33,9 @@ parameters:
           type: string
           description: Method by which consent was obtained
           enum:
-            - digital
-            - written
-            - verbal
-          example: digital
+            - DIGITAL_SIGNATURE
+            - VERBAL_WITH_RECORD
+          example: DIGITAL_SIGNATURE
 
 responses:
   201:
@@ -53,7 +52,7 @@ responses:
         file_reference:
           type: string
           description: Auto-generated file identifier associated with the consent PDF
-          example: "file_20251129153022_12.pdf"
+          example: "file_20260105101530_12.pdf"
 
   400:
     description: Invalid input (missing required fields)

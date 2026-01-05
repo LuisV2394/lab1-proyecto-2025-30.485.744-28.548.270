@@ -25,17 +25,19 @@ parameters:
       properties:
         person_id:
           type: integer
+          description: ID of the person providing consent (optional)
           example: 12
-        processTipe:
+        process_type:
           type: string
+          description: Type of process for which consent is given (optional)
           example: "data_processing"
         method:
           type: string
+          description: Method by which consent was obtained (optional)
           enum:
-            - digital
-            - written
-            - verbal
-          example: "written"
+            - DIGITAL_SIGNATURE
+            - VERBAL_WITH_RECORD
+          example: DIGITAL_SIGNATURE
 
 responses:
   200:

@@ -9,7 +9,7 @@ class Consent(db.Model):
     process_type = db.Column(db.String(100), nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     # digital_signature, verbal_acceptance_with_registration
-    method = db.Column(db.String(50), nullable=False) 
+    method = db.Column(db.Enum("DIGITAL_SIGNATURE","VERBAL_WITH_RECORD",name="consent_method_enum"),nullable=False)
     file_id = db.Column(db.String(255)) # ID del archivo guardado en S3/Disco
 
 # Relationships

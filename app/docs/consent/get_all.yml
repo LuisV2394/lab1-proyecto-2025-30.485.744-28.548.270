@@ -26,14 +26,20 @@ responses:
             example: "data_processing"
           method:
             type: string
-            example: "digital"
+            description: Method by which consent was obtained
+            enum:
+              - DIGITAL_SIGNATURE
+              - VERBAL_WITH_RECORD
+            example: DIGITAL_SIGNATURE
           file_id:
             type: string
-            example: "file_20251129153022_12.pdf"
+            description: Auto-generated file identifier associated with the consent PDF
+            example: "file_20260105103022_12.pdf"
           date:
             type: string
             format: date-time
-            example: "2025-11-29T15:30:22Z"
+            description: Date and time when the consent was registered
+            example: "2026-01-05T10:30:22Z"
 
   500:
     description: Server error
