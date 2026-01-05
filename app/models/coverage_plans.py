@@ -22,6 +22,7 @@ class CoveragePlan(db.Model):
             "insurer_id": self.insurer_id,
             "prayer_id": self.prayer_id,
             "name": self.name,
+            "description": self.description,
             "general_conditions": self.general_conditions,
             "code": self.code,
             "active": self.active,
