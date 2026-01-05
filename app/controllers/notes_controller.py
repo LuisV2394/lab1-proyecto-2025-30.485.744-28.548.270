@@ -8,22 +8,22 @@ def create_note_controller():
     data = request.json or {}
 
     try:
-        # 1️⃣ Validar campos obligatorios
+        # Validar campos obligatorios
         episode_id = data.get('episode_id')
         if not episode_id:
             return jsonify({"error": "Debe enviar 'episode_id'"}), 400
 
-        # 2️⃣ Validar existencia del episodio y que esté abierto
+        # Validar existencia del episodio y que esté abierto
         episode = Episode.query.get(episode_id)
         if not episode or episode.status == 'CLOSED':
             return jsonify({"error": "El episodio no existe o está cerrado"}), 400
 
-        # 3️⃣ Validar existencia del profesional si se envía
+        # Validar existencia del profesional si se envía
         professional_id = data.get('professional_id')
         if professional_id and not Professional.query.get(professional_id):
             return jsonify({"error": "El profesional no existe"}), 404
 
-        # 4️⃣ Determinar contenido
+        # Determinar contenido
         content = data.get('content')
         if not content:
             sub = data.get('sub_objective', "")
@@ -41,13 +41,13 @@ def create_note_controller():
             else:
                 return jsonify({"error": "Debe enviar 'content' o campos SOAP"}), 400
 
-        # 5️⃣ Validar note_type (opcional, ejemplo de enum)
+        # Validar note_type (opcional, ejemplo de enum)
         note_type = data.get('note_type', 'EVOLUTION')
         allowed_types = ['EVOLUTION', 'INITIAL', 'DISCHARGE']
         if note_type not in allowed_types:
             return jsonify({"error": f"note_type inválido. Valores permitidos: {allowed_types}"}), 400
 
-        # 6️⃣ Validar version
+        # Validar version
         version = data.get('version', 1)
         try:
             version = int(version)
@@ -56,7 +56,7 @@ def create_note_controller():
         except ValueError:
             return jsonify({"error": "version debe ser un entero positivo"}), 400
 
-        # 7️⃣ Crear nota clínica
+        # Crear nota clínica
         new_note = ClinicalNote(
             episode_id=episode_id,
             professional_id=professional_id,

@@ -123,7 +123,7 @@ def update_block_controller(block_id):
 
     data = request.json or {}
 
-    # 🔹 Validar FK solo si vienen en el payload
+    # Validar FK solo si vienen en el payload
     if 'professionalId' in data:
         if not Professional.query.get(data['professionalId']):
             return jsonify({"error": "El profesional no existe"}), 404

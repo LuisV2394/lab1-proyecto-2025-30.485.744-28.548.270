@@ -12,7 +12,7 @@ from app.models.invoice_item import InvoiceItem
 from app.models.notification import Notification
 from app.models.user import User
 from app.models.appointment import Appointment
-from app.models.consets import Consent
+from app.models.consents import Consent
 from app.models.diagnoses import Diagnosis
 from app.models.note import ClinicalNote    
 from app.models.role import Role

@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
+from app.utils.middleware import role_required
 import os
 
 from app.controllers.appointment_controller import (
@@ -20,6 +21,7 @@ BASE_DOCS = os.path.abspath(
 
 @appt_bp.route('/', methods=['POST'])
 @jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'create.yml'))
 def create_appointment():
     return create_appointment_controller()
@@ -27,6 +29,7 @@ def create_appointment():
 
 @appt_bp.route('/', methods=['GET'])
 #@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'get_all.yml'))
 def list_appointments():
     return list_appointments_controller()
@@ -34,20 +37,23 @@ def list_appointments():
 
 @appt_bp.route('/<int:id>', methods=['GET'])
 #@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'get.yml'))
 def get_appointment(id):
     return get_appointment_controller(id)
 
 
 @appt_bp.route('/<int:id>', methods=['PUT'])
-@jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'update.yml'))
 def update_appointment(id):
     return update_appointment_controller(id)
 
 
 @appt_bp.route('/<int:id>/status', methods=['PUT'])
-@jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'update_status.yml'))
 def update_status(id):
     return update_appointment_status_controller(id)
@@ -55,6 +61,7 @@ def update_status(id):
 
 @appt_bp.route('/<int:id>', methods=['DELETE'])
 #@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'delete.yml'))
 def delete_appointment(id):
     return delete_appointment_controller(id)

@@ -7,17 +7,17 @@ def add_diagnosis_controller():
     data = request.json or {}
 
     try:
-        # 1️⃣ Campos obligatorios
+        # Campos obligatorios
         if not all([data.get("episode_id"), data.get("code"), data.get("description"), data.get("type")]):
             return jsonify({"error": "Faltan campos obligatorios"}), 400
 
         episode_id = data.get("episode_id")
 
-        # 2️⃣ Validar existencia del episodio
+        # Validar existencia del episodio
         if not Episode.query.get(episode_id):
             return jsonify({"error": "El episodio no existe"}), 404
 
-        # 3️⃣ Crear nuevo diagnóstico
+        # Crear nuevo diagnóstico
         new_diag = Diagnosis(
             episode_id=episode_id,
             code=data.get("code"),

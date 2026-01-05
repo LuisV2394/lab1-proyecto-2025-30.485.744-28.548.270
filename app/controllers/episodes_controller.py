@@ -15,7 +15,7 @@ def create_episode_controller():
     data = request.json or {}
 
     try:
-        # 1️⃣ Campos obligatorios
+        # Campos obligatorios
         if not all([data.get('person_id'), data.get('type')]):
             return jsonify({"error": "Faltan campos obligatorios"}), 400
 
@@ -23,19 +23,19 @@ def create_episode_controller():
         professional_id = data.get('professional_id')
         unit_id = data.get('unit_id')
 
-        # 2️⃣ Validar existencia de la persona
+        # Validar existencia de la persona
         if not Person.query.get(person_id):
             return jsonify({"error": "La persona no existe"}), 404
 
-        # 3️⃣ Validar existencia del profesional si se envía
+        # Validar existencia del profesional si se envía
         if professional_id and not Professional.query.get(professional_id):
             return jsonify({"error": "El profesional no existe"}), 404
 
-        # 4️⃣ Validar existencia de la unidad si se envía
+        # Validar existencia de la unidad si se envía
         if unit_id and not Unit.query.get(unit_id):
             return jsonify({"error": "La unidad no existe"}), 404
 
-        # 5️⃣ Crear nuevo episodio
+        # Crear nuevo episodio
         new_episode = Episode(
             person_id=person_id,
             professional_id=professional_id,

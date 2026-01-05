@@ -189,7 +189,7 @@ def update_appointment_controller(id):
     if "start" in data or "duration_minutes" in data:
         appt.end = appt.start + timedelta(minutes=appt.duration_minutes)
 
-        # 🔥 Validar colisión por profesional
+        # Validar colisión por profesional
         prof_conflict = Appointment.query.filter(
             Appointment.professional_id == appt.professional_id,
             Appointment.id != appt.id,
