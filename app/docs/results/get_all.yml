@@ -1,0 +1,42 @@
+tags:
+  - Results
+summary: Get all results
+description: Retrieve all results/actas from the system.
+operationId: getAllResults
+produces:
+  - application/json
+responses:
+  200:
+    description: List of results retrieved successfully
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          order_id:
+            type: integer
+            example: 101
+          summary:
+            type: string
+            example: "Patient lab results normal"
+          file_id:
+            type: string
+            example: "file_12345.pdf"
+          version:
+            type: integer
+            example: 1
+          date:
+            type: string
+            format: date-time
+            example: "2026-01-05T17:00:00"
+          created_at:
+            type: string
+            format: date-time
+            example: "2026-01-05T17:00:00"
+          updated_at:
+            type: string
+            format: date-time
+            example: "2026-01-05T17:00:00"

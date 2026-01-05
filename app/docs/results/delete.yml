@@ -1,40 +1,26 @@
 tags:
- - results
-description: Delete a result by its ID.
+  - Results
 summary: Delete a result
+description: Delete a result/acta permanently.
 operationId: deleteResult
 produces:
- - application/json
-
+  - application/json
 parameters:
- - in: path
-   name: result_id
-   required: true
-   type: integer
-   description: Result ID
-   example: 202
+  - in: path
+    name: result_id
+    type: integer
+    required: true
+    description: ID of the result to delete
 responses:
-  200: 
-   description: Result deleted successfully
-   schema:
-     type: object
-     properties:
-       message:
-         type: string
-         example: "Resultado eliminado"
+  200:
+    description: Result deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Result deleted successfully"
   404:
     description: Result not found
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Resultado no encontrado"
   500:
-    description: Server error 
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Internal server error"
+    description: Server error

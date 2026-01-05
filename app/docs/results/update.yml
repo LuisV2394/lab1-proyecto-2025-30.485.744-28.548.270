@@ -1,40 +1,32 @@
 tags:
-- result
+  - Results
 summary: Update an existing result
-description: Endpoint to update an existing result associated with a specific episode.
+description: Update summary or file of a result/acta and increment version.
 operationId: updateResult
 consumes:
   - application/json
 produces:
   - application/json
-
 parameters:
   - in: path
     name: result_id
-    required: true
     type: integer
-    description: ID of the result to be updated
-    example: 201
+    required: true
+    description: ID of the result to update
   - in: body
     name: body
-    required: true  
-    schema|:
+    required: true
+    schema:
       type: object
       properties:
-        value:
+        summary:
           type: string
-          example: "Positive"
-        unit:
+          example: "Updated patient lab results"
+        file_id:
           type: string
-          example: "mg/dL"
-        reference_range:
-          type: string
-          example: "70-110 mg/dL"
-        notes:
-          type: string
-          example: "Fasting sample"
+          example: "file_12346.pdf"
 responses:
-  200:  
+  200:
     description: Result updated successfully
     schema:
       type: object
@@ -42,22 +34,39 @@ responses:
         message:
           type: string
           example: "Result updated successfully"
-        id:
-          type: integer
-          example: 201
+        result:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            order_id:
+              type: integer
+              example: 101
+            summary:
+              type: string
+              example: "Updated patient lab results"
+            file_id:
+              type: string
+              example: "file_12346.pdf"
+            version:
+              type: integer
+              example: 2
+            date:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:10:00"
+  400:
+    description: Invalid input
   404:
     description: Result not found
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Result not found"
   500:
-    description: Internal server error
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "An error occurred while updating the result"
+    description: Server error

@@ -1,40 +1,35 @@
 tags:
-- results
+  - Results
 summary: Create a new result
-description: Endpoint to create a new result associated with a specific episode.
+description: Create a new result/acta and attach a file if needed.
 operationId: createResult
-
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
-- name: episode_id
-  in: path
-  required: true
-  description: ID of the episode to associate the result with.
-  schema:
-    type: integer
-- in: body
-  name: body
-  description: Result data
-  required: true
-  schema:
-    type: object
-    required:
-      - test_name
-      - result_value
-      - unit
-    properties:
-      test_name:
-        type: string
-        description: Name of the test performed.
-        example: "Blood Glucose"
-      result_value:
-        type: string
-        description: Value of the test result.
-        example: "95"
-      unit:
-        type: string
-        description: Unit of measurement for the result.
-        example: "mg/dL"
-  
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          example: 101
+        summary:
+          type: string
+          example: "Patient lab results normal"
+        file_id:
+          type: string
+          example: "file_12345.pdf"
+        date:
+          type: string
+          format: date
+          example: "2026-01-05"
+      required:
+        - order_id
+        - summary
 responses:
   201:
     description: Result created successfully
@@ -44,22 +39,39 @@ responses:
         message:
           type: string
           example: "Result created successfully"
-        result_id:
-          type: integer
-          example: 7890
+        result:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            order_id:
+              type: integer
+              example: 101
+            summary:
+              type: string
+              example: "Patient lab results normal"
+            file_id:
+              type: string
+              example: "file_12345.pdf"
+            version:
+              type: integer
+              example: 1
+            date:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
   400:
     description: Invalid input
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Invalid input data"
+  404:
+    description: Order not found
   500:
     description: Server error
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Internal server error"
