@@ -1,31 +1,59 @@
 tags:
   - Prescriptions
-summary: Get Prescription by ID
-description: Retrieve a prescription by its unique identifier.
+summary: Get prescription by ID
+description: Retrieves a prescription by its ID.
 operationId: getPrescriptionById
 parameters:
-  - name: prescriptionId
-    in: path
+  - in: path
+    name: prescription_id
     required: true
-    description: The unique identifier of the prescription.
-    schema:
-      type: string
+    type: integer
+    example: 1
+produces:
+  - application/json
 responses:
-  '200':
-    description: Successful retrieval of the prescription.
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/Prescription'
-  '404':
-    description: Prescription not found.
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/Error'
-  '500':
-    description: Internal server error.
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/Error'
+  200:
+    description: Prescription details
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        episode_id:
+          type: integer
+          example: 12
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              medicationCode:
+                type: string
+                example: "MED123"
+              name:
+                type: string
+                example: "Paracetamol"
+              dose:
+                type: string
+                example: "500mg"
+              route:
+                type: string
+                example: "oral"
+              frequency:
+                type: string
+                example: "TID"
+              duration:
+                type: string
+                example: "5 days"
+        observations:
+          type: string
+          example: "Take after meals"
+        created_at:
+          type: string
+          example: "2026-01-05T17:30:00"
+        updated_at:
+          type: string
+          example: "2026-01-05T17:40:00"
+  404:
+    description: Prescription not found

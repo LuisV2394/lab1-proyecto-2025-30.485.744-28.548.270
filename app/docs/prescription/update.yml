@@ -1,22 +1,24 @@
 tags:
   - Prescriptions
-summary: Create a new prescription
-description: Creates a new prescription record in the system.
-operationId: createPrescription
+summary: Update a prescription
+description: Updates an existing prescription.
+operationId: updatePrescription
 consumes:
   - application/json
 produces:
   - application/json
 parameters:
+  - in: path
+    name: prescription_id
+    required: true
+    type: integer
+    example: 1
   - in: body
     name: body
     required: true
     schema:
       type: object
       properties:
-        episode_id:
-          type: integer
-          example: 12
         items:
           type: array
           items:
@@ -43,22 +45,21 @@ parameters:
         observations:
           type: string
           example: "Take after meals"
-      required:
-        - episode_id
-        - items
 responses:
-  201:
-    description: Prescription created successfully
+  200:
+    description: Prescription updated successfully
     schema:
       type: object
       properties:
         message:
           type: string
-          example: "Prescription created successfully"
+          example: "Prescription updated successfully"
         prescription_id:
           type: integer
           example: 1
   400:
     description: Invalid input
+  404:
+    description: Prescription not found
   500:
     description: Server error

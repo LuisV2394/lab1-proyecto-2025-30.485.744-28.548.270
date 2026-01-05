@@ -6,15 +6,12 @@ class Prescription(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     episode_id = db.Column(db.Integer, db.ForeignKey('episodes.id'), nullable=False)
-    
-    # items: Array of objets {medicationCode, name, dose, route, frequency, duration}
     items = db.Column(db.JSON, nullable=False)
-    
     observations = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationship to Episode model
-    # episode = db.relationship("Episode", backref="prescriptions")
+    episode = db.relationship("Episode", backref="prescriptions")
 
     def to_dict(self):
         return {
@@ -22,5 +19,6 @@ class Prescription(db.Model):
             "episode_id": self.episode_id,
             "items": self.items,
             "observations": self.observations,
-            "created_at": self.created_at.isoformat()
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }

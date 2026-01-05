@@ -67,7 +67,7 @@ def create_app():
         from app.routes.consent_routes import consent_bp
         from app.routes.appointment_routes import appt_bp
         from app.routes.order_routes import orders_bp
-        from app.routes.prescription_routes import prescription_bp
+        from app.routes.prescription_routes import prescriptions_bp
         from app.routes.result_routes import results_bp
         from app.routes.coverage_plan_routes import coverage_bp
         from app.routes.order_item_routes import order_items_bp
@@ -90,7 +90,7 @@ def create_app():
         app.register_blueprint(agenda_bp)
         app.register_blueprint(appt_bp)
         app.register_blueprint(orders_bp)
-        app.register_blueprint(prescription_bp)
+        app.register_blueprint(prescriptions_bp)
         app.register_blueprint(results_bp)
         app.register_blueprint(coverage_bp)
         app.register_blueprint(order_items_bp)
