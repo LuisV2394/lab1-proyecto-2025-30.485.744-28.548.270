@@ -1,85 +1,56 @@
 tags:
   - Affiliations
 summary: Update an affiliation
-description: >
-  Updates details of an existing affiliation. Validates foreign keys, dates, and policy number uniqueness.
+description: Updates an existing affiliation.
 operationId: updateAffiliation
-
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
-  - name: affiliationId
+  - name: affiliation_id
     in: path
     required: true
-    description: ID of the affiliation to update
-    schema:
-      type: integer
-      example: 9012
-  - name: body
-    in: body
+    type: integer
+    example: 1
+  - in: body
+    name: body
     required: true
     schema:
       type: object
       properties:
-        planId:
+        payer_id:
           type: integer
-          description: New coverage plan ID
-        policyNumber:
+          example: 2
+        card_number:
           type: string
-          description: New policy number
-        validFrom:
+          example: "CARD-999999"
+        policy_number:
+          type: string
+          example: "POL-999999"
+        valid_from:
           type: string
           format: date
-        validUntil:
+          example: "2024-02-01"
+        valid_to:
           type: string
           format: date
+          example: "2024-12-31"
         copayment:
           type: number
-          format: float
-        deductible:
+          example: 15.00
+        coinsurance:
           type: number
-          format: float
-
+          example: 7.50
+        status:
+          type: boolean
+          example: true
 responses:
   200:
     description: Affiliation updated successfully
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Affiliation updated successfully"
-        affiliation:
-          type: object
-
   400:
-    description: Validation error (invalid data)
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-
+    description: Invalid input
   404:
-    description: Affiliation or CoveragePlan not found
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-
-  409:
-    description: Duplicate policy number
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "policyNumber ya existe"
-
+    description: Affiliation not found
   500:
     description: Server error
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Error interno del servidor"

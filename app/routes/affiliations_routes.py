@@ -1,13 +1,13 @@
 from flask import Blueprint
+from flasgger import swag_from
 from flask_jwt_extended import jwt_required
-from flasgger.utils import swag_from
 from app.utils.middleware import role_required
 import os
 
 from app.controllers.affiliation_controller import (
     create_affiliation_controller,
     get_all_affiliations_controller,
-    get_person_affiliations_controller,
+    get_affiliation_by_id_controller,
     update_affiliation_controller,
     deactivate_affiliation_controller
 )
@@ -18,7 +18,7 @@ BASE_DOCS = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "docs", "affiliation")
 )
 
-# -------------------- Crear afiliación --------------------
+# CREATE
 @affiliation_bp.route("/", methods=["POST"])
 #@jwt_required()
 #@role_required(["admin"])
@@ -26,7 +26,7 @@ BASE_DOCS = os.path.abspath(
 def create_affiliation():
     return create_affiliation_controller()
 
-# -------------------- Obtener todas las afiliaciones --------------------
+# READ ALL
 @affiliation_bp.route("/", methods=["GET"])
 #@jwt_required()
 #@role_required(["admin"])
@@ -34,15 +34,15 @@ def create_affiliation():
 def get_all_affiliations():
     return get_all_affiliations_controller()
 
-# -------------------- Obtener afiliaciones por persona --------------------
-@affiliation_bp.route("/person/<int:person_id>", methods=["GET"])
+# READ BY ID
+@affiliation_bp.route("/<int:affiliation_id>", methods=["GET"])
 #@jwt_required()
 #@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
-def get_by_person(person_id):
-    return get_person_affiliations_controller(person_id)
+def get_affiliation_by_id(affiliation_id):
+    return get_affiliation_by_id_controller(affiliation_id)
 
-# -------------------- Actualizar afiliación --------------------
+# UPDATE
 @affiliation_bp.route("/<int:affiliation_id>", methods=["PUT"])
 #@jwt_required()
 #@role_required(["admin"])
@@ -50,8 +50,8 @@ def get_by_person(person_id):
 def update_affiliation(affiliation_id):
     return update_affiliation_controller(affiliation_id)
 
-# -------------------- Desactivar afiliación --------------------
-@affiliation_bp.route("/<int:affiliation_id>/deactivate", methods=["PATCH"])
+# DEACTIVATE (Soft delete)
+@affiliation_bp.route("/<int:affiliation_id>", methods=["PATCH"])
 #@jwt_required()
 #@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "desactivate.yml"))

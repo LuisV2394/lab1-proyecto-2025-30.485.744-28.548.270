@@ -1,98 +1,64 @@
 tags:
   - Affiliations
 summary: Create a new affiliation
-description: >
-  Creates a new affiliation between a person, a payer, and a coverage plan.
-  Validates required fields, foreign keys, dates, and unique policy number.
+description: Creates a new affiliation between a person and a coverage plan.
 operationId: createAffiliation
-
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
-  - name: body
-    in: body
+  - in: body
+    name: body
     required: true
     schema:
       type: object
-      required:
-        - personId
-        - planId
-        - payerId   # <--- agregado
-        - policyNumber
-        - validFrom
       properties:
-        personId:
+        person_id:
           type: integer
-          example: 1234
-        planId:
+          example: 1
+        plan_id:
           type: integer
-          example: 5678
-        payerId:
+          example: 2
+        payer_id:
           type: integer
-          example: 4321
-        policyNumber:
+          example: 1
+        card_number:
           type: string
-          example: "POL123456"
-        validFrom:
+          example: "CARD-123456"
+        policy_number:
+          type: string
+          example: "POL-789456"
+        valid_from:
           type: string
           format: date
-          example: "2026-01-01"
-        validUntil:
+          example: "2024-01-01"
+        valid_to:
           type: string
           format: date
-          example: "2026-12-31"
+          example: "2024-12-31"
         copayment:
           type: number
           format: float
-          example: 20.0
-        deductible:
+          example: 10.00
+        coinsurance:
           type: number
           format: float
-          example: 100.0
-
+          example: 5.00
+        status:
+          type: boolean
+          example: true
+      required:
+        - person_id
+        - plan_id
+        - card_number
+        - valid_from
 responses:
   201:
     description: Affiliation created successfully
-    schema:
-      type: object
-      properties:
-        affiliation_id:
-          type: integer
-          example: 9012
-        message:
-          type: string
-          example: "Affiliation created successfully"
-
   400:
-    description: Validation error (missing fields or invalid data)
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Faltan campos obligatorios"
-
+    description: Invalid input
   404:
-    description: Related resource not found (person, payer, or coverage plan)
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Person, Payer o CoveragePlan no encontrados"
-
-  409:
-    description: Duplicate policy number
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "policyNumber ya existe"
-
+    description: Related entity not found
   500:
     description: Server error
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Error interno del servidor"

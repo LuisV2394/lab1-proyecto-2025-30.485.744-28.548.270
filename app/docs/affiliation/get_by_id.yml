@@ -1,62 +1,20 @@
 tags:
   - Affiliations
-summary: Get active affiliations for a person
-description: >
-  Retrieves all active affiliations for a specific person.
-operationId: getPersonAffiliations
-
+summary: Get affiliation by ID
+description: Retrieves a single affiliation by its ID.
+operationId: getAffiliationById
+produces:
+  - application/json
 parameters:
-  - name: personId
+  - name: affiliation_id
     in: path
     required: true
-    description: ID of the person
-    schema:
-      type: integer
-      example: 1234
-
+    type: integer
+    example: 1
 responses:
   200:
-    description: List of active affiliations
-    schema:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: integer
-          personId:
-            type: integer
-          planId:
-            type: integer
-          policyNumber:
-            type: string
-          validFrom:
-            type: string
-            format: date
-          validUntil:
-            type: string
-            format: date
-          copayment:
-            type: number
-          deductible:
-            type: number
-          active:
-            type: boolean
-
+    description: Affiliation retrieved successfully
   404:
-    description: Person not found
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Person not found"
-
+    description: Affiliation not found
   500:
     description: Server error
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Error interno del servidor"

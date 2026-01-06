@@ -32,6 +32,8 @@ def create_app():
     from app.models.coverage_plans import CoveragePlan
     from app.models.order_item import OrderItem
     from app.models.authorization import Authorization
+    from app.models.payer import Payer
+    from app.models.afiliation import Affiliation
 
     from app.models.insurer import Insurer
     from app.models.invoice import Invoice
@@ -72,6 +74,7 @@ def create_app():
         from app.routes.coverage_plan_routes import plans_bp
         from app.routes.order_item_routes import order_items_bp
         from app.routes.authorization_routes import auth_request_bp
+        from app.routes.affiliations_routes import affiliation_bp
     
         
         from app.routes.invoice_routes import invoice_bp
@@ -93,6 +96,7 @@ def create_app():
         app.register_blueprint(prescriptions_bp)
         app.register_blueprint(results_bp)
         app.register_blueprint(plans_bp)
+        app.register_blueprint(affiliation_bp)
         app.register_blueprint(order_items_bp)
         app.register_blueprint(auth_request_bp)
         app.register_blueprint(invoice_bp)

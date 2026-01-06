@@ -1,43 +1,20 @@
 tags:
   - Affiliations
 summary: Deactivate an affiliation
-description: >
-  Marks an affiliation as inactive instead of deleting it.
+description: Deactivates an affiliation without deleting it from the database.
 operationId: deactivateAffiliation
-
+produces:
+  - application/json
 parameters:
-  - name: affiliationId
+  - name: affiliation_id
     in: path
     required: true
-    description: ID of the affiliation to deactivate
-    schema:
-      type: integer
-      example: 9012
-
+    type: integer
+    example: 1
 responses:
   200:
     description: Affiliation deactivated successfully
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Affiliation deactivated successfully"
-
   404:
     description: Affiliation not found
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Affiliation not found"
-
   500:
     description: Server error
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Error interno del servidor"
