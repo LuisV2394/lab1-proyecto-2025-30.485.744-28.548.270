@@ -76,7 +76,7 @@ def create_app():
         from app.routes.authorization_routes import authorization_bp
         from app.routes.affiliations_routes import affiliation_bp
         from app.routes.payment_routes import payments_bp
-    
+        from app.routes.credit_debit_note_routes import credit_debit_notes_bp
         
         from app.routes.invoice_routes import invoice_bp
         from app.routes.invoice_item_routes import invoice_item_bp
@@ -104,6 +104,7 @@ def create_app():
         app.register_blueprint(invoice_item_bp)
         app.register_blueprint(notifications_bp)
         app.register_blueprint(payments_bp)
+        app.register_blueprint(credit_debit_notes_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")

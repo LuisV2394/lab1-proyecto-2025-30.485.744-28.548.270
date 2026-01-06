@@ -1,0 +1,30 @@
+tags:
+  - Credit/Debit Notes
+summary: Get all credit/debit notes
+description: Retrieves a list of all credit and debit notes in the system.
+operationId: getAllCreditDebitNotes
+produces:
+  - application/json
+responses:
+  200:
+    description: List of credit/debit notes
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          invoice_id:
+            type: integer
+          amount:
+            type: number
+            format: float
+          reason:
+            type: string
+          created_at:
+            type: string
+          updated_at:
+            type: string
+  500:
+    description: Server error

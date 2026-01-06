@@ -1,0 +1,36 @@
+tags:
+  - Credit/Debit Notes
+summary: Get credit/debit note by ID
+description: Retrieves a single credit/debit note by its ID.
+operationId: getCreditDebitNoteById
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: note_id
+    type: integer
+    required: true
+    description: ID of the credit/debit note
+responses:
+  200:
+    description: Credit/Debit note found
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+        invoice_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        reason:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+  404:
+    description: Note not found
+  500:
+    description: Server error

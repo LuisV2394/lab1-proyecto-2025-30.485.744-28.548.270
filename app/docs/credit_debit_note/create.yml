@@ -1,0 +1,45 @@
+tags:
+  - Credit/Debit Notes
+summary: Create a new credit/debit note
+description: Creates a new credit or debit note associated with an invoice.
+operationId: createCreditDebitNote
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        invoice_id:
+          type: integer
+          example: 123
+        amount:
+          type: number
+          format: float
+          example: 150.75
+        reason:
+          type: string
+          example: "Correction for overcharge"
+      required:
+        - invoice_id
+        - amount
+        - reason
+responses:
+  201:
+    description: Credit/Debit note created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Note created successfully
+        note_id:
+          type: integer
+  400:
+    description: Invalid input
+  500:
+    description: Server error
