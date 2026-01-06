@@ -1,0 +1,28 @@
+tags:
+  - Authorizations
+summary: Get authorization by ID
+description: Retrieves a specific authorization by its ID.
+operationId: getAuthorizationById
+parameters:
+  - name: auth_id
+    in: path
+    required: true
+    type: integer
+    example: 1
+produces:
+  - application/json
+responses:
+  200:
+    description: Authorization retrieved successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Authorization retrieved successfully"
+        authorization:
+          $ref: '#/definitions/Authorization'
+  404:
+    description: Authorization not found
+  500:
+    description: Server error

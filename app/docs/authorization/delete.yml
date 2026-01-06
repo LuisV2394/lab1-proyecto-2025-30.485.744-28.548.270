@@ -1,0 +1,26 @@
+tags:
+  - Authorizations
+summary: Delete an authorization
+description: Deletes an authorization by its ID.
+operationId: deleteAuthorization
+parameters:
+  - name: auth_id
+    in: path
+    required: true
+    type: integer
+    example: 1
+produces:
+  - application/json
+responses:
+  200:
+    description: Authorization deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Authorization deleted successfully"
+  404:
+    description: Authorization not found
+  500:
+    description: Server error

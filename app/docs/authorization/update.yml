@@ -1,0 +1,59 @@
+tags:
+  - Authorizations
+summary: Update an existing authorization
+description: Updates fields of an existing authorization.
+operationId: updateAuthorization
+parameters:
+  - name: auth_id
+    in: path
+    required: true
+    type: integer
+    example: 1
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        procedure_code:
+          type: string
+          example: "PROC123"
+        plan_id:
+          type: integer
+          example: 2
+        status:
+          type: string
+          enum: ["REQUESTED", "APPROVED", "DENIED"]
+          example: "APPROVED"
+        response_date:
+          type: string
+          format: date-time
+          example: "2026-01-06T10:00:00"
+        authorization_number:
+          type: string
+          example: "AUTH-12345"
+        observations:
+          type: string
+          example: "Updated after approval"
+produces:
+  - application/json
+responses:
+  200:
+    description: Authorization updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Authorization updated successfully"
+        authorization:
+          $ref: '#/definitions/Authorization'
+  400:
+    description: Invalid input
+  404:
+    description: Authorization or related entities not found
+  500:
+    description: Server error

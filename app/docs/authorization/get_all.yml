@@ -1,0 +1,16 @@
+tags:
+  - Authorizations
+summary: Get all authorizations
+description: Retrieves a list of all authorizations in the system.
+operationId: getAllAuthorizations
+produces:
+  - application/json
+responses:
+  200:
+    description: List of authorizations
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Authorization'
+  500:
+    description: Server error

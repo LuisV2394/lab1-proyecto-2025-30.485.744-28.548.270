@@ -1,0 +1,96 @@
+tags:
+  - Authorizations
+summary: Create a new authorization
+description: Creates a new authorization record in the system.
+operationId: createAuthorization
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          example: 1
+        procedure_code:
+          type: string
+          example: "PROC123"
+        plan_id:
+          type: integer
+          example: 2
+        status:
+          type: string
+          enum: ["REQUESTED", "APPROVED", "DENIED"]
+          example: "REQUESTED"
+        response_date:
+          type: string
+          format: date-time
+          example: "2026-01-05T15:00:00"
+        authorization_number:
+          type: string
+          example: "AUTH-12345"
+        observations:
+          type: string
+          example: "Initial request for procedure"
+      required:
+        - plan_id
+responses:
+  201:
+    description: Authorization created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Authorization created successfully"
+        authorization:
+          $ref: '#/definitions/Authorization'
+  400:
+    description: Invalid input
+  404:
+    description: Related order or plan not found
+  500:
+    description: Server error
+
+definitions:
+  Authorization:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      order_id:
+        type: integer
+        example: 1
+      procedure_code:
+        type: string
+        example: "PROC123"
+      plan_id:
+        type: integer
+        example: 2
+      status:
+        type: string
+        example: "REQUESTED"
+      request_date:
+        type: string
+        example: "2026-01-05T14:30:00"
+      response_date:
+        type: string
+        example: "2026-01-05T15:00:00"
+      authorization_number:
+        type: string
+        example: "AUTH-12345"
+      observations:
+        type: string
+        example: "Initial request for procedure"
+      created_at:
+        type: string
+        example: "2026-01-05T14:30:00"
+      updated_at:
+        type: string
+        example: "2026-01-05T14:30:00"
