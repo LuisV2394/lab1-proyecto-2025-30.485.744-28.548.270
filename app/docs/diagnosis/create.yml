@@ -19,7 +19,7 @@ parameters:
         - episode_id
         - code
         - description
-        - type
+        - type_diagnoses
       properties:
         episode_id:
           type: integer
@@ -33,11 +33,11 @@ parameters:
           type: string
           description: Human-readable name of the diagnosis
           example: "Asthma, unspecified"
-        type:
+        type_diagnoses:
           type: string
-          description: Diagnosis category or type
-          enum: ["primary", "secondary", "suspected", "rule-out"]
-          example: "primary"
+          description: Diagnosis type
+          enum: ["PRESUMPTIVE", "DEFINITIVE"]
+          example: "PRESUMPTIVE"
         main:
           type: boolean
           description: Flag indicating whether this is the main diagnosis
@@ -57,13 +57,13 @@ responses:
           example: 110
 
   400:
-    description: Invalid input (missing required fields)
+    description: Invalid input (missing required fields or invalid type_diagnoses)
     schema:
       type: object
       properties:
         error:
           type: string
-          example: "Faltan campos obligatorios"
+          example: "Faltan campos obligatorios o type_diagnoses inválido"
 
   404:
     description: Episode not found

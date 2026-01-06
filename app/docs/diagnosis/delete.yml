@@ -1,19 +1,18 @@
 tags:
   - Diagnoses
 summary: Delete a diagnosis
-description: >
-  Deletes a diagnosis by its ID.
+description: Deletes a diagnosis record by its ID.
 operationId: deleteDiagnosis
 produces:
   - application/json
 
 parameters:
   - in: path
-    name: diagnosis_id
+    name: id
     required: true
     type: integer
-    description: Diagnosis ID
-    example: 101
+    description: ID of the diagnosis to delete
+    example: 110
 
 responses:
   200:
@@ -39,6 +38,6 @@ responses:
     schema:
       type: object
       properties:
-        message:
+        error:
           type: string
           example: "Internal server error"

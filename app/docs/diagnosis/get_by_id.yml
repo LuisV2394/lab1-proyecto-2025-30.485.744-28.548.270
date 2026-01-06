@@ -1,19 +1,18 @@
 tags:
   - Diagnoses
 summary: Get diagnosis by ID
-description: >
-  Retrieves a diagnosis by its unique identifier.
+description: Retrieves a single diagnosis by its ID.
 operationId: getDiagnosisById
 produces:
   - application/json
 
 parameters:
   - in: path
-    name: diagnosis_id
+    name: id
     required: true
     type: integer
-    description: Diagnosis ID
-    example: 101
+    description: ID of the diagnosis
+    example: 110
 
 responses:
   200:
@@ -23,22 +22,31 @@ responses:
       properties:
         id:
           type: integer
-          example: 101
+          example: 110
         episode_id:
           type: integer
-          example: 45
+          example: 25
         code:
           type: string
-          example: "J18.9"
+          example: "J45.9"
         description:
           type: string
-          example: "Pneumonia, unspecified organism"
-        type:
+          example: "Asthma, unspecified"
+        type_diagnoses:
           type: string
-          example: "clinical"
+          enum: ["PRESUMPTIVE", "DEFINITIVE"]
+          example: "PRESUMPTIVE"
         main:
           type: boolean
           example: true
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-06T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-01-06T12:05:00Z"
 
   404:
     description: Diagnosis not found
@@ -54,6 +62,6 @@ responses:
     schema:
       type: object
       properties:
-        message:
+        error:
           type: string
           example: "Internal server error"
