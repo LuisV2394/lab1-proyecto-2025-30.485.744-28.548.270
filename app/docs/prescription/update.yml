@@ -1,15 +1,11 @@
 tags:
   - Prescriptions
 summary: Update a prescription
-description: Updates an existing prescription.
+description: Updates an existing prescription by its ID.
 operationId: updatePrescription
-consumes:
-  - application/json
-produces:
-  - application/json
 parameters:
-  - in: path
-    name: prescription_id
+  - name: prescription_id
+    in: path
     required: true
     type: integer
     example: 1
@@ -24,13 +20,13 @@ parameters:
           items:
             type: object
             properties:
-              medicationCode:
+              medicine_code:
                 type: string
                 example: "MED123"
               name:
                 type: string
                 example: "Paracetamol"
-              dose:
+              dosage:
                 type: string
                 example: "500mg"
               route:
@@ -45,6 +41,8 @@ parameters:
         observations:
           type: string
           example: "Take after meals"
+produces:
+  - application/json
 responses:
   200:
     description: Prescription updated successfully

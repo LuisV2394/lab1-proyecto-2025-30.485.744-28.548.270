@@ -1,7 +1,8 @@
 from flask import request, jsonify
 from app import db
-from app.models.prescription import Prescription 
+from app.models.prescription import Prescription, PrescriptionItem
 from app.models.episodes import Episode
+
 def get_all_prescriptions_controller():
     prescriptions = Prescription.query.all()
     return jsonify([p.to_dict() for p in prescriptions]), 200
@@ -25,16 +26,28 @@ def create_prescription_controller():
     if not isinstance(data["items"], list) or not data["items"]:
         return jsonify({"error": "items must be a non-empty list"}), 400
 
-    # Validar que el episodio exista
+    # Validate that the episode exists
     episode = Episode.query.get(data["episode_id"])
     if not episode:
         return jsonify({"error": "Episode not found"}), 404
 
+    # Create Prescription instance
     prescription = Prescription(
         episode_id=data["episode_id"],
-        items=data["items"],
         observations=data.get("observations")
     )
+
+    # Create PrescriptionItem instances
+    for item_data in data["items"]:
+        item = PrescriptionItem(
+            medicine_code=item_data.get("medicine_code"),
+            name=item_data.get("name"),
+            dosage=item_data.get("dosage"),
+            route=item_data.get("route"),
+            frequency=item_data.get("frequency"),
+            duration=item_data.get("duration")
+        )
+        prescription.items.append(item)
 
     db.session.add(prescription)
     try:
@@ -47,7 +60,7 @@ def create_prescription_controller():
         "message": "Prescription created successfully",
         "prescription_id": prescription.id
     }), 201
-    return jsonify({"message": "Prescription created successfully", "prescription_id": prescription.id}), 201
+
 def update_prescription_controller(prescription_id):
     prescription = Prescription.query.get(prescription_id)
     if not prescription:
@@ -57,13 +70,27 @@ def update_prescription_controller(prescription_id):
     if not data:
         return jsonify({"error": "Invalid JSON payload"}), 400
 
+    if "observations" in data:
+        prescription.observations = data["observations"]
+
     if "items" in data:
         if not isinstance(data["items"], list) or not data["items"]:
             return jsonify({"error": "items must be a non-empty list"}), 400
-        prescription.items = data["items"]
+        
+        # Remove existing items
+        prescription.items.clear()
 
-    if "observations" in data:
-        prescription.observations = data["observations"]
+        # Add new items
+        for item_data in data["items"]:
+            item = PrescriptionItem(
+                medicine_code=item_data.get("medicine_code"),
+                name=item_data.get("name"),
+                dosage=item_data.get("dosage"),
+                route=item_data.get("route"),
+                frequency=item_data.get("frequency"),
+                duration=item_data.get("duration")
+            )
+            prescription.items.append(item)
 
     try:
         db.session.commit()

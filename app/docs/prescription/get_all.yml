@@ -1,7 +1,7 @@
 tags:
   - Prescriptions
 summary: Get all prescriptions
-description: Retrieves a list of all prescriptions in the system.
+description: Returns a list of all prescriptions in the system.
 operationId: getAllPrescriptions
 produces:
   - application/json
@@ -19,18 +19,32 @@ responses:
           episode_id:
             type: integer
             example: 12
+          observations:
+            type: string
+            example: "Take after meals"
+          created_at:
+            type: string
+            format: date-time
+            example: "2026-01-06T15:00:00Z"
+          updated_at:
+            type: string
+            format: date-time
+            example: "2026-01-06T15:30:00Z"
           items:
             type: array
             items:
               type: object
               properties:
-                medicationCode:
+                id:
+                  type: integer
+                  example: 1
+                medicine_code:
                   type: string
                   example: "MED123"
                 name:
                   type: string
                   example: "Paracetamol"
-                dose:
+                dosage:
                   type: string
                   example: "500mg"
                 route:
@@ -42,12 +56,11 @@ responses:
                 duration:
                   type: string
                   example: "5 days"
-          observations:
-            type: string
-            example: "Take after meals"
-          created_at:
-            type: string
-            example: "2026-01-05T17:30:00"
-          updated_at:
-            type: string
-            example: "2026-01-05T17:40:00"
+                created_at:
+                  type: string
+                  format: date-time
+                  example: "2026-01-06T15:05:00Z"
+                updated_at:
+                  type: string
+                  format: date-time
+                  example: "2026-01-06T15:10:00Z"

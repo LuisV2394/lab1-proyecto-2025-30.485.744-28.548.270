@@ -1,11 +1,11 @@
 tags:
   - Prescriptions
 summary: Get prescription by ID
-description: Retrieves a prescription by its ID.
+description: Returns a single prescription by its ID.
 operationId: getPrescriptionById
 parameters:
-  - in: path
-    name: prescription_id
+  - name: prescription_id
+    in: path
     required: true
     type: integer
     example: 1
@@ -13,7 +13,7 @@ produces:
   - application/json
 responses:
   200:
-    description: Prescription details
+    description: Prescription found
     schema:
       type: object
       properties:
@@ -23,18 +23,32 @@ responses:
         episode_id:
           type: integer
           example: 12
+        observations:
+          type: string
+          example: "Take after meals"
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-06T15:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-01-06T15:30:00Z"
         items:
           type: array
           items:
             type: object
             properties:
-              medicationCode:
+              id:
+                type: integer
+                example: 1
+              medicine_code:
                 type: string
                 example: "MED123"
               name:
                 type: string
                 example: "Paracetamol"
-              dose:
+              dosage:
                 type: string
                 example: "500mg"
               route:
@@ -46,14 +60,13 @@ responses:
               duration:
                 type: string
                 example: "5 days"
-        observations:
-          type: string
-          example: "Take after meals"
-        created_at:
-          type: string
-          example: "2026-01-05T17:30:00"
-        updated_at:
-          type: string
-          example: "2026-01-05T17:40:00"
+              created_at:
+                type: string
+                format: date-time
+                example: "2026-01-06T15:05:00Z"
+              updated_at:
+                type: string
+                format: date-time
+                example: "2026-01-06T15:10:00Z"
   404:
     description: Prescription not found

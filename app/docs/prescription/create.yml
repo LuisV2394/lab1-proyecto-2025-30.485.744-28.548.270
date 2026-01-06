@@ -22,13 +22,13 @@ parameters:
           items:
             type: object
             properties:
-              medicationCode:
+              medicine_code:
                 type: string
                 example: "MED123"
               name:
                 type: string
                 example: "Paracetamol"
-              dose:
+              dosage:
                 type: string
                 example: "500mg"
               route:

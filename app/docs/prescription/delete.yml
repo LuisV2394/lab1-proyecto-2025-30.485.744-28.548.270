@@ -1,11 +1,11 @@
 tags:
   - Prescriptions
 summary: Delete a prescription
-description: Deletes a prescription by ID.
+description: Deletes a prescription by its ID.
 operationId: deletePrescription
 parameters:
-  - in: path
-    name: prescription_id
+  - name: prescription_id
+    in: path
     required: true
     type: integer
     example: 1
