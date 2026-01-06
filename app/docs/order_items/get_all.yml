@@ -1,15 +1,13 @@
 tags:
-  - order items
+  - Order Items
 summary: Get all order items
-description: Retrieve all order items in the system.
+description: Retrieves a list of all order items in the system.
 operationId: getAllOrderItems
-
 produces:
   - application/json
-
 responses:
   200:
-    description: List of order items
+    description: Order items retrieved successfully
     schema:
       type: array
       items:
@@ -23,15 +21,21 @@ responses:
             example: 10
           prestation_code:
             type: string
-            example: LAB-001
+            example: "LAB-CBC"
           instructions:
             type: string
-            example: Patient must fast for 8 hours
+            example: "Patient must be fasting"
           status:
             type: string
-            example: pending
+            example: "pending"
           result_id:
             type: integer
-            example: 20
+            example: 5
+          created_at:
+            type: string
+            example: "2025-01-05T14:30:00"
+          updated_at:
+            type: string
+            example: "2025-01-05T15:10:00"
   500:
     description: Server error

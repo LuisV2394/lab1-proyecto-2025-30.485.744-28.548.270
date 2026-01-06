@@ -1,58 +1,42 @@
 tags:
-  - order items
-summary: Update order item status
-description: Update status or result of an order item.
-operationId: updateOrderItemStatus
-
+  - Order Items
+summary: Update an order item
+description: Updates one or more fields of an existing order item.
+operationId: updateOrderItem
 consumes:
   - application/json
 produces:
   - application/json
-
 parameters:
   - in: path
-    name: item_id
-    type: integer
+    name: order_item_id
     required: true
-    description: ID of the order item
-    example: 5
-
+    type: integer
+    example: 1
   - in: body
     name: body
     required: true
-    description: Fields to update
     schema:
       type: object
       properties:
+        prestation_code:
+          type: string
+          example: "LAB-GLU"
+        instructions:
+          type: string
+          example: "No fasting required"
         status:
           type: string
-          example: completed
+          example: "completed"
         result_id:
           type: integer
-          example: 20
-
+          example: 8
 responses:
   200:
     description: Order item updated successfully
-    schema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 5
-        status:
-          type: string
-          example: completed
-        result_id:
-          type: integer
-          example: 20
   404:
-    description: Item not found
-    schema:
-      type: object
-      properties:
-        error:
-          type: string
-          example: Ítem not found
+    description: Order item not found
+  400:
+    description: Invalid input
   500:
     description: Server error

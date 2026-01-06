@@ -1,42 +1,20 @@
 tags:
-  - order items
-summary: Get items by order
-description: Retrieve all items associated with a specific order.
-operationId: getItemsByOrder
-
+  - Order Items
+summary: Get order item by ID
+description: Retrieves a single order item by its ID.
+operationId: getOrderItemById
 produces:
   - application/json
-
 parameters:
   - in: path
-    name: order_id
-    type: integer
+    name: order_item_id
     required: true
-    description: ID of the order
-    example: 10
-
+    type: integer
+    example: 1
 responses:
   200:
-    description: List of order items
-    schema:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: integer
-            example: 5
-          order_id:
-            type: integer
-            example: 10
-          prestation_code:
-            type: string
-            example: LAB-001
-          instructions:
-            type: string
-            example: Patient must fast for 8 hours
-          status:
-            type: string
-            example: pending
+    description: Order item retrieved successfully
+  404:
+    description: Order item not found
   500:
     description: Server error
