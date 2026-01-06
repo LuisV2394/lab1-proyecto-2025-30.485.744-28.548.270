@@ -30,7 +30,7 @@ def create_app():
     from app.models.prescription import Prescription
     from app.models.result import Result
     from app.models.coverage_plans import CoveragePlan
-    from app.models.order_item import OrderItem
+    from app.models.order_details import OrderDetail
     from app.models.authorization import Authorization
     from app.models.payer import Payer
     from app.models.afiliation import Affiliation

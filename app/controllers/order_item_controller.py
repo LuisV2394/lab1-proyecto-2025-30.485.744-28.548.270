@@ -1,13 +1,13 @@
 from flask import request, jsonify
 from datetime import datetime
 from app import db
-from app.models.order_item import OrderItem
+from app.models.order_details import OrderDetail
 from app.models.orders import Order
 
 # Get All Order Items
 def get_all_order_items():
     try:
-        order_items = OrderItem.query.all()
+        order_items = OrderDetail.query.all()
         return jsonify([item.to_dict() for item in order_items]), 200
     except Exception as e:
         return jsonify({
@@ -35,7 +35,7 @@ def create_order_item():
             "error": "Order not found"
         }), 404
 
-    order_item = OrderItem(
+    order_item = OrderDetail(
         order_id=order_id,
         prestation_code=prestation_code,
         instructions=data.get("instructions"),
@@ -56,7 +56,7 @@ def create_order_item():
 
 # Get Order Item by ID
 def get_order_item(order_item_id):
-    order_item = OrderItem.query.get(order_item_id)
+    order_item = OrderDetail.query.get(order_item_id)
 
     if not order_item:
         return jsonify({
@@ -74,12 +74,12 @@ def get_order_items_by_order(order_id):
             "error": "Order not found"
         }), 404
 
-    items = OrderItem.query.filter_by(order_id=order_id).all()
+    items = OrderDetail.query.filter_by(order_id=order_id).all()
     return jsonify([item.to_dict() for item in items]), 200
 
 # Update Order Item
 def update_order_item(order_item_id):
-    order_item = OrderItem.query.get(order_item_id)
+    order_item = OrderDetail.query.get(order_item_id)
 
     if not order_item:
         return jsonify({
@@ -113,7 +113,7 @@ def update_order_item(order_item_id):
 
 # Delete Order Item
 def delete_order_item(order_item_id):
-    order_item = OrderItem.query.get(order_item_id)
+    order_item = OrderDetail.query.get(order_item_id)
 
     if not order_item:
         return jsonify({

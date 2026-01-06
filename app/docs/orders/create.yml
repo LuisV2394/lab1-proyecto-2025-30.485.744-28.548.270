@@ -1,7 +1,7 @@
 tags:
   - Orders
 summary: Create a new order
-description: Creates a new order record in the system.
+description: Creates a new order record with associated details in the system.
 operationId: createOrder
 consumes:
   - application/json
@@ -16,9 +16,11 @@ parameters:
       properties:
         episode_id:
           type: integer
+          example: 12
         professional_id:
           type: integer
           nullable: true
+          example: 5
         requires_authorization:
           type: boolean
           example: false
@@ -33,14 +35,13 @@ parameters:
             properties:
               code:
                 type: string
+                example: "LAB001"
               description:
                 type: string
-              instructions:
+                example: "Complete Blood Count"
+              indications:
                 type: string
-          example:
-            - code: "LAB001"
-              description: "Blood Test"
-              instructions: "Fasting required"
+                example: "Fasting required"
         priority:
           type: string
           enum: ["normal", "urgent"]
@@ -60,6 +61,7 @@ responses:
           example: "Order created successfully"
         order_id:
           type: integer
+          example: 1
   400:
     description: Invalid input
   500:

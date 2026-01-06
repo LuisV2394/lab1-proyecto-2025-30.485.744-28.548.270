@@ -1,7 +1,7 @@
 tags:
   - Orders
 summary: Get all orders
-description: Retrieves a list of all orders in the system.
+description: Returns a list of all orders with their details.
 operationId: getAllOrders
 produces:
   - application/json
@@ -19,12 +19,20 @@ responses:
             type: integer
           professional_id:
             type: integer
-            nullable: true
           requires_authorization:
             type: boolean
           type:
             type: string
-            example: "LABORATORY"
+          priority:
+            type: string
+          status:
+            type: string
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
           details:
             type: array
             items:
@@ -34,17 +42,5 @@ responses:
                   type: string
                 description:
                   type: string
-                instructions:
+                indications:
                   type: string
-          priority:
-            type: string
-            enum: ["normal", "urgent"]
-          status:
-            type: string
-            enum: ["issued", "authorized", "in_progress", "completed", "canceled"]
-          created_at:
-            type: string
-            format: date-time
-          updated_at:
-            type: string
-            format: date-time

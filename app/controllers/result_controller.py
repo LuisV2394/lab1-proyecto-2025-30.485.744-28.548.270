@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from app.models.result import Result
 from app.models.orders import Order
-from app.models.order_item import OrderItem
+from app.models.order_details import OrderDetail
 from app import db
 from datetime import datetime
 

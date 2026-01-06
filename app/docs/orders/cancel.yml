@@ -1,6 +1,6 @@
 tags:
   - Orders
-summary: Cancel an order
+summary: Cancel order
 description: Cancels an existing order.
 operationId: cancelOrder
 produces:
