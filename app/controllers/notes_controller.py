@@ -7,75 +7,50 @@ from app import db
 def create_note_controller():
     data = request.json or {}
 
+    episode_id = data.get('episode_id')
+    if not episode_id:
+        return jsonify({"error": "You must provide 'episode_id'"}), 400
+
+    episode = Episode.query.get(episode_id)
+    if not episode or episode.status == 'CLOSED':
+        return jsonify({"error": "Episode does not exist or is closed"}), 400
+
+    professional_id = data.get('professional_id')
+    if professional_id and not Professional.query.get(professional_id):
+        return jsonify({"error": "Professional does not exist"}), 404
+
+    subjective = data.get('subjective')
+    objective = data.get('objective')
+    assessment = data.get('assessment')
+    plan = data.get('plan')
+    attachments = data.get('attachments', [])
+
+    if not any([subjective, objective, assessment, plan, attachments]):
+        return jsonify({"error": "You must provide at least one field: subjective, objective, assessment, plan, or attachments"}), 400
+
     try:
-        # Validar campos obligatorios
-        episode_id = data.get('episode_id')
-        if not episode_id:
-            return jsonify({"error": "Debe enviar 'episode_id'"}), 400
-
-        # Validar existencia del episodio y que esté abierto
-        episode = Episode.query.get(episode_id)
-        if not episode or episode.status == 'CLOSED':
-            return jsonify({"error": "El episodio no existe o está cerrado"}), 400
-
-        # Validar existencia del profesional si se envía
-        professional_id = data.get('professional_id')
-        if professional_id and not Professional.query.get(professional_id):
-            return jsonify({"error": "El profesional no existe"}), 404
-
-        # Determinar contenido
-        content = data.get('content')
-        if not content:
-            sub = data.get('sub_objective', "")
-            obj = data.get('objective', "")
-            test = data.get('test', "")
-            plan = data.get('plan', "")
-
-            if any([sub, obj, test, plan]):
-                content = (
-                    f"S: {sub}\n"
-                    f"O: {obj}\n"
-                    f"A: {test}\n"
-                    f"P: {plan}"
-                )
-            else:
-                return jsonify({"error": "Debe enviar 'content' o campos SOAP"}), 400
-
-        # Validar note_type (opcional, ejemplo de enum)
-        note_type = data.get('note_type', 'EVOLUTION')
-        allowed_types = ['EVOLUTION', 'INITIAL', 'DISCHARGE']
-        if note_type not in allowed_types:
-            return jsonify({"error": f"note_type inválido. Valores permitidos: {allowed_types}"}), 400
-
-        # Validar version
-        version = data.get('version', 1)
-        try:
-            version = int(version)
-            if version < 1:
-                raise ValueError
-        except ValueError:
-            return jsonify({"error": "version debe ser un entero positivo"}), 400
-
-        # Crear nota clínica
         new_note = ClinicalNote(
             episode_id=episode_id,
             professional_id=professional_id,
-            note_type=note_type,
-            content=content,
-            version=version
+            subjective=subjective,
+            objective=objective,
+            assessment=assessment,
+            plan=plan,
+            attachments=attachments
         )
 
         db.session.add(new_note)
         db.session.commit()
 
         return jsonify({
-            "message": "Nota clínica registrada",
+            "message": "Clinical note created",
             "id": new_note.id
         }), 201
 
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
 
 def get_all_notes_controller():
     notes = ClinicalNote.query.all()
@@ -85,10 +60,13 @@ def get_all_notes_controller():
             "id": note.id,
             "episode_id": note.episode_id,
             "professional_id": note.professional_id,
-            "note_type": note.note_type,
-            "content": note.content,
-            "version": note.version,
-            "created_at": note.created_at.isoformat() if hasattr(note, "created_at") and note.created_at else None
+            "subjective": note.subjective,
+            "objective": note.objective,
+            "assessment": note.assessment,
+            "plan": note.plan,
+            "attachments": note.attachments,
+            "created_at": note.created_at.isoformat() if note.created_at else None,
+            "updated_at": note.updated_at.isoformat() if note.updated_at else None
         }
         for note in notes
     ]), 200
@@ -96,58 +74,60 @@ def get_all_notes_controller():
 
 def get_note_by_id_controller(note_id):
     note = ClinicalNote.query.get(note_id)
-
     if not note:
-        return jsonify({"message": "Nota clínica no encontrada"}), 404
+        return jsonify({"message": "Clinical note not found"}), 404
 
     return jsonify({
         "id": note.id,
         "episode_id": note.episode_id,
         "professional_id": note.professional_id,
-        "note_type": note.note_type,
-        "content": note.content,
-        "version": note.version,
-        "created_at": note.created_at.isoformat() if hasattr(note, "created_at") and note.created_at else None
+        "subjective": note.subjective,
+        "objective": note.objective,
+        "assessment": note.assessment,
+        "plan": note.plan,
+        "attachments": note.attachments,
+        "created_at": note.created_at.isoformat() if note.created_at else None,
+        "updated_at": note.updated_at.isoformat() if note.updated_at else None
     }), 200
 
 
 def update_note_controller(note_id):
     note = ClinicalNote.query.get(note_id)
-
     if not note:
-        return jsonify({"message": "Nota clínica no encontrada"}), 404
-
-    data = request.json
+        return jsonify({"message": "Clinical note not found"}), 404
 
     episode = Episode.query.get(note.episode_id)
     if episode.status == 'CLOSED':
-        return jsonify({"error": "No se puede modificar una nota de un episodio cerrado"}), 409
+        return jsonify({"error": "Cannot modify a note of a closed episode"}), 409
 
-    note.content = data.get("content", note.content)
-    note.note_type = data.get("note_type", note.note_type)
-    note.version = data.get("version", note.version)
+    data = request.json
+
+    note.subjective = data.get('subjective', note.subjective)
+    note.objective = data.get('objective', note.objective)
+    note.assessment = data.get('assessment', note.assessment)
+    note.plan = data.get('plan', note.plan)
+    note.attachments = data.get('attachments', note.attachments)
 
     db.session.commit()
 
     return jsonify({
-        "message": "Nota clínica actualizada",
+        "message": "Clinical note updated",
         "id": note.id
     }), 200
 
 
 def delete_note_controller(note_id):
     note = ClinicalNote.query.get(note_id)
-
     if not note:
-        return jsonify({"message": "Nota clínica no encontrada"}), 404
+        return jsonify({"message": "Clinical note not found"}), 404
 
     episode = Episode.query.get(note.episode_id)
     if episode.status == 'CLOSED':
-        return jsonify({"error": "No se puede eliminar una nota de un episodio cerrado"}), 409
+        return jsonify({"error": "Cannot delete a note of a closed episode"}), 409
 
     db.session.delete(note)
     db.session.commit()
 
     return jsonify({
-        "message": "Nota clínica eliminada"
+        "message": "Clinical note deleted"
     }), 200
