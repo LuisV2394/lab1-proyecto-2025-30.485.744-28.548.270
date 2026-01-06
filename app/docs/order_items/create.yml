@@ -1,0 +1,71 @@
+tags:
+  - order items
+summary: Create order item
+description: Create a new item associated with an existing order.
+operationId: createOrderItem
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+parameters:
+  - in: body
+    name: body
+    required: true
+    description: Order item data
+    schema:
+      type: object
+      required:
+        - order_id
+        - prestation_code
+      properties:
+        order_id:
+          type: integer
+          example: 10
+        prestation_code:
+          type: string
+          example: LAB-001
+        instructions:
+          type: string
+          example: Patient must fast for 8 hours
+
+responses:
+  201:
+    description: Order item created successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 5
+        order_id:
+          type: integer
+          example: 10
+        prestation_code:
+          type: string
+          example: LAB-001
+        instructions:
+          type: string
+          example: Patient must fast for 8 hours
+        status:
+          type: string
+          example: pending
+  400:
+    description: Missing required fields
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: order_id y prestation_code are obligatory
+  404:
+    description: Order not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: the orden dosen't exist
+  500:
+    description: Server error

@@ -1,0 +1,25 @@
+tags:
+  - Coverage Plans
+summary: Delete a coverage plan
+description: Deletes an existing coverage plan by ID
+operationId: deleteCoveragePlan
+parameters:
+  - in: path
+    name: plan_id
+    required: true
+    schema:
+      type: integer
+      example: 1
+responses:
+  200:
+    description: Coverage plan deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Coverage plan deleted successfully"
+  404:
+    description: Coverage plan not found
+  500:
+    description: Server error

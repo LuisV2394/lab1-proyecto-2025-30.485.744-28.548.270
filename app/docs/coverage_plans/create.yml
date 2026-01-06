@@ -1,0 +1,58 @@
+tags:
+  - Coverage Plans
+summary: Create a new coverage plan
+description: Creates a new coverage plan record in the system
+operationId: createCoveragePlan
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        insurer_id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: "Basic Plan"
+        general_conditions:
+          type: string
+          example: "Covers general consultations"
+      required:
+        - insurer_id
+        - name
+responses:
+  201:
+    description: Coverage plan created successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        insurer_id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: "Basic Plan"
+        general_conditions:
+          type: string
+          example: "Covers general consultations"
+        created_at:
+          type: string
+          format: date-time
+          example: "2026-01-05T18:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2026-01-05T18:00:00Z"
+  400:
+    description: Invalid input
+  500:
+    description: Server error

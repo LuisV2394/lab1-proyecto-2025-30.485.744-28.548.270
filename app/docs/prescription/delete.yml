@@ -1,0 +1,26 @@
+tags:
+  - Prescriptions
+summary: Delete a prescription
+description: Deletes a prescription by ID.
+operationId: deletePrescription
+parameters:
+  - in: path
+    name: prescription_id
+    required: true
+    type: integer
+    example: 1
+produces:
+  - application/json
+responses:
+  200:
+    description: Prescription deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prescription deleted successfully"
+  404:
+    description: Prescription not found
+  500:
+    description: Server error

@@ -1,0 +1,50 @@
+tags:
+  - Affiliations
+summary: Get all affiliations
+description: Retrieves a list of all affiliations.
+operationId: getAllAffiliations
+produces:
+  - application/json
+responses:
+  200:
+    description: List of affiliations retrieved successfully
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          person_id:
+            type: integer
+            example: 1
+          plan_id:
+            type: integer
+            example: 2
+          payer_id:
+            type: integer
+            example: 1
+          card_number:
+            type: string
+            example: "CARD-123456"
+          policy_number:
+            type: string
+            example: "POL-789456"
+          valid_from:
+            type: string
+            example: "2024-01-01"
+          valid_to:
+            type: string
+            example: "2024-12-31"
+          copayment:
+            type: number
+            example: 10.00
+          coinsurance:
+            type: number
+            example: 5.00
+          status:
+            type: boolean
+            example: true
+  500:
+    description: Server error

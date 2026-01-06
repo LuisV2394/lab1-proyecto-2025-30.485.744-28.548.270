@@ -47,15 +47,15 @@ def create_professional():
 # Actualizar profesional existente
 @professionals_bp.route("/<int:professional_id>", methods=["PATCH"])
 #@jwt_required()
-@role_required(["admin"])
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_professional(professional_id):
     return update_professional_controller(professional_id)
 
 # Desactivar profesional
 @professionals_bp.route("/<int:professional_id>", methods=["DELETE"])
-@jwt_required()
-@role_required(["admin"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "delete.yml"))
 def deactivate_professional(professional_id):
     return deactivate_professional_controller(professional_id)

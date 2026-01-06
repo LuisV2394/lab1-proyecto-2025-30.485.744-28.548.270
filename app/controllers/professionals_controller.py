@@ -1,7 +1,9 @@
 from flask import jsonify, request
 from app.models.professional import Professional
-from app.models.person import Person
 from app import db
+import re
+from app.models.professional import Professional
+
 
 # Obtener todos los profesionales
 def get_all_professionals_controller():
@@ -25,17 +27,35 @@ def get_professional_by_id_controller(professional_id):
 def create_professional_controller():
     data = request.get_json()
 
-    required_fields = ["first_name", "last_name", "registration_number", "specialty"]
+    # Validar campos requeridos
+    required_fields = ["first_name", "last_name", "professional_registry", "specialty"]
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    email = data.get("email")
+    professional_registry = data["professional_registry"]
+
+    if email:
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_regex, email):
+            return jsonify({"error": "Invalid email format"}), 400
+
+        existing_email = Professional.query.filter_by(email=email).first()
+        if existing_email:
+            return jsonify({"error": "Email already in use"}), 400
+
+    existing_registry = Professional.query.filter_by(professional_registry=professional_registry).first()
+    if existing_registry:
+        return jsonify({"error": "Professional registry already in use"}), 400
+
+    # Crear el profesional
     new_professional = Professional(
         first_name=data["first_name"],
         last_name=data["last_name"],
-        registration_number=data["registration_number"],
+        professional_registry=professional_registry,
         specialty=data["specialty"],
-        email=data.get("email"),
+        email=email,
         phone=data.get("phone"),
         status=data.get("status"),
         is_active=True,
@@ -60,6 +80,27 @@ def update_professional_controller(professional_id):
 
     for key, value in data.items():
         if hasattr(professional, key):
+
+            if key == "email" and value:
+                email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+                if not re.match(email_regex, value):
+                    return jsonify({"error": "Invalid email format"}), 400
+                
+                existing_email = Professional.query.filter(
+                    Professional.email == value,
+                    Professional.id != professional.id
+                ).first()
+                if existing_email:
+                    return jsonify({"error": "Email already in use"}), 400
+
+            if key == "professional_registry" and value:
+                existing_registry = Professional.query.filter(
+                    Professional.professional_registry == value,
+                    Professional.id != professional.id
+                ).first()
+                if existing_registry:
+                    return jsonify({"error": "Professional registry already in use"}), 400
+
             setattr(professional, key, value)
 
     db.session.commit()

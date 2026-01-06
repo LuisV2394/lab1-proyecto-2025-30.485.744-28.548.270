@@ -1,65 +1,52 @@
+# routes/users_get_by_id.yml
 tags:
-  - Professionals
-summary: Get a professional by ID
-description: Retrieve a single professional by their ID.
-
+  - Users
+summary: Get user by ID
+description: Retrieves a user record from the system by its unique ID.
 parameters:
   - in: path
-    name: professional_id
+    name: id
     required: true
+    description: ID of the user to retrieve
     schema:
       type: integer
-    description: ID of the professional
-
+      example: 1
 responses:
   200:
-    description: Professional found
+    description: User retrieved successfully
     content:
       application/json:
         schema:
           type: object
           properties:
-            id:
-              type: integer
-            person_id:
-              type: integer
-            registration_number:
+            message:
               type: string
-            specialty:
-              type: string
-            sub_specialty:
-              type: string
-              nullable: true
-            is_active:
-              type: boolean
-            schedule_enabled:
-              type: boolean
-            person:
+              example: "User retrieved successfully"
+            user:
               type: object
-              nullable: true
               properties:
                 id:
                   type: integer
-                first_name:
+                  example: 1
+                person_id:
+                  type: integer
+                  example: 1
+                username:
                   type: string
-                last_name:
+                  example: "luisdaza"
+                email:
                   type: string
-                birth_date:
+                  example: "luis.daza@example.com"
+                is_active:
+                  type: integer
+                  example: 1
+                created_at:
                   type: string
-                  format: date
-            created_at:
-              type: string
-              format: date-time
-            updated_at:
-              type: string
-              format: date-time
-
+                  example: "2025-11-20T15:00:00"
+                updated_at:
+                  type: string
+                  example: "2025-11-20T15:00:00"
   404:
-    description: Professional not found
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            error:
-              type: string
+    description: User not found
+  500:
+    description: Server error

@@ -1,0 +1,44 @@
+tags:
+  - Invoices
+summary: Get all invoices
+description: Retrieves a list of all invoices in the system.
+operationId: getAllInvoices
+produces:
+  - application/json
+responses:
+  200:
+    description: List of invoices
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          numero:
+            type: string
+            example: "FAC-000123"
+          fechaEmision:
+            type: string
+            example: "2025-01-10"
+          personaId:
+            type: integer
+            example: 45
+          aseguradoraId:
+            type: integer
+            example: null
+          moneda:
+            type: string
+            example: "USD"
+          subtotal:
+            type: number
+            format: float
+            example: 50.00
+          total:
+            type: number
+            format: float
+            example: 55.00
+          estado:
+            type: string
+            example: "pendiente"

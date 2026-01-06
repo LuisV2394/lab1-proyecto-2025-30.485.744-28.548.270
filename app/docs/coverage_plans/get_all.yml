@@ -1,0 +1,33 @@
+tags:
+  - Coverage Plans
+summary: Get all coverage plans
+description: Retrieves a list of all coverage plans in the system
+operationId: getAllCoveragePlans
+responses:
+  200:
+    description: List of coverage plans
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          insurer_id:
+            type: integer
+            example: 3
+          name:
+            type: string
+            example: "Basic Plan"
+          general_conditions:
+            type: string
+            example: "Covers general consultations"
+          created_at:
+            type: string
+            format: date-time
+            example: "2026-01-05T18:00:00Z"
+          updated_at:
+            type: string
+            format: date-time
+            example: "2026-01-05T18:00:00Z"

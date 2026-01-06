@@ -1,0 +1,80 @@
+tags:
+  - InvoiceItems
+summary: Create a new invoice item
+description: Adds a new item to an existing invoice.
+operationId: createInvoiceItem
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        invoiceId:
+          type: integer
+          example: 1
+        prestacionId:
+          type: integer
+          example: 1
+        descripcion:
+          type: string
+          example: "Consulta médica"
+        cantidad:
+          type: number
+          format: float
+          example: 1
+        valorUnitario:
+          type: number
+          format: float
+          example: 50.00
+        impuestos:
+          type: number
+          format: float
+          example: 5.00
+      required:
+        - invoiceId
+        - descripcion
+        - cantidad
+        - valorUnitario
+responses:
+  201:
+    description: Invoice item created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invoice item created successfully"
+        item:
+          type: object
+          properties:
+            prestacionCodigo:
+              type: integer
+              example: 1
+            descripcion:
+              type: string
+              example: "Consulta médica"
+            cantidad:
+              type: number
+              format: float
+              example: 1
+            valorUnitario:
+              type: number
+              format: float
+              example: 50.00
+            impuestos:
+              type: number
+              format: float
+              example: 5.00
+            total:
+              type: number
+              format: float
+              example: 55.00
+  400:
+    description: Invalid input
+  404:
+    description: Associated invoice not found

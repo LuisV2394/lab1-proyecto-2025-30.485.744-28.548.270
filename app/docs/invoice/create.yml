@@ -1,0 +1,136 @@
+tags:
+  - Invoices
+summary: Create a new invoice
+description: Creates a new invoice record in the system, including its items.
+operationId: createInvoice
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        numero:
+          type: string
+          example: "FAC-000123"
+        fechaEmision:
+          type: string
+          format: date
+          example: "2025-01-10"
+        personaId:
+          type: integer
+          example: 45
+        aseguradoraId:
+          type: integer
+          example: null
+        moneda:
+          type: string
+          example: "USD"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              prestacionId:
+                type: integer
+                example: 1
+              descripcion:
+                type: string
+                example: "Consulta médica"
+              cantidad:
+                type: number
+                format: float
+                example: 1
+              valorUnitario:
+                type: number
+                format: float
+                example: 50.00
+              impuestos:
+                type: number
+                format: float
+                example: 5.00
+            required:
+              - descripcion
+              - cantidad
+              - valorUnitario
+      required:
+        - numero
+        - fechaEmision
+        - moneda
+        - items
+responses:
+  201:
+    description: Invoice created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invoice created successfully"
+        invoice:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            numero:
+              type: string
+              example: "FAC-000123"
+            fechaEmision:
+              type: string
+              example: "2025-01-10"
+            personaId:
+              type: integer
+              example: 45
+            aseguradoraId:
+              type: integer
+              example: null
+            moneda:
+              type: string
+              example: "USD"
+            subtotal:
+              type: number
+              format: float
+              example: 50.00
+            total:
+              type: number
+              format: float
+              example: 55.00
+            estado:
+              type: string
+              example: "pendiente"
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  prestacionCodigo:
+                    type: integer
+                    example: 1
+                  descripcion:
+                    type: string
+                    example: "Consulta médica"
+                  cantidad:
+                    type: number
+                    format: float
+                    example: 1
+                  valorUnitario:
+                    type: number
+                    format: float
+                    example: 50.00
+                  impuestos:
+                    type: number
+                    format: float
+                    example: 5.00
+                  total:
+                    type: number
+                    format: float
+                    example: 55.00
+  400:
+    description: Invalid input
+  500:
+    description: Server error

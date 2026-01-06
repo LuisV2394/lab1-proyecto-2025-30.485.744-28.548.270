@@ -1,0 +1,50 @@
+tags:
+  - Orders
+summary: Get all orders
+description: Retrieves a list of all orders in the system.
+operationId: getAllOrders
+produces:
+  - application/json
+responses:
+  200:
+    description: List of orders
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          episode_id:
+            type: integer
+          professional_id:
+            type: integer
+            nullable: true
+          requires_authorization:
+            type: boolean
+          type:
+            type: string
+            example: "LABORATORY"
+          details:
+            type: array
+            items:
+              type: object
+              properties:
+                code:
+                  type: string
+                description:
+                  type: string
+                instructions:
+                  type: string
+          priority:
+            type: string
+            enum: ["normal", "urgent"]
+          status:
+            type: string
+            enum: ["issued", "authorized", "in_progress", "completed", "canceled"]
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time

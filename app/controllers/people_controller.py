@@ -2,6 +2,8 @@ from flask import jsonify, request
 from app.models.person import Person
 from app import db
 from datetime import datetime
+import re
+from app.models.person import Person
 
 
 # Obtener todas las personas
@@ -18,15 +20,23 @@ def get_person_by_id_controller(person_id):
     
     return jsonify(person.to_dict()), 200
 
-
-# Crear persona nueva
 def create_person_controller():
     data = request.get_json()
     required_fields = ["first_name", "last_name"]
-
+    
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    email = data.get("email")
+    if email:
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not re.match(email_regex, email):
+            return jsonify({"error": "Invalid email format"}), 400
+        
+        existing_person = Person.query.filter_by(email=email).first()
+        if existing_person:
+            return jsonify({"error": "Email already in use"}), 400
 
     new_person = Person(
         document_number=data.get("document_number"),
@@ -34,7 +44,7 @@ def create_person_controller():
         last_name=data["last_name"],
         gender=data.get("gender"),
         birth_date=data.get("birth_date"),
-        email=data.get("email"),
+        email=email,
         phone=data.get("phone"),
         address=data.get("address"),
         emergency_contact=data.get("emergency_contact"),
@@ -49,8 +59,6 @@ def create_person_controller():
         "person": new_person.to_dict()
     }), 201
 
-
-# Actualizar persona
 def update_person_controller(person_id):
     person = Person.query.get(person_id)
     if not person:
@@ -67,6 +75,18 @@ def update_person_controller(person_id):
                 else:
                     value = None
 
+            if key == "email":
+                if value:
+                    email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+                    if not re.match(email_regex, value):
+                        return jsonify({"error": "Invalid email format"}), 400
+
+                    existing_person = Person.query.filter(Person.email == value, Person.id != person.id).first()
+                    if existing_person:
+                        return jsonify({"error": "Email already in use"}), 400
+                else:
+                    value = None  
+
             setattr(person, key, value)
 
     db.session.commit()
@@ -75,7 +95,6 @@ def update_person_controller(person_id):
         "message": "Person updated successfully",
         "person": person.to_dict()
     }), 200
-
 
 # Desactivar persona
 def deactivate_person_controller(person_id):

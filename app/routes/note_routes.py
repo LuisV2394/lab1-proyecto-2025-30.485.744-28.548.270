@@ -1,5 +1,7 @@
 from flask import Blueprint
 from flasgger import swag_from
+from flask_jwt_extended import jwt_required
+from app.utils.middleware import role_required
 import os
 
 from app.controllers.notes_controller import (
@@ -18,30 +20,40 @@ BASE_DOCS = os.path.abspath(
 
 # CREATE
 @note_bp.route("/", methods=["POST"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "create.yml"))
 def create_note():
     return create_note_controller()
 
 # READ ALL
 @note_bp.route("/", methods=["GET"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
 def get_all_notes():
     return get_all_notes_controller()
 
 # READ BY ID
 @note_bp.route("/<int:note_id>", methods=["GET"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_note_by_id(note_id):
     return get_note_by_id_controller(note_id)
 
 # UPDATE
 @note_bp.route("/<int:note_id>", methods=["PUT"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_note(note_id):
     return update_note_controller(note_id)
 
 # DELETE
 @note_bp.route("/<int:note_id>", methods=["DELETE"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "delete.yml"))
 def delete_note(note_id):
     return delete_note_controller(note_id)

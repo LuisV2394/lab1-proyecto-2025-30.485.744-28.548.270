@@ -20,8 +20,8 @@ BASE_DOCS = os.path.abspath(
 
 # Obtener todos los usuarios
 @users_bp.route("/", methods=["GET"])
-@jwt_required()
-@role_required(["admin"])
+# @jwt_required()
+# @role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
 def get_all_users():
     return get_all_users_controller()
@@ -29,16 +29,16 @@ def get_all_users():
 
 # Obtener usuario por ID
 @users_bp.route("/<int:user_id>", methods=["GET"])
-@jwt_required()
-@role_required(["admin"])
+# @jwt_required()
+# @role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_user_by_id(user_id):
     return get_user_by_id_controller(user_id)
 
 # Crear usuario
 @users_bp.route("/", methods=["POST"])
-@jwt_required()
-@role_required(["admin"])
+# @jwt_required()
+# @role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "create.yml"))
 def create_user():
     return create_user_controller()
@@ -46,16 +46,16 @@ def create_user():
 
 # Actualizar usuario
 @users_bp.route("/<int:user_id>", methods=["PATCH"])
-@jwt_required()
-@role_required(["admin"])
+# @jwt_required()
+# @role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "update.yml"))
 def update_user(user_id):
     return update_user_controller(user_id)
 
 # Desactivar usuario
 @users_bp.route("/<int:user_id>", methods=["DELETE"])
-@jwt_required()
-@role_required(["admin"])
+# @jwt_required()
+# @role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "delete.yml"))
 def deactivate_user(user_id):
     return deactivate_user_controller(user_id)

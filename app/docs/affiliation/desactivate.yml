@@ -1,0 +1,20 @@
+tags:
+  - Affiliations
+summary: Deactivate an affiliation
+description: Deactivates an affiliation without deleting it from the database.
+operationId: deactivateAffiliation
+produces:
+  - application/json
+parameters:
+  - name: affiliation_id
+    in: path
+    required: true
+    type: integer
+    example: 1
+responses:
+  200:
+    description: Affiliation deactivated successfully
+  404:
+    description: Affiliation not found
+  500:
+    description: Server error

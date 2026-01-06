@@ -1,0 +1,65 @@
+tags:
+  - Prescriptions
+summary: Update a prescription
+description: Updates an existing prescription.
+operationId: updatePrescription
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: prescription_id
+    required: true
+    type: integer
+    example: 1
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              medicationCode:
+                type: string
+                example: "MED123"
+              name:
+                type: string
+                example: "Paracetamol"
+              dose:
+                type: string
+                example: "500mg"
+              route:
+                type: string
+                example: "oral"
+              frequency:
+                type: string
+                example: "TID"
+              duration:
+                type: string
+                example: "5 days"
+        observations:
+          type: string
+          example: "Take after meals"
+responses:
+  200:
+    description: Prescription updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prescription updated successfully"
+        prescription_id:
+          type: integer
+          example: 1
+  400:
+    description: Invalid input
+  404:
+    description: Prescription not found
+  500:
+    description: Server error

@@ -1,5 +1,7 @@
 from flask import Blueprint
 from flasgger import swag_from
+from flask_jwt_extended import jwt_required
+from app.utils.middleware import role_required
 import os
 
 from app.controllers.consent_controller import (
@@ -18,18 +20,24 @@ BASE_DOCS = os.path.abspath(
 
 # CREATE
 @consent_bp.route("/", methods=["POST"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "create.yml"))
 def create_consent():
     return create_consent_controller()
 
 # READ ALL
 @consent_bp.route("/", methods=["GET"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
 def get_all_consents():
     return get_all_consents_controller()
 
 # READ BY ID
 @consent_bp.route("/<int:consent_id>", methods=["GET"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_by_id.yml"))
 def get_consent_by_id(consent_id):
     return get_consent_by_id_controller(consent_id)
@@ -42,6 +50,8 @@ def update_consent(consent_id):
 
 # DELETE
 @consent_bp.route("/<int:consent_id>", methods=["DELETE"])
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "delete.yml"))
 def delete_consent(consent_id):
     return delete_consent_controller(consent_id)

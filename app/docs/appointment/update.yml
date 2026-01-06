@@ -4,8 +4,8 @@ summary: Update appointment status
 description: >
   Updates the status of an existing appointment.  
   Validates allowed state transitions and records history logs.  
-  If the status change involves rescheduling (changing start/end), 
-  the system must validate block availability and capacity again.
+  Rescheduling (changing start/end) is handled as a normal update 
+  without block availability validation, since blocks no longer exist.
 operationId: updateAppointmentStatus
 consumes:
   - application/json
@@ -29,8 +29,8 @@ parameters:
         status:
           type: string
           description: New appointment status
-          enum: ["PENDING","CONFIRMED","IN_PROGRESS","COMPLETED","CANCELLED","RESCHEDULED","NO_SHOW"]
-          example: "CONFIRMED"
+          enum: ["SOLICITADA","CONFIRMADA","CUMPLIDA","CANCELADA","NO_ASISTIDA"]
+          example: "CONFIRMADA"
         observations:
           type: string
           description: Additional notes about the status change
@@ -38,15 +38,12 @@ parameters:
         start:
           type: string
           format: date-time
-          description: >
-            Optional. Only used when rescheduling.  
-            Requires revalidation of availability and block capacity.
+          description: Optional. New start time if rescheduling.
           example: "2025-01-15T14:00:00"
         end:
           type: string
           format: date-time
-          description: >
-            Optional. Only used when rescheduling.
+          description: Optional. New end time if rescheduling.
           example: "2025-01-15T15:00:00"
 
 responses:
@@ -60,7 +57,7 @@ responses:
           example: "Estado actualizado"
         status:
           type: string
-          example: "CONFIRMED"
+          example: "CONFIRMADA"
 
   400:
     description: Invalid status transition or invalid input
@@ -69,7 +66,7 @@ responses:
       properties:
         error:
           type: string
-          example: "Transición inválida de PENDING a COMPLETED"
+          example: "Transición inválida de SOLICITADA a CUMPLIDA"
 
   404:
     description: Appointment not found

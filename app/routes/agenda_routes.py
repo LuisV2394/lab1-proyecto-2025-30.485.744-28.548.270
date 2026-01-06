@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flasgger import swag_from
 from flask_jwt_extended import jwt_required
+from app.utils.middleware import role_required
 import os
 
 from app.controllers.agenda_controller import (
@@ -24,25 +25,29 @@ def create_block():
     return create_block_controller()
 
 @agenda_bp.route('/', methods=['GET'])
-# @jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'get_all.yml'))
 def list_blocks():
     return list_blocks_controller()
 
 @agenda_bp.route('/<int:block_id>', methods=['GET'])
-# @jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'get.yml'))
 def get_block(block_id):
     return get_block_controller(block_id)
 
 @agenda_bp.route('/<int:block_id>', methods=['PUT'])
-# @jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'update.yml'))
 def update_block(block_id):
     return update_block_controller(block_id)
 
 @agenda_bp.route('/<int:block_id>', methods=['DELETE'])
-# @jwt_required()
+#@jwt_required()
+#@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, 'delete.yml'))
 def delete_block(block_id):
     return delete_block_controller(block_id)

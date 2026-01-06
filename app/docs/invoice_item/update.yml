@@ -1,0 +1,77 @@
+tags:
+  - InvoiceItems
+summary: Update invoice item
+description: Updates fields of an existing invoice item.
+operationId: updateInvoiceItem
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: item_id
+    type: integer
+    required: true
+    description: ID of the invoice item to update
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        prestacionId:
+          type: integer
+          example: 1
+        descripcion:
+          type: string
+          example: "Consulta médica actualizada"
+        cantidad:
+          type: number
+          format: float
+          example: 2
+        valorUnitario:
+          type: number
+          format: float
+          example: 55.00
+        impuestos:
+          type: number
+          format: float
+          example: 6.00
+responses:
+  200:
+    description: Invoice item updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invoice item updated successfully"
+        item:
+          type: object
+          properties:
+            prestacionCodigo:
+              type: integer
+              example: 1
+            descripcion:
+              type: string
+              example: "Consulta médica actualizada"
+            cantidad:
+              type: number
+              format: float
+              example: 2
+            valorUnitario:
+              type: number
+              format: float
+              example: 55.00
+            impuestos:
+              type: number
+              format: float
+              example: 6.00
+            total:
+              type: number
+              format: float
+              example: 116.00
+  400:
+    description: Invalid input
+  404:
+    description: Invoice item not found

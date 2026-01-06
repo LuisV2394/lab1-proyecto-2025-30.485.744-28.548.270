@@ -1,0 +1,53 @@
+tags:
+  - Notifications
+summary: Create a new notification
+description: Creates a new notification record.
+operationId: createNotification
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "EMAIL"
+        template:
+          type: string
+          example: "welcome_email"
+        recipient:
+          type: string
+          example: "user@example.com"
+        payload:
+          type: object
+          example:
+            name: "John"
+      required:
+        - type
+        - template
+        - recipient
+responses:
+  201:
+    description: Notification created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Notification created successfully"
+        notification:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            status:
+              type: string
+              example: "PENDING"
+  400:
+    description: Invalid input

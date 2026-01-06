@@ -1,0 +1,37 @@
+tags:
+  - InvoiceItems
+summary: Get all invoice items
+description: Retrieves a list of all invoice items in the system.
+operationId: getAllInvoiceItems
+produces:
+  - application/json
+responses:
+  200:
+    description: List of invoice items
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          prestacionCodigo:
+            type: integer
+            example: 1
+          descripcion:
+            type: string
+            example: "Consulta médica"
+          cantidad:
+            type: number
+            format: float
+            example: 1
+          valorUnitario:
+            type: number
+            format: float
+            example: 50.00
+          impuestos:
+            type: number
+            format: float
+            example: 5.00
+          total:
+            type: number
+            format: float
+            example: 55.00

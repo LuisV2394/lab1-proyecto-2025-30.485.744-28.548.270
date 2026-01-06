@@ -1,4 +1,3 @@
-# agenda/update.yml
 tags:
   - Agenda
 summary: Actualizar un bloque de agenda
@@ -35,11 +34,16 @@ parameters:
           example: "12:00:00"
         state:
           type: string
-          enum: [AVAILABLE, BLOCKED, OCCUPIED]
+          enum:
+            - AVAILABLE
+            - BLOCKED
           example: "BLOCKED"
         type:
           type: string
-          enum: [CONSULTATION, PROCEDURE, INTERCONSULTATION]
+          enum:
+            - CONSULTATION
+            - PROCEDURE
+            - INTERCONSULTATION
           example: "PROCEDURE"
         capacity:
           type: integer
@@ -47,6 +51,7 @@ parameters:
         notes:
           type: string
           example: "Actualizado por reasignación"
+
 responses:
   200:
     description: Bloque actualizado exitosamente
@@ -56,11 +61,39 @@ responses:
         message:
           type: string
           example: "Bloque actualizado"
+
   400:
-    description: Datos inválidos
+    description: Datos inválidos (formato, horarios o capacidad)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "La hora de inicio debe ser anterior a la hora de fin"
+
   404:
-    description: Bloque no encontrado
+    description: Bloque, profesional o unidad no encontrada
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Bloque no encontrado"
+
   409:
-    description: Conflicto de horario
+    description: Conflicto de horario (solapamiento)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional ya tiene un bloque en este horario"
+
   500:
     description: Error interno del servidor
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Error interno del servidor"

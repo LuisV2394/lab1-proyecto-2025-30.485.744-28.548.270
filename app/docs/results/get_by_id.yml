@@ -1,0 +1,54 @@
+tags:
+  - Results
+summary: Get result by ID
+description: Retrieve a single result/acta by its ID.
+operationId: getResultById
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: result_id
+    type: integer
+    required: true
+    description: ID of the result to retrieve
+responses:
+  200:
+    description: Result retrieved successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Result retrieved successfully"
+        result:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            order_id:
+              type: integer
+              example: 101
+            summary:
+              type: string
+              example: "Patient lab results normal"
+            file_id:
+              type: string
+              example: "file_12345.pdf"
+            version:
+              type: integer
+              example: 1
+            date:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+            updated_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T17:00:00"
+  404:
+    description: Result not found

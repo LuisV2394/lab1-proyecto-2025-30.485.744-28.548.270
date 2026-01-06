@@ -21,6 +21,23 @@ def create_app():
     from app.models.unit import Unit
     from app.models.episodes import Episode
     from app.models.note import ClinicalNote
+    from app.models.diagnoses import Diagnosis
+    from app.models.consents import Consent
+    from app.models.appointment import Appointment
+    from app.models.orders import Order    
+    from app.models.user import User
+    from app.models.person import Person
+    from app.models.prescription import Prescription
+    from app.models.result import Result
+    from app.models.coverage_plans import CoveragePlan
+    from app.models.order_item import OrderItem
+    from app.models.authorization import Authorization
+    from app.models.payer import Payer
+    from app.models.afiliation import Affiliation
+
+    from app.models.insurer import Insurer
+    from app.models.invoice import Invoice
+    from app.models.invoice_item import InvoiceItem
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_object("config.Config")
 
@@ -51,6 +68,18 @@ def create_app():
         from app.routes.diagnosis_routes import diagnosis_bp
         from app.routes.consent_routes import consent_bp
         from app.routes.appointment_routes import appt_bp
+        from app.routes.order_routes import orders_bp
+        from app.routes.prescription_routes import prescriptions_bp
+        from app.routes.result_routes import results_bp
+        from app.routes.coverage_plan_routes import plans_bp
+        from app.routes.order_item_routes import order_items_bp
+        from app.routes.authorization_routes import auth_request_bp
+        from app.routes.affiliations_routes import affiliation_bp
+    
+        
+        from app.routes.invoice_routes import invoice_bp
+        from app.routes.invoice_item_routes import invoice_item_bp
+        from app.routes.notification_routes import notifications_bp
     
         app.register_blueprint(auth_bp)
         app.register_blueprint(professionals_bp)
@@ -63,6 +92,16 @@ def create_app():
         app.register_blueprint(consent_bp)
         app.register_blueprint(agenda_bp)
         app.register_blueprint(appt_bp)
+        app.register_blueprint(orders_bp)
+        app.register_blueprint(prescriptions_bp)
+        app.register_blueprint(results_bp)
+        app.register_blueprint(plans_bp)
+        app.register_blueprint(affiliation_bp)
+        app.register_blueprint(order_items_bp)
+        app.register_blueprint(auth_request_bp)
+        app.register_blueprint(invoice_bp)
+        app.register_blueprint(invoice_item_bp)
+        app.register_blueprint(notifications_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")

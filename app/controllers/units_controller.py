@@ -2,12 +2,10 @@ from flask import jsonify, request
 from app.models.unit import Unit
 from app import db
 
-# Obtener todas las unidades
 def get_all_units_controller():
     units = Unit.query.all()
     return jsonify([u.to_dict() for u in units]), 200
 
-# Obtener unidad por ID
 def get_unit_by_id_controller(unit_id):
     unit = Unit.query.get(unit_id)
     if not unit:
@@ -15,20 +13,23 @@ def get_unit_by_id_controller(unit_id):
 
     return jsonify(unit.to_dict()), 200
 
-# Crear nueva unidad
 def create_unit_controller():
     data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON body"}), 400
 
     required_fields = ["name", "type"]
     for field in required_fields:
-        if field not in data:
+        if not data.get(field):
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
     new_unit = Unit(
         name=data["name"],
-        type=data["type"],
+        type=data["type"].upper(),
         description=data.get("description"),
+        address=data.get("address"),
         phone=data.get("phone"),
+        schedule_reference=data.get("schedule_reference"),
         is_active=data.get("is_active", True)
     )
 
@@ -40,16 +41,31 @@ def create_unit_controller():
         "unit": new_unit.to_dict()
     }), 201
 
-# Actualizar unidad
 def update_unit_controller(unit_id):
     unit = Unit.query.get(unit_id)
     if not unit:
         return jsonify({"error": "Unit not found"}), 404
 
     data = request.get_json()
-    for key, value in data.items():
-        if hasattr(unit, key):
-            setattr(unit, key, value)
+    if not data:
+        return jsonify({"error": "Invalid JSON body"}), 400
+
+    allowed_fields = [
+        "name",
+        "type",
+        "description",
+        "address",
+        "phone",
+        "schedule_reference",
+        "is_active"
+    ]
+
+    for field in allowed_fields:
+        if field in data:
+            value = data[field]
+            if field == "type" and value:
+                value = value.upper()
+            setattr(unit, field, value)
 
     db.session.commit()
 
@@ -58,7 +74,6 @@ def update_unit_controller(unit_id):
         "unit": unit.to_dict()
     }), 200
 
-# Desactivar unidad
 def deactivate_unit_controller(unit_id):
     unit = Unit.query.get(unit_id)
     if not unit:
