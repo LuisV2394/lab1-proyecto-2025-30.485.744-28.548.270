@@ -1,8 +1,7 @@
 tags:
   - Episodes
 summary: Get all episodes
-description: >
-  Retrieves all episodes in the system.
+description: Retrieve a list of all medical episodes
 operationId: getAllEpisodes
 produces:
   - application/json
@@ -17,30 +16,23 @@ responses:
         properties:
           id:
             type: integer
-            example: 55
           person_id:
             type: integer
-            example: 12
-          type:
+          professional_id:
+            type: integer
+          unit_id:
+            type: integer
+          type_episode:
             type: string
-            example: CONSULTATION
+          motivo:
+            type: string
           status:
             type: string
-            example: OPEN
           started_at:
             type: string
-            format: date-time
-            example: "2025-11-29T15:30:22Z"
           closed_at:
             type: string
-            format: date-time
-            example: null
-
-  500:
-    description: Server error
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Internal server error"
+          created_at:
+            type: string
+          updated_at:
+            type: string

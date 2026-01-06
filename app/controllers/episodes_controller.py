@@ -11,20 +11,30 @@ def check_orders_completed(episode_id):
     # Lógica futura: return Order.query.filter(...).count() == 0
     return True
 
+# CREATE – Abrir un nuevo episodio
 def create_episode_controller():
     data = request.json or {}
 
     try:
-        # Campos obligatorios
-        if not all([data.get('person_id'), data.get('type')]):
+        if not all([data.get('person_id'), data.get('type_episode')]):
             return jsonify({"error": "Faltan campos obligatorios"}), 400
 
         person_id = data.get('person_id')
         professional_id = data.get('professional_id')
         unit_id = data.get('unit_id')
+        motivo = data.get('motivo')
+        type_episode = data.get('type_episode')
+
+        # Validar enum type_episode
+        allowed_types = ["CONSULTATION", "PROCEDURE", "CONTROL", "AMBULATORY_EMERGENCY"]
+        if type_episode not in allowed_types:
+            return jsonify({
+                "error": f"type_episode inválido. Valores permitidos: {allowed_types}"
+            }), 400
 
         # Validar existencia de la persona
-        if not Person.query.get(person_id):
+        person = Person.query.get(person_id)
+        if not person:
             return jsonify({"error": "La persona no existe"}), 404
 
         # Validar existencia del profesional si se envía
@@ -35,12 +45,24 @@ def create_episode_controller():
         if unit_id and not Unit.query.get(unit_id):
             return jsonify({"error": "La unidad no existe"}), 404
 
+        # Validar que no exista otro episodio abierto del mismo tipo para la persona
+        existing_episode = Episode.query.filter_by(
+            person_id=person_id,
+            type_episode=type_episode,
+            status='OPEN'
+        ).first()
+        if existing_episode:
+            return jsonify({
+                "error": f"La persona ya tiene un episodio abierto de tipo {type_episode}"
+            }), 409
+
         # Crear nuevo episodio
         new_episode = Episode(
             person_id=person_id,
             professional_id=professional_id,
             unit_id=unit_id,
-            type=data.get('type'),  # CONSULTATION, EMERGENCY, etc.
+            type_episode=type_episode,
+            motivo=motivo,
             status='OPEN',
             started_at=datetime.utcnow()
         )
@@ -56,7 +78,7 @@ def create_episode_controller():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-
+    
 # READ ALL – Obtener todos los episodios
 def get_all_episodes_controller():
     episodes = Episode.query.all()
@@ -65,10 +87,13 @@ def get_all_episodes_controller():
         {
             "id": episode.id,
             "person_id": episode.person_id,
-            "type": episode.type,
+            "type_episode": episode.type_episode,
+            "motivo": episode.motivo,
             "status": episode.status,
             "started_at": episode.started_at.isoformat() if episode.started_at else None,
-            "closed_at": episode.closed_at.isoformat() if episode.closed_at else None
+            "closed_at": episode.closed_at.isoformat() if episode.closed_at else None,
+            "created_at": episode.created_at.isoformat() if episode.created_at else None,
+            "updated_at": episode.updated_at.isoformat() if episode.updated_at else None
         }
         for episode in episodes
     ]), 200
@@ -84,14 +109,16 @@ def get_episode_by_id_controller(episode_id):
     return jsonify({
         "id": episode.id,
         "person_id": episode.person_id,
-        "type": episode.type,
+        "type_episode": episode.type_episode,
+        "motivo": episode.motivo,
         "status": episode.status,
         "started_at": episode.started_at.isoformat() if episode.started_at else None,
-        "closed_at": episode.closed_at.isoformat() if episode.closed_at else None
+        "closed_at": episode.closed_at.isoformat() if episode.closed_at else None,
+        "created_at": episode.created_at.isoformat() if episode.created_at else None,
+        "updated_at": episode.updated_at.isoformat() if episode.updated_at else None
     }), 200
 
-
-# UPDATE – Actualizar datos del episodio (NO cerrar)
+# UPDATE – Actualizar datos del episodio (tipo y motivo)
 def update_episode_controller(episode_id):
     episode = Episode.query.get(episode_id)
 
@@ -99,8 +126,17 @@ def update_episode_controller(episode_id):
         return jsonify({"message": "Episodio no encontrado"}), 404
 
     data = request.json
+    type_episode = data.get("type_episode", episode.type_episode)
 
-    episode.type = data.get("type", episode.type)
+    # Validación enum
+    allowed_types = ["CONSULTATION", "PROCEDURE", "CONTROL", "AMBULATORY_EMERGENCY"]
+    if type_episode not in allowed_types:
+        return jsonify({
+            "error": f"type_episode inválido. Valores permitidos: {allowed_types}"
+        }), 400
+
+    episode.type_episode = type_episode
+    episode.motivo = data.get("motivo", episode.motivo)
 
     db.session.commit()
 
@@ -108,7 +144,6 @@ def update_episode_controller(episode_id):
         "message": "Episodio actualizado",
         "id": episode.id
     }), 200
-
 
 # CLOSE – Cerrar episodio
 def close_episode_controller(episode_id):

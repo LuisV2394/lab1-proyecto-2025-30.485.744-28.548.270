@@ -18,7 +18,7 @@ parameters:
       type: object
       required:
         - person_id
-        - type
+        - type_episode
       properties:
         person_id:
           type: integer
@@ -32,13 +32,17 @@ parameters:
           type: integer
           description: ID of the unit where the episode is opened (optional)
           example: 3
-        type:
+        type_episode:
           type: string
           description: >
             Type or classification of the episode  
-            (e.g., CONSULTATION, EMERGENCY, ADMISSION, PROCEDURE)
-          enum: ["CONSULTATION", "EMERGENCY", "ADMISSION", "PROCEDURE"]
-          example: "EMERGENCY"
+            (e.g., CONSULTATION, PROCEDURE, CONTROL, AMBULATORY_EMERGENCY)
+          enum: ["CONSULTATION", "PROCEDURE", "CONTROL", "AMBULATORY_EMERGENCY"]
+          example: "CONSULTATION"
+        motivo:
+          type: string
+          description: Reason for opening the episode
+          example: "Patient presents with abdominal pain"
 
 responses:
   201:

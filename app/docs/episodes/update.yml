@@ -1,8 +1,7 @@
 tags:
   - Episodes
-summary: Update an episode
-description: >
-  Updates episode information (does not close the episode).
+summary: Update episode data
+description: Update type_episode or motivo of an existing episode (cannot close it)
 operationId: updateEpisode
 consumes:
   - application/json
@@ -14,22 +13,20 @@ parameters:
     name: episode_id
     required: true
     type: integer
-    description: Episode ID
-    example: 55
-
+    description: ID of the episode to update
   - in: body
     name: body
     required: true
     schema:
       type: object
       properties:
-        type:
+        type_episode:
           type: string
-          enum:
-            - CONSULTATION
-            - EMERGENCY
-            - HOSPITALIZATION
-          example: EMERGENCY
+          enum: ["CONSULTATION", "PROCEDURE", "CONTROL", "AMBULATORY_EMERGENCY"]
+          example: "CONTROL"
+        motivo:
+          type: string
+          example: "Follow-up after surgery"
 
 responses:
   200:
@@ -42,7 +39,7 @@ responses:
           example: "Episodio actualizado"
         id:
           type: integer
-          example: 55
+          example: 77
 
   404:
     description: Episode not found
@@ -52,12 +49,3 @@ responses:
         message:
           type: string
           example: "Episodio no encontrado"
-
-  500:
-    description: Server error
-    schema:
-      type: object
-      properties:
-        message:
-          type: string
-          example: "Internal server error"
