@@ -1,0 +1,20 @@
+tags:
+  - Order Details
+summary: Delete an order detail
+description: Deletes an existing order detail by its ID.
+operationId: deleteOrderDetail
+produces:
+  - application/json
+parameters:
+  - in: path
+    name: detail_id
+    type: integer
+    required: true
+    description: ID of the order detail to delete
+responses:
+  200:
+    description: Order detail deleted successfully
+  404:
+    description: Order detail not found
+  500:
+    description: Server error

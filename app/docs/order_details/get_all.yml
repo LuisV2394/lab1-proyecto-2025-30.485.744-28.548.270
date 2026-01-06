@@ -1,0 +1,31 @@
+tags:
+  - Order Details
+summary: Get all order details
+description: Retrieves a list of all order details in the system.
+operationId: getAllOrderDetails
+produces:
+  - application/json
+responses:
+  200:
+    description: List of order details
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+          order_id:
+            type: integer
+          code:
+            type: string
+          description:
+            type: string
+          indications:
+            type: string
+          created_at:
+            type: string
+          updated_at:
+            type: string
+  500:
+    description: Server error

@@ -1,8 +1,8 @@
 tags:
-  - Order Items
-summary: Create a new order item
-description: Creates a new order item associated with an existing order.
-operationId: createOrderItem
+  - Order Details
+summary: Create a new order detail
+description: Creates a new order detail associated with an existing order.
+operationId: createOrderDetail
 consumes:
   - application/json
 produces:
@@ -17,24 +17,22 @@ parameters:
         order_id:
           type: integer
           example: 10
-        prestation_code:
+        code:
           type: string
-          example: "LAB-CBC"
-        instructions:
+          example: "LAB001"
+        description:
+          type: string
+          example: "Complete Blood Count"
+        indications:
           type: string
           example: "Patient must be fasting"
-        status:
-          type: string
-          example: "pending"
-        result_id:
-          type: integer
-          example: 5
       required:
         - order_id
-        - prestation_code
+        - code
+        - description
 responses:
   201:
-    description: Order item created successfully
+    description: Order detail created successfully
   400:
     description: Missing or invalid input data
   404:
