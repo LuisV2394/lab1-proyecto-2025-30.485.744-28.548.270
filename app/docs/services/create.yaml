@@ -1,0 +1,75 @@
+tags:
+ - services
+summary: Create a new service
+description: Endpoint to create a new service in the system.
+operationId: createService
+consumes:
+ - application/json
+produces:
+ - application/json
+
+parameters:
+ - in: body
+   name: body
+   required: true
+   schema:
+     type: object
+     properties:
+       name:
+         type: string
+         example: "Blood Test"
+       description:
+         type: string
+         example: "Comprehensive blood test including CBC and metabolic panel."
+       price:
+         type: number
+         format: float
+         example: 99.99
+     required:
+       - name
+       - price
+responses:
+ 201:
+   description: Service created successfully
+   schema:
+     type: object
+     properties:
+       message:
+         type: string
+         example: "Service created successfully"
+       service:
+         type: object
+         properties:
+           id:
+             type: integer
+             example: 1
+           name:
+             type: string
+             example: "Blood Test"
+           description:
+             type: string
+             example: "Comprehensive blood test including CBC and metabolic panel."
+           price:
+             type: number
+             format: float
+             example: 99.99
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-01-05T14:30:00Z"
+400:
+    description: Invalid input
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid input data"
+500:
+    description: Server error
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "An error occurred while creating the service"
