@@ -1,0 +1,16 @@
+# get a tarif by id
+---
+tags:
+  - Tariffs
+parameters:
+  - name: tariff_id
+    in: path
+    required: true
+    type: integer
+    example: 1
+responses:
+  200:
+    description: Tarifa obtenida exitosamente
+  404:
+    description: Tarifa no encontrada
+    
