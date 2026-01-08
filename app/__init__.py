@@ -38,6 +38,7 @@ def create_app():
     from app.models.services import Service
     from app.models.tariff import Tariff
     from app.models.access_logs import AccessLog
+    from app.models.clinical_versions import ClinicalVersion
 
     from app.models.insurer import Insurer
     from app.models.invoice import Invoice
@@ -82,6 +83,7 @@ def create_app():
         from app.routes.service_routes import services_bp
         from app.routes.tariff_routes import tariff_bp
         from app.routes.access_log_routes import access_log_bp
+        from app.routes.clinical_versions_routes import version_bp
     
         
         from app.routes.invoice_routes import invoice_bp
@@ -112,6 +114,7 @@ def create_app():
         app.register_blueprint(services_bp)
         app.register_blueprint(tariff_bp)
         app.register_blueprint(access_log_bp)
+        app.register_blueprint(version_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
