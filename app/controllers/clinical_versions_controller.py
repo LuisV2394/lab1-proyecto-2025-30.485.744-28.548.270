@@ -24,10 +24,6 @@ def get_version_by_id_controller(version_id):
 
 # GET HISTORY BY ENTITY
 def get_history_by_entity_controller(entity_type, entity_id):
-    """
-    Gets all previous versions of a specific note or result.
-    """
-
     if not entity_type:
         return jsonify({"error": "entity_type is required"}), 400
 

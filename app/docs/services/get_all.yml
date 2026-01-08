@@ -1,0 +1,36 @@
+tags:
+  - Services
+summary: Get all services
+description: Retrieves a list of all services in the system
+operationId: getAllServices
+produces:
+  - application/json
+responses:
+  200:
+    description: List of services
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          code:
+            type: string
+            example: "LAB001"
+          name:
+            type: string
+            example: "Blood Test"
+          group_name:
+            type: string
+            example: "Laboratory"
+          requirements:
+            type: string
+            example: "Fasting 8 hours"
+          estimated_time:
+            type: integer
+            example: 30
+          active:
+            type: boolean
+            example: true

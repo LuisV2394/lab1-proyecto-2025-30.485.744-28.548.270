@@ -1,0 +1,42 @@
+tags:
+  - Services
+summary: Get service by ID
+description: Retrieves a service by its ID
+operationId: getServiceById
+parameters:
+  - in: path
+    name: service_id
+    required: true
+    type: integer
+    description: ID of the service
+produces:
+  - application/json
+responses:
+  200:
+    description: Service retrieved successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        code:
+          type: string
+          example: "LAB001"
+        name:
+          type: string
+          example: "Blood Test"
+        group_name:
+          type: string
+          example: "Laboratory"
+        requirements:
+          type: string
+          example: "Fasting 8 hours"
+        estimated_time:
+          type: integer
+          example: 30
+        active:
+          type: boolean
+          example: true
+  404:
+    description: Service not found

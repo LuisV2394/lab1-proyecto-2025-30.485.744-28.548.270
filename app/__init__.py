@@ -113,6 +113,13 @@ def create_app():
         app.register_blueprint(invoice_bp)
         app.register_blueprint(invoice_item_bp)
         app.register_blueprint(notifications_bp)
+        app.register_blueprint(services_bp)
+        app.register_blueprint(tariff_bp)
+        app.register_blueprint(access_log_bp)
+        app.register_blueprint(version_bp)
+        app.register_blueprint(payments_bp)
+        app.register_blueprint(credit_debit_notes_bp)
+        app.register_blueprint(prescription_items_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")

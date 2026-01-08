@@ -140,10 +140,7 @@ def update_log_controller(log_id):
         "log": log.to_dict()
     }), 200
 
-
-# ---------------------------
 # DELETE LOG
-# ---------------------------
 def delete_log_controller(log_id):
     log = AccessLog.query.get(log_id)
 

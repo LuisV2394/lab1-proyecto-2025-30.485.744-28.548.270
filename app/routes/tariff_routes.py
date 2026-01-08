@@ -16,7 +16,7 @@ from app.controllers.tariff_controller import (
 tariff_bp = Blueprint("tariffs", __name__, url_prefix="/tariffs")
 
 BASE_DOCS = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "docs", "tariffs")
+    os.path.join(os.path.dirname(__file__), "..", "docs", "tariff")
 )
 
 # GET ALL TARIFFS

@@ -1,0 +1,24 @@
+tags:
+  - Services
+summary: Deactivate a service
+description: Deactivates a service (sets active=False)
+operationId: deactivateService
+parameters:
+  - in: path
+    name: service_id
+    required: true
+    type: integer
+    description: ID of the service to deactivate
+produces:
+  - application/json
+responses:
+  200:
+    description: Service deactivated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Service deactivated successfully"
+  404:
+    description: Service not found

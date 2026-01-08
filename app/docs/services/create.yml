@@ -1,0 +1,66 @@
+tags:
+  - Services
+summary: Create a new service
+description: Creates a new service record in the system
+operationId: createService
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "LAB001"
+        name:
+          type: string
+          example: "Blood Test"
+        group_name:
+          type: string
+          example: "Laboratory"
+        requirements:
+          type: string
+          example: "Fasting 8 hours"
+        estimated_time:
+          type: integer
+          example: 30
+        active:
+          type: boolean
+          example: true
+      required:
+        - code
+        - name
+responses:
+  201:
+    description: Service created successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        code:
+          type: string
+          example: "LAB001"
+        name:
+          type: string
+          example: "Blood Test"
+        group_name:
+          type: string
+          example: "Laboratory"
+        requirements:
+          type: string
+          example: "Fasting 8 hours"
+        estimated_time:
+          type: integer
+          example: 30
+        active:
+          type: boolean
+          example: true
+  400:
+    description: Invalid input
