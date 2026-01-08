@@ -1,0 +1,57 @@
+# create a access log entry
+tags:
+  - Access Logs
+summary: Create an access log entry
+description: Create a new access log entry in the system.
+parameters:
+  - in: body
+    name: body
+    description: Access log entry details
+    required: true
+    schema:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          description: ID of the user accessing the system
+        action:
+          type: string
+          description: Description of the action performed
+      required:
+        - user_id
+        - action
+responses:
+  201:
+    description: Access log entry created successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the created access log entry
+        user_id:
+          type: integer
+          description: ID of the user accessing the system
+        action:
+          type: string
+          description: Description of the action performed
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of when the access log entry was created
+  400:
+    description: Bad request. Missing or invalid parameters.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message detailing the issue
+  500:
+    description: Internal server error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message detailing the issue

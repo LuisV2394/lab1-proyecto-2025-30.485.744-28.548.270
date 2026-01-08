@@ -1,0 +1,27 @@
+from app import db
+from datetime import datetime
+
+class Service(db.Model):
+    __tablename__ = 'prestations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(20), unique=True, nullable=False) # Código CUPS/CUM o interno
+    name = db.Column(db.String(200), nullable=False)
+    group_name = db.Column(db.String(100)) # Ej: Laboratorio, Imágenes, Consulta
+    requirements = db.Column(db.Text) # Ej: Ayuno de 8 horas, Vejiga llena
+    estimated_time = db.Column(db.Integer) # Tiempo en minutos
+    
+    active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "code": self.code,
+            "name": self.name,
+            "group_name": self.group_name,
+            "requirements": self.requirements,
+            "estimated_time": self.estimated_time,
+            "active": self.active
+        }

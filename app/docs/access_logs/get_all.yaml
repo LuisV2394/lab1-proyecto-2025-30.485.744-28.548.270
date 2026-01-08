@@ -1,0 +1,45 @@
+# get all access logs 
+tags:
+  - Access Logs
+summary: Get all access log entries
+description: Retrieve a list of all access log entries in the system.
+parameters: 
+  - in: query
+    name: page
+    type: integer
+    description: Page number for pagination (default is 1)
+    required: false
+  - in: query
+    name: per_page
+    type: integer
+    description: Number of entries per page for pagination (default is 10)
+    required: false
+responses:
+  200:
+    description: A list of access log entries
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: ID of the access log entry
+          user_id:
+            type: integer
+            description: ID of the user accessing the system
+          action:
+            type: string
+            description: Description of the action performed
+          timestamp:
+            type: string
+            format: date-time
+            description: Timestamp of when the access log entry was created
+  500:
+    description: Internal server error.
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message detailing the issue

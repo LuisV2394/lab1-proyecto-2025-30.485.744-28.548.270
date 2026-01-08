@@ -1,0 +1,33 @@
+Crear una nueva tarifa
+---
+tags:
+  - Tariffs
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      properties:
+        service_code:
+          type: string
+          example: "CUPS903895"
+        plan_id:
+          type: integer
+          example: 1
+        baseValue:
+          type: number
+          example: 45000.00
+        taxes:
+          type: number
+          example: 0.00
+        validFrom:
+          type: string
+          example: "2026-01-01"
+        validUntil:
+          type: string
+          example: "2026-12-31"
+responses:
+  201:
+    description: Tarifa creada exitosamente
+  404:
+    description: Servicio o Plan no encontrado
