@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
+from flask_jwt_extended import get_jwt_identity
 from flask_cors import CORS
 from dotenv import load_dotenv
 from .swagger_config import init_swagger
@@ -36,6 +37,7 @@ def create_app():
     from app.models.afiliation import Affiliation
     from app.models.services import Service
     from app.models.tariff import Tariff
+    from app.models.access_logs import AccessLog
 
     from app.models.insurer import Insurer
     from app.models.invoice import Invoice
@@ -79,6 +81,7 @@ def create_app():
         from app.routes.affiliations_routes import affiliation_bp
         from app.routes.service_routes import services_bp
         from app.routes.tariff_routes import tariff_bp
+        from app.routes.access_log_routes import access_log_bp
     
         
         from app.routes.invoice_routes import invoice_bp
@@ -108,9 +111,24 @@ def create_app():
         app.register_blueprint(notifications_bp)
         app.register_blueprint(services_bp)
         app.register_blueprint(tariff_bp)
+        app.register_blueprint(access_log_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")
+
+    @app.after_request
+    def log_request_info(response):
+        # Evitar loguear la consulta de logs misma para no crear un bucle infinito
+        if request.blueprint != 'access_logs' and response.status_code < 400:
+            user_id = None
+            try:
+                user_id = get_jwt_identity() # Si hay token, obtenemos el ID
+            except:
+                pass
+            
+            from app.controllers.access_logs_controller import create_log_entry
+            create_log_entry(user_id, request.path, request.method)
+        return response
     
     # @app.route("/ping")
     # def ping():
