@@ -1,0 +1,40 @@
+tags:
+  - Access Logs
+summary: Update access log
+description: Updates an existing access log entry.
+operationId: updateAccessLog
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - name: log_id
+    in: path
+    required: true
+    type: integer
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        resource:
+          type: string
+          example: "/billing/77"
+        action:
+          type: string
+          example: "PATCH"
+        details:
+          type: string
+          example: "Corrected billing information"
+responses:
+  200:
+    description: Log updated successfully
+  400:
+    description: Invalid data
+  404:
+    description: Log not found
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden

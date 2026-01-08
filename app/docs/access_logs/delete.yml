@@ -1,0 +1,19 @@
+tags:
+  - Access Logs
+summary: Delete access log
+description: Permanently deletes an access log entry.
+operationId: deleteAccessLog
+parameters:
+  - name: log_id
+    in: path
+    required: true
+    type: integer
+responses:
+  200:
+    description: Access log deleted successfully
+  404:
+    description: Access log not found
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden

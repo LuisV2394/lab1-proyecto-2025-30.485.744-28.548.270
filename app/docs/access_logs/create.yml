@@ -1,0 +1,52 @@
+tags:
+  - Access Logs
+summary: Create access log entry
+description: Creates a new access log entry manually.
+operationId: createAccessLog
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 4
+        resource:
+          type: string
+          example: "/patients/4"
+        action:
+          type: string
+          example: "PUT"
+        details:
+          type: string
+          example: "Updated patient information"
+      required:
+        - user_id
+        - resource
+        - action
+responses:
+  201:
+    description: Log created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Access log created successfully"
+        id:
+          type: integer
+          example: 55
+  400:
+    description: Invalid input
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden
+  500:
+    description: Server error

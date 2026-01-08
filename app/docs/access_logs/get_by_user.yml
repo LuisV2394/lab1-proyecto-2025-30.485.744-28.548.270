@@ -1,0 +1,51 @@
+tags:
+  - Access Logs
+summary: Get access logs by user ID
+description: Returns all access logs associated with a specific user.
+operationId: getAccessLogsByUser
+produces:
+  - application/json
+parameters:
+  - name: user_id
+    in: path
+    required: true
+    type: integer
+responses:
+  200:
+    description: Logs retrieved successfully
+    schema:
+      type: object
+      properties:
+        logs:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 8
+              resource:
+                type: string
+                example: "/appointments"
+              action:
+                type: string
+                example: "POST"
+              details:
+                type: string
+                example: "Created new appointment"
+              ip_address:
+                type: string
+                example: "172.16.0.5"
+              user_agent:
+                type: string
+                example: "Chrome 140"
+              date:
+                type: string
+                format: date-time
+                example: "2026-01-07T11:20:00"
+  404:
+    description: User not found
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden
