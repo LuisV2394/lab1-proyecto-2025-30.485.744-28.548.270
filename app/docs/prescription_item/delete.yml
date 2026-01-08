@@ -1,0 +1,23 @@
+tags:
+  - Prescription Items
+summary: Delete a prescription item
+description: Deletes a prescription item by ID.
+operationId: deletePrescriptionItem
+parameters:
+  - in: path
+    name: item_id
+    required: true
+    type: integer
+responses:
+  200:
+    description: Prescription item deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prescription item deleted successfully"
+  404:
+    description: Prescription item not found
+  500:
+    description: Server error

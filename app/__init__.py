@@ -70,6 +70,7 @@ def create_app():
         from app.routes.appointment_routes import appt_bp
         from app.routes.order_routes import orders_bp
         from app.routes.prescription_routes import prescriptions_bp
+        from app.routes.prescription_item_routes import prescription_items_bp
         from app.routes.result_routes import results_bp
         from app.routes.coverage_plan_routes import plans_bp
         from app.routes.order_detail_routes import order_details_bp
@@ -105,6 +106,7 @@ def create_app():
         app.register_blueprint(notifications_bp)
         app.register_blueprint(payments_bp)
         app.register_blueprint(credit_debit_notes_bp)
+        app.register_blueprint(prescription_items_bp)
         init_swagger(app)
     except Exception as e:
         print(f"Blueprint registration warning: {e}")

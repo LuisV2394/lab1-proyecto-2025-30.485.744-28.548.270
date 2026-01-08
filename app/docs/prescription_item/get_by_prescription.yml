@@ -1,0 +1,47 @@
+tags:
+  - Prescription Items
+summary: Get prescription items by prescription ID
+description: Returns all prescription items associated with a specific prescription.
+operationId: getItemsByPrescriptionId
+parameters:
+  - in: path
+    name: prescription_id
+    required: true
+    type: integer
+    description: ID of the prescription
+responses:
+  200:
+    description: List of prescription items retrieved successfully
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 5
+          prescription_id:
+            type: integer
+            example: 2
+          medicine_code:
+            type: string
+            example: "MED123"
+          name:
+            type: string
+            example: "Paracetamol"
+          dosage:
+            type: string
+            example: "500mg"
+          route:
+            type: string
+            example: "oral"
+          frequency:
+            type: string
+            example: "TID"
+          duration:
+            type: string
+            example: "5 days"
+  404:
+    description: Prescription not found
+  500:
+    description: Server error

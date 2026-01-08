@@ -1,0 +1,59 @@
+tags:
+  - Prescription Items
+summary: Create a new prescription item
+description: Creates a new prescription item associated with an existing prescription.
+operationId: createPrescriptionItem
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        prescription_id:
+          type: integer
+          example: 2
+        medicine_code:
+          type: string
+          example: "MED123"
+        name:
+          type: string
+          example: "Paracetamol"
+        dosage:
+          type: string
+          example: "500mg"
+        route:
+          type: string
+          example: "oral"
+        frequency:
+          type: string
+          example: "TID"
+        duration:
+          type: string
+          example: "5 days"
+      required:
+        - prescription_id
+        - medicine_code
+        - name
+responses:
+  201:
+    description: Prescription item created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Prescription item created successfully"
+        item_id:
+          type: integer
+          example: 10
+  400:
+    description: Invalid input
+  404:
+    description: Prescription not found
+  500:
+    description: Server error
