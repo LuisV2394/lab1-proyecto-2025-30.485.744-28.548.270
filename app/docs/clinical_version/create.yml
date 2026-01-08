@@ -1,0 +1,78 @@
+tags:
+  - Clinical Versions
+summary: Create a clinical version entry
+description: Creates a new clinical version manually.
+operationId: createClinicalVersion
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        entity_type:
+          type: string
+          example: "note"
+        entity_id:
+          type: integer
+          example: 12
+        content_snapshot:
+          type: string
+          example: "Snapshot content of the note"
+        user_id:
+          type: integer
+          example: 5
+        version_number:
+          type: integer
+          example: 2
+      required:
+        - entity_type
+        - entity_id
+        - content_snapshot
+        - user_id
+        - version_number
+responses:
+  201:
+    description: Clinical version created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Clinical version created successfully"
+        version:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 15
+            entity_type:
+              type: string
+              example: "note"
+            entity_id:
+              type: integer
+              example: 12
+            content_snapshot:
+              type: string
+              example: "Snapshot content of the note"
+            user_id:
+              type: integer
+              example: 5
+            version_number:
+              type: integer
+              example: 2
+            created_at:
+              type: string
+              example: "2026-01-08T14:22:31"
+  400:
+    description: Invalid input
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden
+  500:
+    description: Server error
