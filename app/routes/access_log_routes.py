@@ -27,3 +27,5 @@ def get_logs():
 @swag_from(os.path.join(BASE_DOCS, "get_by_user.yml"))
 def get_user_logs(user_id):
     return get_logs_by_user_controller(user_id)
+
+# create_log_entry is an internal function and does not need a route
