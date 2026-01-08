@@ -1,10 +1,8 @@
 tags:
   - Tariffs
-summary: Update an existing tariff
-description: Updates the price, taxes, or valid_until date of an existing tariff.
-operationId: updateTariff
-consumes:
-  - application/json
+summary: Get a tariff by ID
+description: Retrieves a tariff by its ID.
+operationId: getTariffById
 produces:
   - application/json
 parameters:
@@ -12,33 +10,15 @@ parameters:
     in: path
     required: true
     type: integer
-  - in: body
-    name: body
-    required: true
-    schema:
-      type: object
-      properties:
-        price:
-          type: number
-          format: float
-          example: 160.0
-        taxes:
-          type: number
-          format: float
-          example: 16.0
-        validUntil:
-          type: string
-          format: date
-          example: "2026-12-31"
 responses:
   200:
-    description: Tariff updated successfully
+    description: Tariff retrieved successfully
     schema:
       type: object
       properties:
         message:
           type: string
-          example: "Tariff updated successfully"
+          example: "Tariff retrieved successfully"
         tariff:
           type: object
           properties:
@@ -54,20 +34,20 @@ responses:
             base_value:
               type: number
               format: float
-              example: 160.0
+              example: 150.0
             taxes:
               type: number
               format: float
-              example: 16.0
+              example: 15.0
             valid_from:
               type: string
               example: "2026-01-08"
             valid_until:
               type: string
               example: "2026-12-31"
-  400:
-    description: Invalid input or date format
   404:
     description: Tariff not found
-  500:
-    description: Server error
+  401:
+    description: Unauthorized
+  403:
+    description: Forbidden

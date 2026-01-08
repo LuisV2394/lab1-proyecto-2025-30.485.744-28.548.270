@@ -1,0 +1,23 @@
+tags:
+  - Tariffs
+summary: Delete a tariff
+description: Permanently deletes a tariff by its ID.
+operationId: deleteTariff
+parameters:
+  - name: tariff_id
+    in: path
+    required: true
+    type: integer
+responses:
+  200:
+    description: Tariff deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Tariff deleted successfully"
+  404:
+    description: Tariff not found
+  500:
+    description: Server error

@@ -1,44 +1,55 @@
 tags:
   - Tariffs
-summary: Update an existing tariff
-description: Updates the price, taxes, or valid_until date of an existing tariff.
-operationId: updateTariff
+summary: Create a new tariff
+description: Creates a new tariff for a service under a coverage plan.
+operationId: createTariff
 consumes:
   - application/json
 produces:
   - application/json
 parameters:
-  - name: tariff_id
-    in: path
-    required: true
-    type: integer
   - in: body
     name: body
     required: true
     schema:
       type: object
       properties:
+        service_code:
+          type: string
+          example: "SRV001"
+        plan_id:
+          type: integer
+          example: 1
         price:
           type: number
           format: float
-          example: 160.0
+          example: 150.0
         taxes:
           type: number
           format: float
-          example: 16.0
+          example: 15.0
+        validFrom:
+          type: string
+          format: date
+          example: "2026-01-08"
         validUntil:
           type: string
           format: date
           example: "2026-12-31"
+      required:
+        - service_code
+        - plan_id
+        - price
+        - validFrom
 responses:
-  200:
-    description: Tariff updated successfully
+  201:
+    description: Tariff created successfully
     schema:
       type: object
       properties:
         message:
           type: string
-          example: "Tariff updated successfully"
+          example: "Tariff created successfully"
         tariff:
           type: object
           properties:
@@ -54,11 +65,11 @@ responses:
             base_value:
               type: number
               format: float
-              example: 160.0
+              example: 150.0
             taxes:
               type: number
               format: float
-              example: 16.0
+              example: 15.0
             valid_from:
               type: string
               example: "2026-01-08"
@@ -68,6 +79,6 @@ responses:
   400:
     description: Invalid input or date format
   404:
-    description: Tariff not found
+    description: Service or coverage plan not found
   500:
     description: Server error
