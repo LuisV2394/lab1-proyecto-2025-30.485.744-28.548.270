@@ -13,6 +13,7 @@ This repository implements a modular backend for medical services using **Flask*
 * Technology Stack
 * Architecture & Project Layout
 * Quickstart (Local)
+* Running the API with Python
 * Environment Variables
 * Database Migrations
 * Running with Docker
@@ -149,6 +150,36 @@ JWT_SECRET_KEY=your_jwt_secret_here
 SENDGRID_API_KEY=
 SENDGRID_SENDER_EMAIL=1001.30485744.ucla@gmail.com
 ```
+
+---
+
+## Running the API with Python
+
+To start the API directly using Python (without Docker), run:
+
+```bash
+# Make sure your virtual environment is activated and dependencies installed
+python run.py
+```
+
+Or, if using Flask CLI:
+
+```bash
+# Set the Flask app
+export FLASK_APP=run.py   # macOS / Linux
+set FLASK_APP=run.py      # Windows
+
+# Run the Flask development server
+flask run
+```
+
+By default, the API will be available at:
+
+```
+http://localhost:5000
+```
+
+Make sure your **environment variables** are set correctly (`.env`) for database, JWT, and SendGrid before running.
 
 ---
 
