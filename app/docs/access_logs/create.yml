@@ -17,6 +17,7 @@ parameters:
         user_id:
           type: integer
           example: 4
+          description: "Nullable. ID of the user related to this access event"
         resource:
           type: string
           example: "/patients/4"
@@ -26,22 +27,57 @@ parameters:
         details:
           type: string
           example: "Updated patient information"
+        date:
+          type: string
+          format: date-time
+          example: "2026-01-09T14:30:00Z"
+          description: "Optional. If not provided, current UTC time is used"
       required:
-        - user_id
         - resource
         - action
 responses:
   201:
-    description: Log created successfully
+    description: Access log created successfully
     schema:
       type: object
       properties:
         message:
           type: string
           example: "Access log created successfully"
-        id:
-          type: integer
-          example: 55
+        log:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 55
+            user_id:
+              type: integer
+              example: 4
+            resource:
+              type: string
+              example: "/patients/4"
+            action:
+              type: string
+              example: "PUT"
+            ip_address:
+              type: string
+              example: "192.168.1.22"
+            user_agent:
+              type: string
+              example: "Mozilla/5.0"
+            details:
+              type: string
+              example: "Updated patient information"
+            date:
+              type: string
+              format: date-time
+              example: "2026-01-09T14:30:00Z"
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
   400:
     description: Invalid input
   401:

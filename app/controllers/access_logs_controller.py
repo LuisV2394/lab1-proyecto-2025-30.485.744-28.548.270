@@ -2,8 +2,9 @@ from flask import jsonify, request
 from app.models.access_logs import AccessLog
 from app import db
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 
-# GET ALL LOGS (with optional pagination)
+# GET ALL LOGS (pagination)
 def get_all_logs_controller():
     try:
         limit = int(request.args.get("limit", 100))
@@ -22,7 +23,7 @@ def get_all_logs_controller():
             "page": page,
             "logs": [log.to_dict() for log in logs.items]
         }), 200
-    
+
     except Exception as e:
         return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
 
@@ -37,50 +38,59 @@ def get_log_by_id_controller(log_id):
         "message": "Log retrieved successfully",
         "log": log.to_dict()
     }), 200
-    
+
 # GET LOGS BY USER
 def get_logs_by_user_controller(user_id):
-    logs = AccessLog.query.filter_by(user_id=user_id)\
-                          .order_by(AccessLog.date.desc())\
+    logs = AccessLog.query.filter_by(user_id=user_id) \
+                          .order_by(AccessLog.date.desc()) \
                           .all()
-
-    if not logs:
-        return jsonify({"message": "No logs found for this user", "logs": []}), 200
 
     return jsonify({
         "message": "Logs retrieved successfully",
         "logs": [log.to_dict() for log in logs]
     }), 200
 
-# CREATE LOG ENTRY (API endpoint)-
+# CREATE LOG ENTRY
 def create_log_controller():
     data = request.get_json() or {}
 
-    required_fields = ["user_id", "resource", "action"]
+    # Required business fields
+    required_fields = ["resource", "action"]
 
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
-    # Basic validations
-    if len(data.get("resource", "")) > 255:
-        return jsonify({"error": "Resource exceeds maximum length (255)"}), 400
+    # Length validations consistent with your model
+    if len(data.get("resource", "")) > 100:
+        return jsonify({"error": "Resource exceeds maximum length (100)"}), 400
 
     if len(data.get("action", "")) > 100:
         return jsonify({"error": "Action exceeds maximum length (100)"}), 400
 
-    details = data.get("details")
-    if details and len(details) > 5000:
+    if data.get("details") and len(data["details"]) > 5000:
         return jsonify({"error": "Details exceeds maximum length (5000)"}), 400
+
+    # Parse optional custom date input
+    # Format example: "2026-01-09 14:50:00"
+    date_value = data.get("date")
+    if date_value:
+        try:
+            date_value = datetime.fromisoformat(date_value)
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use ISO 8601"}), 400
+    else:
+        date_value = datetime.utcnow()
 
     try:
         new_log = AccessLog(
-            user_id=data["user_id"],
+            user_id=data.get("user_id"),  # can be null
             resource=data["resource"],
             action=data["action"],
-            details=details,
-            ip_address=request.remote_addr,
-            user_agent=request.user_agent.string
+            details=data.get("details"),
+            ip_address=request.remote_addr or request.environ.get("HTTP_X_REAL_IP"),
+            user_agent=getattr(request.user_agent, "string", None),
+            date=date_value
         )
 
         db.session.add(new_log)
@@ -90,12 +100,12 @@ def create_log_controller():
             "message": "Access log created successfully",
             "log": new_log.to_dict()
         }), 201
-    
+
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify({"error": f"Database error: {str(e)}"}), 500
 
-# INTERNAL UTILITY FUNCTION (unchanged but improved)
+# INTERNAL UTILITY
 def create_log_entry(user_id, resource, action, details=None):
     try:
         log = AccessLog(
@@ -104,7 +114,8 @@ def create_log_entry(user_id, resource, action, details=None):
             action=action,
             details=details,
             ip_address=request.remote_addr,
-            user_agent=request.user_agent.string
+            user_agent=getattr(request.user_agent, "string", None),
+            date=datetime.utcnow()
         )
         db.session.add(log)
         db.session.commit()
@@ -122,6 +133,7 @@ def update_log_controller(log_id):
 
     data = request.get_json() or {}
 
+    # Allowed to update only descriptive data
     allowed_fields = ["resource", "action", "details"]
 
     for key, value in data.items():
@@ -140,7 +152,7 @@ def update_log_controller(log_id):
         "log": log.to_dict()
     }), 200
 
-# DELETE LOG
+# DELETE LOG ENTRY
 def delete_log_controller(log_id):
     log = AccessLog.query.get(log_id)
 

@@ -6,43 +6,15 @@ operationId: getAccessLogById
 produces:
   - application/json
 parameters:
-  - name: log_id
+  - name: id
     in: path
     required: true
     type: integer
+    example: 22
 responses:
   200:
     description: Log retrieved successfully
-    schema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 10
-        user_id:
-          type: integer
-          example: 3
-        resource:
-          type: string
-          example: "/invoices/22"
-        action:
-          type: string
-          example: "DELETE"
-        details:
-          type: string
-          example: "Invoice deleted by admin"
-        ip_address:
-          type: string
-          example: "10.0.0.15"
-        user_agent:
-          type: string
-          example: "PostmanRuntime/7.32.3"
-        date:
-          type: string
-          example: "2026-01-08T13:45:10"
   404:
-    description: Log not found
-  401:
-    description: Unauthorized
-  403:
-    description: Forbidden
+    description: Access log not found
+  500:
+    description: Server error
