@@ -1,38 +1,287 @@
-# lab1-proyecto-2025-30.485.744-28.548.270
-Project developed as part of the Laboratory I course at Universidad Centroccidental Lisandro Alvarado (UCLA). The goal is to implement a RESTful API for managing medical services, including modules for authentication, patients, healthcare professionals, scheduling, and appointments — built with Python (Flask) and MySQL.
+# Healthcare API — Medical Services Platform (Laboratory I — 2025)
 
-**Backend API – Medical Services Platform (Laboratory I – 2025)**
+Professional, well-documented RESTful API for managing clinical workflows, built for the Laboratory I course at Universidad Centroccidental Lisandro Alvarado (UCLA).
 
-# 🏥 **Healthcare API – Medical Backend in Flask**
-
-A modular medical API built with **Flask**, **SQLAlchemy**, **JWT**, and **Swagger**, following a clean layered architecture (routes → services → repositories → models), with full YAML-based documentation.
-
-Designed to manage:
-
-* Authentication (JWT)
-* Users & profiles
-* People registry
-* Healthcare professionals
-* Medical units
-* Clinical episodes
-* Agenda & appointments
-* Consent records
+This repository implements a modular backend for medical services using **Flask**, **SQLAlchemy**, **JWT-based authentication**, **Swagger documentation**, and **email notifications via SendGrid**.
 
 ---
 
-## 👥 Project Team
+## Table of Contents
+
+* Overview
+* Key Features
+* Technology Stack
+* Architecture & Project Layout
+* Quickstart (Local)
+* Environment Variables
+* Database Migrations
+* Running with Docker
+* API Documentation (Swagger)
+* Authentication
+* Example Endpoints
+* Authors & Roles
+* Tests
+* Useful Scripts
+* Contributing
+* Contact
+* License
+
+---
+
+## Overview
+
+The Healthcare API provides a complete backend platform for managing medical services. It includes **full support for clinical workflows, appointments, billing, notifications, email communications, and audit trails**, following a layered architecture (routes → controllers → services → repositories → models) for maintainability and testability.
+
+---
+
+## Key Features
+
+* Complete CRUD for patients, professionals, care units, agendas, appointments, clinical episodes, notes, orders, prescriptions, results, insurances, plans, authorizations, services, tariffs, invoices, and payments.
+* JWT authentication and role-based access control.
+* **Email notifications** for appointment confirmations, reminders, and billing alerts (SendGrid integration).
+* Swagger documentation per module (YAML) for interactive API exploration.
+* SQLAlchemy models fully integrated with Flask-Migrate for DB migrations.
+* Docker-compose support for local development with MySQL.
+* Unit and functional tests ready-to-run.
+* Audit logs and versioning for clinical notes and results.
+* Scripts for seeding database and generating documentation.
+
+---
+
+## Technology Stack
+
+* Python 3.10+
+* Flask
+* Flask-Migrate / Alembic
+* SQLAlchemy
+* PyJWT or Flask-JWT-Extended
+* MySQL
+* Flasgger (Swagger UI)
+* SendGrid (email notifications)
+* Docker / Docker-compose (optional)
+
+---
+
+## Architecture & Project Layout
+
+```
+app/
+  __init__.py        # App factory
+  swagger.py         # Flasgger loader
+  config.py          # Configurations
+  controllers/       # Endpoint logic
+  docs/              # YAML Swagger docs
+  models/            # ORM models
+  repositories/      # DB access
+  routes/            # Blueprints
+  services/          # Business logic
+  utils/             # Helpers
+docker/              # Docker-compose files & init scripts
+migrations/          # Alembic/Flask-Migrate
+scripts/             # Seed/generate scripts
+tests/               # Unit & functional tests
+requirements.txt
+run.py
+README.md
+```
+
+---
+
+## Quickstart (Local)
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/LuisV2394/lab1-proyecto-2025-30.485.744-28.548.270.git
+cd lab1-proyecto-2025-30.485.744-28.548.270
+```
+
+2. Create and activate a virtual environment:
+
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# macOS / Linux
+source venv/bin/activate
+```
+
+3. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure environment variables (`.env`):
+
+### For Docker (`docker-compose`)
+
+```env
+FLASK_ENV=development
+FLASK_APP=run.py
+FLASK_DEBUG=1
+
+# Database
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=healthcare_api
+DB_USER=healthcare_user
+DB_PASSWORD=healthcare_pass
+DB_URL=mysql+pymysql://healthcare_user:healthcare_pass@mysql:3306/healthcare_api
+
+# Security
+JWT_SECRET_KEY=your_secret_key_here
+SECRET_KEY=super_secret_key
+
+# Email notifications (SendGrid)
+SENDGRID_API_KEY=
+SENDGRID_SENDER_EMAIL=1001.30485744.ucla@gmail.com
+```
+
+### For Local Development
+
+```env
+DB_URL=mysql+pymysql://root:@localhost:3307/healthcare_api
+FLASK_ENV=development
+FLASK_APP=manage.py
+SECRET_KEY=super_secret_key
+JWT_SECRET_KEY=your_jwt_secret_here
+SENDGRID_API_KEY=
+SENDGRID_SENDER_EMAIL=1001.30485744.ucla@gmail.com
+```
+
+---
+
+## Database Migrations
+
+```bash
+flask db migrate -m "initial"
+flask db upgrade
+```
+
+---
+
+## Running with Docker (Enhanced)
+
+Start the API and MySQL using Docker Compose:
+
+```bash
+docker-compose up --build
+```
+
+This will start:
+
+* **Flask API** — backend server
+* **MySQL** — database for the project
+* **Optional: Adminer** — web interface for database management
+
+### Useful Docker commands:
+
+```bash
+# Rebuild containers if dependencies or Dockerfile change
+docker-compose up --build
+
+# Run in detached mode
+docker-compose up -d
+
+# Stop containers
+docker-compose down
+
+# Remove containers and volumes (reset database)
+docker-compose down -v
+
+# View logs
+docker-compose logs -f
+```
+
+### Database Initialization
+
+The MySQL container automatically runs the script `docker/mysql/init.sql` to create tables and seed initial data. Ensure `DB_URL` matches the container host (`mysql`) when running via Docker.
+
+---
+
+## API Documentation (Swagger)
+
+Open interactive documentation at:
+
+```
+http://localhost:5000/apidocs/
+```
+
+YAML files are organized per module under `app/docs/`.
+
+---
+
+## Authentication
+
+JWT Bearer tokens:
+
+* `POST /auth/login` — login and receive token
+* `Authorization: Bearer <token>` — required for protected routes
+
+---
+
+## Example Endpoints
+
+### Create a Person
+
+**Endpoint:** `POST /people`
+
+**Request Body:**
+
+```json
+{
+  "document_number": "V12345678",
+  "first_name": "Luis",
+  "last_name": "Daza",
+  "gender": "M",
+  "birth_date": "1990-05-20",
+  "email": "luis.daza@example.com",
+  "phone": "+584123456789",
+  "address": "Calle Falsa 123, Caracas, Venezuela",
+  "emergency_contact": "+584123987654",
+  "active": 1
+}
+```
+
+**Response 201 (Success):**
+
+```json
+{
+  "id": 1,
+  "document_number": "V12345678",
+  "first_name": "Luis",
+  "last_name": "Daza",
+  "gender": "M",
+  "birth_date": "1990-05-20",
+  "email": "luis.daza@example.com",
+  "phone": "+584123456789",
+  "address": "Calle Falsa 123, Caracas, Venezuela",
+  "emergency_contact": "+584123987654",
+  "active": 1
+}
+```
+
+**Response 400 (Invalid input)**
+**Response 500 (Server error)**
+
+---
+
+## Authors & Roles
 
 ### **Luis Eduardo Daza Velasquez**
 
 * **ID:** 30.485.744
 * **Email:** [1001.30485744.ucla@gmail.com](mailto:1001.30485744.ucla@gmail.com)
-* **Role:** Backend Developer
+* **Role:** Backend Developer & QA
 * **Responsibilities:**
 
-  * Authentication module (JWT).
-  * Implementation of multiple core routes.
-  * Unit testing and functional test development.
-  * Route adjustments and validation logic.
+  * Authentication module (JWT)
+  * Core routes implementation
+  * Unit & functional testing
+  * Bug fixing and code corrections
+  * Route adjustments and validations
+  * **SendGrid email notifications integration and testing**
 
 ### **William Alfonso Molina Riera**
 
@@ -41,263 +290,16 @@ Designed to manage:
 * **Role:** Backend Developer
 * **Responsibilities:**
 
-  * Implementation of multiple core routes.
-  * creation of multiple modules.
-  * udate of routes and models.
+  * Core routes and modules implementation
+  * Database models & migrations
+  * Adjustments on routes and business logic
+  * Feature development and validation
 
 ---
 
-## 📌 **Key Features**
+## Tests
 
-* 🔐 Secure authentication using **JWT**
-* 🧩 Clean modular architecture
-* 📚 Swagger documentation using **YAML** files
-* 🗂 Database migrations with **Flask-Migrate**
-* 🏗 MySQL as the primary database
-* 🧪 Ready-to-use testing structure
-* 📦 Production-ready project organization
-
----
-
-# 🚀 **Installation & Setup**
-
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/your-user/healthcare_api.git
-cd healthcare_api
-```
-
-### 2️⃣ Create and activate a virtual environment
-
-```bash
-python -m venv venv
-source venv/bin/activate        # Linux / macOS
-venv\Scripts\activate           # Windows
-```
-
-### 3️⃣ Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4️⃣ Configure environment variables (`.env`)
-
-```
-FLASK_ENV=development
-SECRET_KEY=your_secret_key
-JWT_SECRET_KEY=your_jwt_secret
-DATABASE_URL=mysql+pymysql://user:password@localhost/healthcare
-SWAGGER_TITLE=Healthcare API
-```
-
-### 5️⃣ Run database migrations
-
-```bash
-flask db upgrade
-```
-
-### 6️⃣ Start the server
-
-```bash
-python run.py
-```
-
-### ✔ If everything loads correctly:
-
-```
-Medical API running
-```
-
----
-
-Default URL:
-
-```
-http://127.0.0.1:5000 o http://192.168.0.111:5000
-
-```
-
----
-
-# 📘 **Swagger API Documentation**
-
-This API uses **Flasgger**, with Swagger definitions stored in modular `.yml` files.
-
-Open the docs at:
-
-👉 **[http://localhost:5000/apidocs/](http://localhost:5000/apidocs/)**
-
-All documentation files are stored in:
-
-```
-app/docs/
-```
-
-Organized by module:
-
-```
-docs/auth/
-docs/users/
-docs/professionals/
-docs/people/
-docs/units/
-docs/episodes/
-docs/agenda/
-docs/consent/
-docs/common/
-```
-
-The main Swagger loader is:
-
-```
-app/swagger.py
-```
-
----
-
-# 📂 **Project Structure**
-
-Complete and accurate structure based on your real project:
-
-```
-healthcare_api/
-│
-├── app/
-│   ├── __init__.py
-│   ├── swagger.py
-│   ├── config.py
-│   │
-│   ├── docs/
-│   │   ├── auth/
-│   │   ├── users/
-│   │   ├── professionals/
-│   │   ├── people/
-│   │   ├── units/
-│   │   ├── episodes/
-│   │   ├── agenda/
-│   │   ├── consent/
-│   │   └── common/
-│   │
-│   ├── routes/
-│   │   ├── auth.py
-│   │   ├── users.py
-│   │   ├── professionals.py
-│   │   ├── people.py
-│   │   ├── units.py
-│   │   ├── episodes.py
-│   │   ├── agenda.py
-│   │   └── consent.py
-│   │
-│   ├── models/
-│   │   ├── user.py
-│   │   ├── person.py
-│   │   ├── professional.py
-│   │   ├── unit.py
-│   │   ├── episode.py
-│   │   ├── appointment.py
-│   │   ├── agenda_block.py
-│   │   └── consent.py
-│   │
-│   ├── repositories/
-│   ├── services/
-│   ├── middlewares/
-│   ├── utils/
-│   └── database/
-│
-├── migrations/
-├── scripts/
-├── tests/
-├── requirements.txt
-├── run.py
-└── README.md
-```
-
----
-
-# 🔑 **Authentication**
-
-The API uses JWT with **Bearer tokens**.
-
-### Login
-
-```
-POST /auth/login
-```
-
-### Register
-
-```
-POST /auth/register
-```
-
-### Protected endpoints require:
-
-```
-Authorization: Bearer <token>
-```
-
----
-
-# 🧩 **Available Modules**
-
-## 🔐 Authentication
-
-* Register new user
-* Login
-* Token handling
-
-## 👤 Users
-
-* Get authenticated profile
-* Update user
-
-## 🧍 People
-
-* Create a person
-* Update person
-* Link person to users or professionals
-
-## 🧑‍⚕️ Professionals
-
-* Create/update professionals
-* List all
-* Association with medical units
-
-## 🏢 Units
-
-* Full CRUD
-
-## 📅 Agenda & Appointments
-
-* Create agenda blocks
-* Create medical appointments
-* Update appointment status
-* Validate status transitions
-* Appointment history tracking
-
-## 🗂 Consent
-
-* Register patient consent
-* Audit logs
-
-## 🧾 Clinical Episodes
-
-* Create episodes
-* Link to patients/people
-
----
-
-# 🧪 **Testing**
-
-Tests are stored in:
-
-```
-tests/
-```
-
-Run them with:
+Run tests with:
 
 ```bash
 pytest
@@ -305,31 +307,32 @@ pytest
 
 ---
 
-# 🛠 **Useful Scripts**
+## Useful Scripts
 
-```
-scripts/seed_data.py        # Initial database data
-scripts/generate_docs.py    # Build static swagger documentation
-```
+* `scripts/seed_data.py` — Seed database with initial data
+* `scripts/generate_docs.py` — Generate/validate Swagger documentation
 
 ---
 
-# 📦 **Database Migrations**
+## Contributing
 
-Create a migration:
-
-```bash
-flask db migrate -m "message"
-```
-
-Apply migrations:
-
-```bash
-flask db upgrade
-```
+1. Fork the repository
+2. Create a feature branch
+3. Add tests for new behavior
+4. Keep changes small and scoped
+5. Submit pull request with clear description
 
 ---
 
-# 📄 License
+## Contact
 
-Academic use only – UCLA Laboratory I 2025.
+* Luis Eduardo Daza Velasquez — [1001.30485744.ucla@gmail.com](mailto:1001.30485744.ucla@gmail.com)
+* William Alfonso Molina Riera — [1001.28548270.ucla@gmail.com](mailto:1001.28548270.ucla@gmail.com)
+
+---
+
+## License
+
+Academic use only — UCLA Laboratory I 2025
+
+---
