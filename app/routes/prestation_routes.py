@@ -4,7 +4,7 @@ from flasgger.utils import swag_from
 from app.utils.middleware import role_required
 import os
 
-from app.controllers.services_controller import (
+from app.controllers.prestation_controller import (
     get_all_services_controller,
     get_service_by_id_controller,
     create_service_controller,
@@ -12,11 +12,11 @@ from app.controllers.services_controller import (
     deactivate_service_controller
 )
 
-services_bp = Blueprint("services", __name__, url_prefix="/services")
+services_bp = Blueprint("services", __name__, url_prefix="/prestations")
 
 # Ruta base de los YAML de documentación
 BASE_DOCS = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "docs", "services")
+    os.path.join(os.path.dirname(__file__), "..", "docs", "prestation")
 )
 
 # Obtener todos los servicios

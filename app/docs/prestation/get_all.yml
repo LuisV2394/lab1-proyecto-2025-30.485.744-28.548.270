@@ -1,5 +1,5 @@
 tags:
-  - Services
+  - Prestation
 summary: Get all services
 description: Retrieves a list of all services in the system
 operationId: getAllServices

@@ -26,6 +26,10 @@ from app.models.prescription import Prescription, PrescriptionItem
 from app.models.payer import Payer
 from app.models.payments import Payment
 from app.models.result import Result
+from app.models.prestation import Prestation
+from app.models.clinical_versions import ClinicalVersion
+from app.models.access_logs import AccessLog
+from app.models.tariff import Tariff
 
 app = create_app()
 migrate = Migrate(app, db)

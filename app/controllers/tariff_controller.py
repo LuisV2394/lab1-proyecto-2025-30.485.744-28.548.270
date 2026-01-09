@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from app.models.tariff import Tariff
-from app.models.services import Service
+from app.models.prestation import Prestation
 from app.models.coverage_plans import CoveragePlan
 from app import db
 from datetime import datetime
@@ -27,7 +27,7 @@ def create_tariff_controller():
         return jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
 
     # Validar existencia de Service y CoveragePlan
-    service = Service.query.filter_by(code=data.get('service_code')).first()
+    service = Prestation.query.filter_by(code=data.get('service_code')).first()
     plan = CoveragePlan.query.get(data.get('plan_id'))
 
     if not service:

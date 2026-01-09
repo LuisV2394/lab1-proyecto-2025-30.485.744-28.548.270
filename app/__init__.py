@@ -35,7 +35,7 @@ def create_app():
     from app.models.authorization import Authorization
     from app.models.payer import Payer
     from app.models.afiliation import Affiliation
-    from app.models.services import Service
+    from app.models.prestation import Prestation
     from app.models.tariff import Tariff
     from app.models.access_logs import AccessLog
     from app.models.clinical_versions import ClinicalVersion
@@ -81,7 +81,7 @@ def create_app():
         from app.routes.order_detail_routes import order_details_bp
         from app.routes.authorization_routes import authorization_bp
         from app.routes.affiliations_routes import affiliation_bp
-        from app.routes.service_routes import services_bp
+        from app.routes.prestation_routes import services_bp
         from app.routes.tariff_routes import tariff_bp
         from app.routes.access_log_routes import access_log_bp
         from app.routes.clinical_versions_routes import version_bp

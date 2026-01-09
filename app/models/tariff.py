@@ -5,17 +5,12 @@ class Tariff(db.Model):
     __tablename__ = 'plan_tariffs'
 
     id = db.Column(db.Integer, primary_key=True)
-    # relation with the service id
     prestation_id = db.Column(db.String(20), db.ForeignKey('services.id'), nullable=False)
-    # relation with the coverage plan
     plan_id = db.Column(db.Integer, db.ForeignKey('coverage_plans.id'), nullable=False)
-    
     price = db.Column(db.Numeric(12, 2), nullable=False)
     taxes = db.Column(db.Numeric(10, 2), default=0.0)
-    
     valid_from = db.Column(db.Date, nullable=False)
     valid_until = db.Column(db.Date, nullable=True)
-    
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

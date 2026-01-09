@@ -1,7 +1,7 @@
 from app import db
 from datetime import datetime
 
-class Service(db.Model):
+class Prestation(db.Model):
     __tablename__ = 'prestations'
 
     id = db.Column(db.Integer, primary_key=True)

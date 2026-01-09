@@ -1,5 +1,5 @@
 tags:
-  - Services
+  - Prestation
 summary: Get service by ID
 description: Retrieves a service by its ID
 operationId: getServiceById

@@ -1,17 +1,17 @@
 from flask import jsonify, request
-from app.models.services import Service
+from app.models.prestation import Prestation
 from app import db
 
 # Obtener todos los servicios
 def get_all_services_controller():
-    services = Service.query.all()
+    services = Prestation.query.all()
     data = [s.to_dict() for s in services]
     return jsonify(data), 200
 
 
 # Buscar servicio por ID
 def get_service_by_id_controller(service_id):
-    service = Service.query.get(service_id)
+    service = Prestation.query.get(service_id)
 
     if not service:
         return jsonify({"error": "Service not found"}), 404
@@ -32,7 +32,7 @@ def create_service_controller():
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
     # Verificar que el código sea único
-    existing_service = Service.query.filter_by(code=data["code"]).first()
+    existing_service = Prestation.query.filter_by(code=data["code"]).first()
     if existing_service:
         return jsonify({"error": "Service code already in use"}), 400
 
@@ -43,7 +43,7 @@ def create_service_controller():
             return jsonify({"error": "Estimated time must be a positive integer"}), 400
 
     # Crear el servicio
-    new_service = Service(
+    new_service = Prestation(
         code=data["code"],
         name=data["name"],
         group_name=data.get("group_name"),
@@ -62,7 +62,7 @@ def create_service_controller():
 
 # Actualizar servicio existente
 def update_service_controller(service_id):
-    service = Service.query.get(service_id)
+    service = Prestation.query.get(service_id)
     if not service:
         return jsonify({"error": "Service not found"}), 404
 
@@ -73,9 +73,9 @@ def update_service_controller(service_id):
 
             # Validar código único
             if key == "code" and value:
-                existing_service = Service.query.filter(
-                    Service.code == value,
-                    Service.id != service.id
+                existing_service = Prestation.query.filter(
+                    Prestation.code == value,
+                    Prestation.id != service.id
                 ).first()
                 if existing_service:
                     return jsonify({"error": "Service code already in use"}), 400
@@ -96,7 +96,7 @@ def update_service_controller(service_id):
 
 # Desactivar servicio
 def deactivate_service_controller(service_id):
-    service = Service.query.get(service_id)
+    service = Prestation.query.get(service_id)
     if not service:
         return jsonify({"error": "Service not found"}), 404
 
