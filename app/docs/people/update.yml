@@ -1,7 +1,10 @@
 tags:
   - People
 summary: Update an existing person
-description: Updates fields of an existing person.
+description: >
+  Updates fields of an existing person.
+  Validates email format, unique document_number and email, 
+  valid phone and emergency_contact formats, and birth_date format (YYYY-MM-DD).
 parameters:
   - in: path
     name: person_id
@@ -17,25 +20,65 @@ parameters:
       properties:
         first_name:
           type: string
+          example: "Juan"
         last_name:
           type: string
+          example: "Pérez"
         document_number:
           type: string
+          example: "V12345678"
         gender:
           type: string
+          enum:
+            - M
+            - F
+            - O
+          example: "M"
         birth_date:
           type: string
           format: date
+          example: "1990-01-01"
         email:
           type: string
+          format: email
+          example: "juan.perez@example.com"
         phone:
           type: string
+          example: "+584123456789"
+        emergency_contact:
+          type: string
+          example: "+584129876543"
         address:
           type: string
+          example: "Calle Falsa 123"
         active:
           type: boolean
+          example: true
+
 responses:
   200:
     description: Person updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Person updated successfully"
+        person:
+          $ref: '#/definitions/Person'
+  400:
+    description: Validation error (invalid format, duplicate document_number/email, invalid phone)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Email already in use"
   404:
     description: Person not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Person not found"

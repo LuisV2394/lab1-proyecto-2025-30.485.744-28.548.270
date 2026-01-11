@@ -1,48 +1,101 @@
 tags:
-    - Agenda
-  summary: Create a new agenda block
-  description: >
-    Creates a new agenda block for a professional within a unit.
-    Validates date and time format, foreign keys existence,
-    enum values for state and type, capacity > 0,
-    prevents time overlap with existing blocks, 
-    and prevents exact duplicate blocks.
-  parameters:
-    - in: body
-      name: body
-      required: true
-      schema:
-        type: object
-        required:
-          - professionalId
-          - unitId
-          - date
-          - start_time
-          - end_time
-        properties:
-          professionalId:
-            type: integer
-            example: 101
-          unitId:
-            type: integer
-            example: 5
-          date:
-            type: string
-            format: date
-            example: "2025-12-01"
-          start_time:
-            type: string
-            format: time
-            example: "09:00:00"
-          end_time:
-            type: string
-            format: time
-            example: "11:00:00"
-          state:
-            type: string
-            enum:
-              - AVAILABLE
-              - BLOCKED
-              - OCCUPIED
-            example: AVAILABLE
-          type
+  - Agenda
+summary: Create a new agenda block
+description: >
+  Creates a new agenda block for a professional within a unit.
+  Validates date and time format, foreign keys existence,
+  enum values for state and type, capacity > 0,
+  prevents time overlap with existing blocks, 
+  and prevents exact duplicate blocks.
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - professionalId
+        - unitId
+        - date
+        - start_time
+        - end_time
+      properties:
+        professionalId:
+          type: integer
+          example: 101
+        unitId:
+          type: integer
+          example: 5
+        date:
+          type: string
+          format: date
+          example: "2025-12-01"
+        start_time:
+          type: string
+          format: time
+          example: "09:00:00"
+        end_time:
+          type: string
+          format: time
+          example: "11:00:00"
+        state:
+          type: string
+          enum:
+            - AVAILABLE
+            - BLOCKED
+            - OCCUPIED
+          example: AVAILABLE
+        type:
+          type: string
+          enum:
+            - CONSULTATION
+            - PROCEDURE
+            - INTERCONSULTATION
+          example: CONSULTATION
+        capacity:
+          type: integer
+          minimum: 1
+          example: 2
+        notes:
+          type: string
+          example: "Primera consulta de control"
+
+responses:
+  201:
+    description: Agenda block created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Bloque creado"
+        id:
+          type: integer
+          example: 1
+
+  400:
+    description: Validation error (missing, invalid, out-of-range, or duplicate block)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional ya tiene un bloque en este horario"
+
+  404:
+    description: Related resource not found (professional or unit)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional no existe"
+
+  409:
+    description: Time conflict (overlapping agenda block)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "El profesional ya tiene un bloque en este horario"

@@ -13,6 +13,10 @@ parameters:
     required: true
     schema:
       type: object
+      required:
+        - document_number
+        - first_name
+        - last_name
       properties:
         document_number:
           type: string
@@ -45,12 +49,9 @@ parameters:
           type: string
           example: "+584123987654"
         active:
-          type: integer
-          enum: [0, 1]
-          example: 1
-      required:
-        - first_name
-        - last_name
+          type: boolean
+          example: true
+
 responses:
   201:
     description: Person created successfully
@@ -88,9 +89,23 @@ responses:
           type: string
           example: "+584123987654"
         active:
-          type: integer
-          example: 1
+          type: boolean
+          example: true
+
   400:
-    description: Invalid input
+    description: Validation error (missing required fields or invalid format)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Document number already in use or invalid email format"
+
   500:
-    description: Server error
+    description: Database error or server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Database integrity error"

@@ -3,14 +3,12 @@ from app.models.person import Person
 from app import db
 from datetime import datetime
 import re
-from app.models.person import Person
-
+from sqlalchemy.exc import IntegrityError
 
 # Obtener todas las personas
 def get_all_people_controller():
     people = Person.query.all()
     return jsonify([p.to_dict() for p in people]), 200
-
 
 # Obtener persona por ID
 def get_person_by_id_controller(person_id):
@@ -22,42 +20,74 @@ def get_person_by_id_controller(person_id):
 
 def create_person_controller():
     data = request.get_json()
-    required_fields = ["first_name", "last_name"]
+    required_fields = ["document_number", "first_name", "last_name"]
     
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
+    # Validar document_number único
+    doc_number = data["document_number"]
+    if Person.query.filter_by(document_number=doc_number).first():
+        return jsonify({"error": "Document number already in use"}), 400
+
+    # Validación de email
     email = data.get("email")
     if email:
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         if not re.match(email_regex, email):
             return jsonify({"error": "Invalid email format"}), 400
-        
-        existing_person = Person.query.filter_by(email=email).first()
-        if existing_person:
+        if Person.query.filter_by(email=email).first():
             return jsonify({"error": "Email already in use"}), 400
 
+    # Validación de fecha de nacimiento
+    birth_date = data.get("birth_date")
+    if birth_date:
+        try:
+            birth_date = datetime.strptime(birth_date, "%Y-%m-%d").date()
+        except ValueError:
+            return jsonify({"error": "Invalid birth_date format. Use YYYY-MM-DD"}), 400
+
+    # Validación de teléfono
+    phone = data.get("phone")
+    if phone:
+        phone_regex = r'^\+?\d{7,15}$'
+        if not re.match(phone_regex, phone):
+            return jsonify({"error": "Invalid phone number. Only digits allowed, optional + at start, 7-15 digits"}), 400
+
+    # Validación de contacto de emergencia
+    emergency_contact = data.get("emergency_contact")
+    if emergency_contact:
+        phone_regex = r'^\+?\d{7,15}$'
+        if not re.match(phone_regex, emergency_contact):
+            return jsonify({"error": "Invalid emergency contact number. Only digits allowed, optional + at start, 7-15 digits"}), 400
+
     new_person = Person(
-        document_number=data.get("document_number"),
+        document_number=doc_number,
         first_name=data["first_name"],
         last_name=data["last_name"],
         gender=data.get("gender"),
-        birth_date=data.get("birth_date"),
+        birth_date=birth_date,
         email=email,
-        phone=data.get("phone"),
+        phone=phone,
         address=data.get("address"),
-        emergency_contact=data.get("emergency_contact"),
+        emergency_contact=emergency_contact,
         active=data.get("active", True)
     )
 
+
     db.session.add(new_person)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Database integrity error"}), 400
 
     return jsonify({
         "message": "Person created successfully",
         "person": new_person.to_dict()
     }), 201
+
 
 def update_person_controller(person_id):
     person = Person.query.get(person_id)
@@ -69,27 +99,52 @@ def update_person_controller(person_id):
     for key, value in data.items():
         if hasattr(person, key):
 
+            # Validación de document_number único
+            if key == "document_number" and value:
+                if Person.query.filter(Person.document_number == value, Person.id != person.id).first():
+                    return jsonify({"error": "Document number already in use"}), 400
+
+            # Validación de fecha de nacimiento
             if key == "birth_date":
                 if value:
-                    value = datetime.strptime(value, "%Y-%m-%d").date()
+                    try:
+                        value = datetime.strptime(value, "%Y-%m-%d").date()
+                    except ValueError:
+                        return jsonify({"error": "Invalid birth_date format. Use YYYY-MM-DD"}), 400
                 else:
                     value = None
 
+            # Validación de email
             if key == "email":
                 if value:
                     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
                     if not re.match(email_regex, value):
                         return jsonify({"error": "Invalid email format"}), 400
 
-                    existing_person = Person.query.filter(Person.email == value, Person.id != person.id).first()
-                    if existing_person:
+                    if Person.query.filter(Person.email == value, Person.id != person.id).first():
                         return jsonify({"error": "Email already in use"}), 400
                 else:
                     value = None  
 
+            # Validación de teléfono
+            if key == "phone" and value:
+                phone_regex = r'^\+?\d{7,15}$'
+                if not re.match(phone_regex, value):
+                    return jsonify({"error": "Invalid phone number. Only digits allowed, optional + at start, 7-15 digits"}), 400
+
             setattr(person, key, value)
 
-    db.session.commit()
+            # Validación de contacto de emergencia
+            if key == "emergency_contact" and value:
+                phone_regex = r'^\+?\d{7,15}$'
+                if not re.match(phone_regex, value):
+                    return jsonify({"error": "Invalid emergency contact number. Only digits allowed, optional + at start, 7-15 digits"}), 400
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"error": "Database integrity error"}), 400
 
     return jsonify({
         "message": "Person updated successfully",
