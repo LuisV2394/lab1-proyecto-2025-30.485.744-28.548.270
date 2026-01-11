@@ -49,6 +49,14 @@ def create_affiliation_controller():
         payer = Payer.query.get(payer_id)
         if not payer:
             return jsonify({"error": "Payer not found"}), 404
+        
+    # Validar coinsurance no sean negativo
+    if data.get("coinsurance", 0) < 0:
+        return jsonify({"error": "coinsurance cannot be negative"}), 400
+    
+    # Validar que copayment no sea negativo
+    if data.get("copayment", 0) < 0:
+        return jsonify({"error": "copayment cannot be negative"}), 400
 
     # Validar fechas
     try:
@@ -114,6 +122,14 @@ def update_affiliation_controller(affiliation_id):
         if not payer:
             return jsonify({"error": "Payer not found"}), 404
 
+        # Validar coinsurance no sean negativo
+    if data.get("coinsurance", 0) < 0:
+        return jsonify({"error": "coinsurance cannot be negative"}), 400
+    
+    # Validar que copayment no sea negativo
+    if data.get("copayment", 0) < 0:
+        return jsonify({"error": "copayment cannot be negative"}), 400
+    
     # Validar fechas si se proporcionan
     if "valid_from" in data or "valid_to" in data:
         try:
