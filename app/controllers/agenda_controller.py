@@ -226,6 +226,20 @@ def update_block_controller(block_id):
     if overlap:
         return jsonify({"error": "El profesional ya tiene un bloque en este horario"}), 409
 
+    # Validar duplicado exacto
+    duplicate = Block.query.filter(
+        Block.id != block_id,
+        Block.professional_id == block.professional_id,
+        Block.unit_id == block.unit_id,
+        Block.date == block.date,
+        Block.start_time == block.start_time,
+        Block.end_time == block.end_time,
+        Block.type == block.type
+    ).first()
+
+    if duplicate:
+        return jsonify({"error": "Ya existe un bloque idéntico para este profesional"}), 409
+
     # Commit
     try:
         db.session.commit()

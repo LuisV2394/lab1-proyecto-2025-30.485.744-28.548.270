@@ -1,11 +1,12 @@
-  tags:
+tags:
     - Agenda
   summary: Update an existing agenda block
   description: >
     Updates an existing agenda block for a professional within a unit.
     Validates date and time format, foreign keys existence,
     enum values for state and type, capacity > 0,
-    and prevents time overlap with existing blocks.
+    prevents time overlap with existing blocks, 
+    and prevents exact duplicate blocks.
   parameters:
     - in: path
       name: block_id
@@ -87,10 +88,10 @@
             example: "Bloque no encontrado"
 
     409:
-      description: Time conflict (overlapping agenda block)
+      description: Time conflict or exact duplicate block
       schema:
         type: object
         properties:
           error:
             type: string
-            example: "El profesional ya tiene un bloque en este horario"
+            example: "El profesional ya tiene un bloque en este horario o ya existe un bloque idéntico"

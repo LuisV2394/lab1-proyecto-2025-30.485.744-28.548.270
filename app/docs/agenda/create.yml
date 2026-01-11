@@ -1,11 +1,12 @@
-  tags:
+tags:
     - Agenda
   summary: Create a new agenda block
   description: >
     Creates a new agenda block for a professional within a unit.
     Validates date and time format, foreign keys existence,
     enum values for state and type, capacity > 0,
-    and prevents time overlap with existing blocks.
+    prevents time overlap with existing blocks, 
+    and prevents exact duplicate blocks.
   parameters:
     - in: body
       name: body
@@ -44,57 +45,4 @@
               - BLOCKED
               - OCCUPIED
             example: AVAILABLE
-          type:
-            type: string
-            enum:
-              - CONSULTATION
-              - PROCEDURE
-              - INTERCONSULTATION
-            example: CONSULTATION
-          capacity:
-            type: integer
-            minimum: 1
-            example: 2
-          notes:
-            type: string
-            example: "Primera consulta de control"
-
-  responses:
-    201:
-      description: Agenda block created successfully
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: "Bloque creado"
-          id:
-            type: integer
-            example: 1
-
-    400:
-      description: Validation error (missing, invalid, or out-of-range data)
-      schema:
-        type: object
-        properties:
-          error:
-            type: string
-            example: "Estado inválido, valores permitidos: AVAILABLE, BLOCKED, OCCUPIED"
-
-    404:
-      description: Related resource not found (professional or unit)
-      schema:
-        type: object
-        properties:
-          error:
-            type: string
-            example: "El profesional no existe"
-
-    409:
-      description: Time conflict (overlapping agenda block)
-      schema:
-        type: object
-        properties:
-          error:
-            type: string
-            example: "El profesional ya tiene un bloque en este horario"
+          type
