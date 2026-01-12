@@ -2,27 +2,41 @@ tags:
   - Professionals
 summary: Update a professional
 description: Updates fields of an existing professional.
-
 parameters:
   - in: path
     name: professional_id
     required: true
     type: integer
-    description: ID of the professional to update
     example: 7
-
+    description: ID of the professional to update
   - in: body
     name: body
     required: true
     schema:
       type: object
       properties:
+        first_name:
+          type: string
+          example: "Luis"
+        last_name:
+          type: string
+          example: "Daza"
         professional_registry:
           type: string
           example: "REG-9087"
         specialty:
           type: string
           example: "Cardiología"
+        email:
+          type: string
+          format: email
+          example: "luis.daza@example.com"
+        phone:
+          type: string
+          example: "+584121234567"
+        status:
+          type: string
+          example: "ACTIVE"
         is_active:
           type: boolean
           example: true
@@ -32,9 +46,47 @@ parameters:
       description: "Any of the fields may be updated. All fields are optional."
 
 responses:
-  200:
+  '200':
     description: Professional updated successfully
-  404:
-    description: Professional not found
-  400:
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+        professional:
+          type: object
+          properties:
+            id:
+              type: integer
+            first_name:
+              type: string
+            last_name:
+              type: string
+            professional_registry:
+              type: string
+            specialty:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+            status:
+              type: string
+            is_active:
+              type: boolean
+            schedule_enabled:
+              type: boolean
+  '400':
     description: Invalid data
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+  '404':
+    description: Professional not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
