@@ -8,7 +8,7 @@ produces:
 
 parameters:
   - in: path
-    name: id
+    name: diagnosis_id 
     required: true
     type: integer
     description: ID of the diagnosis to delete

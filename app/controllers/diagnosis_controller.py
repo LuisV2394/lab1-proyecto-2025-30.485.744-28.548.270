@@ -26,6 +26,11 @@ def add_diagnosis_controller():
     episode = Episode.query.get(episode_id)
     if not episode:
         return jsonify({"error": "El episodio no existe"}), 404
+    
+    # Validar código único por episodio
+    existing_code = Diagnosis.query.filter_by(episode_id=episode_id, code=code).first()
+    if existing_code:
+        return jsonify({"error": f"El código '{code}' ya existe en este episodio"}), 400
 
     try:
         # Si se marca como principal, desmarcar otros diagnósticos principales del episodio
@@ -74,7 +79,6 @@ def get_all_diagnoses_controller():
         for d in diagnoses
     ]), 200
 
-
 def get_diagnosis_by_id_controller(diagnosis_id):
     d = Diagnosis.query.get(diagnosis_id)
 
@@ -99,12 +103,23 @@ def update_diagnosis_controller(diagnosis_id):
     if not d:
         return jsonify({"message": "Diagnóstico no encontrado"}), 404
 
-    data = request.json
+    data = request.json or {}
 
     # Validar tipo_diagnoses si se actualiza
     type_diagnoses = data.get("type_diagnoses", d.type_diagnoses)
     if type_diagnoses not in ALLOWED_TYPES:
         return jsonify({"error": f"type_diagnoses inválido. Valores permitidos: {ALLOWED_TYPES}"}), 400
+
+    # Validar código único por episodio si se actualiza
+    new_code = data.get("code", d.code)
+    if new_code != d.code:
+        existing_code = Diagnosis.query.filter(
+            Diagnosis.episode_id == d.episode_id,
+            Diagnosis.code == new_code,
+            Diagnosis.id != diagnosis_id
+        ).first()
+        if existing_code:
+            return jsonify({"error": f"El código '{new_code}' ya existe en este episodio"}), 400
 
     # Regla: solo un diagnóstico principal por episodio
     if data.get("main") is True:
@@ -115,7 +130,7 @@ def update_diagnosis_controller(diagnosis_id):
         ).update({"main": False})
 
     # Actualizar campos
-    d.code = data.get("code", d.code)
+    d.code = new_code
     d.description = data.get("description", d.description)
     d.type_diagnoses = type_diagnoses
     d.main = data.get("main", d.main)
@@ -129,7 +144,6 @@ def update_diagnosis_controller(diagnosis_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-
 
 def delete_diagnosis_controller(diagnosis_id):
     d = Diagnosis.query.get(diagnosis_id)
