@@ -41,4 +41,34 @@ responses:
             example: 55.00
           estado:
             type: string
-            example: "pendiente"
+            example: "PENDING"
+          items:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 10
+                descripcion:
+                  type: string
+                  example: "Consulta médica"
+                cantidad:
+                  type: number
+                  format: float
+                  example: 1
+                valorUnitario:
+                  type: number
+                  format: float
+                  example: 50
+                impuestos:
+                  type: number
+                  format: float
+                  example: 5
+                total:
+                  type: number
+                  format: float
+                  example: 55
+                prestacionId:
+                  type: integer
+                  example: 1

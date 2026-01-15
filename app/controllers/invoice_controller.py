@@ -11,8 +11,36 @@ ALLOWED_STATUSES = {"PENDING", "ISSUED", "PAID", "CANCELLED"}
 
 def get_all_invoices_controller():
     invoices = Invoice.query.all()
-    return jsonify([i.to_dict() for i in invoices]), 200
+    
+    result = []
+    for inv in invoices:
+        invoice_data = {
+            "id": inv.id,
+            "invoiceNumber": inv.invoice_number,
+            "currency": inv.currency,
+            "insurerId": inv.insurer_id,
+            "patientId": inv.patient_id,
+            "issueDate": inv.issue_date.isoformat() if inv.issue_date else None,
+            "status": inv.status,
+            "subtotal": float(inv.subtotal) if inv.subtotal is not None else 0,
+            "total": float(inv.total) if inv.total is not None else 0,
+            "items": []
+        }
 
+        for item in inv.items:
+            invoice_data["items"].append({
+                "id": item.id,
+                "description": item.description,
+                "quantity": float(item.quantity),
+                "unit_price": float(item.unit_price),
+                "tax_amount": float(item.tax_amount),
+                "total_price": float(item.total_price),
+                "prestationId": item.prestation_id
+            })
+        
+        result.append(invoice_data)
+    
+    return jsonify(result), 200
 
 def get_invoice_by_id_controller(invoice_id):
     invoice = Invoice.query.get(invoice_id)

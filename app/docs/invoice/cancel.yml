@@ -1,7 +1,7 @@
 tags:
   - Invoices
 summary: Cancel an invoice
-description: Marks a specific invoice as cancelled.
+description: Sets the status of an invoice to CANCELLED.
 operationId: cancelInvoice
 produces:
   - application/json
@@ -22,3 +22,9 @@ responses:
           example: "Invoice cancelled successfully"
   404:
     description: Invoice not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invoice not found"

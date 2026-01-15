@@ -1,10 +1,8 @@
 tags:
   - InvoiceItems
-summary: Update invoice item
-description: Updates fields of an existing invoice item.
+summary: Update an invoice item
+description: Updates the fields of an existing invoice item, recalculating the invoice totals automatically.
 operationId: updateInvoiceItem
-consumes:
-  - application/json
 produces:
   - application/json
 parameters:
@@ -19,9 +17,6 @@ parameters:
     schema:
       type: object
       properties:
-        prestacionId:
-          type: integer
-          example: 1
         descripcion:
           type: string
           example: "Consulta médica actualizada"
@@ -32,11 +27,14 @@ parameters:
         valorUnitario:
           type: number
           format: float
-          example: 55.00
+          example: 60
         impuestos:
           type: number
           format: float
-          example: 6.00
+          example: 5
+        prestacionId:
+          type: integer
+          example: 1
 responses:
   200:
     description: Invoice item updated successfully
@@ -49,9 +47,9 @@ responses:
         item:
           type: object
           properties:
-            prestacionCodigo:
+            id:
               type: integer
-              example: 1
+              example: 10
             descripcion:
               type: string
               example: "Consulta médica actualizada"
@@ -62,16 +60,31 @@ responses:
             valorUnitario:
               type: number
               format: float
-              example: 55.00
+              example: 60
             impuestos:
               type: number
               format: float
-              example: 6.00
+              example: 5
             total:
               type: number
               format: float
-              example: 116.00
+              example: 125
+            prestacionId:
+              type: integer
+              example: 1
   400:
-    description: Invalid input
+    description: Validation errors
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Quantity must be greater than 0"
   404:
-    description: Invoice item not found
+    description: Invoice item or prestation not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invoice item not found"

@@ -1,7 +1,7 @@
 tags:
   - InvoiceItems
-summary: Delete invoice item
-description: Deletes an existing invoice item and updates its parent invoice totals.
+summary: Delete an invoice item
+description: Deletes an existing invoice item and updates the parent invoice totals.
 operationId: deleteInvoiceItem
 produces:
   - application/json
@@ -22,3 +22,9 @@ responses:
           example: "Invoice item deleted successfully"
   404:
     description: Invoice item not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invoice item not found"
