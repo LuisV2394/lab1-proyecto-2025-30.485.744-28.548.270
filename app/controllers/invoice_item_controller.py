@@ -1,5 +1,7 @@
 from flask import jsonify, request
+from decimal import Decimal,  InvalidOperation
 from app.models.invoice_item import InvoiceItem
+from app.models.prestation import Prestation
 from app.models.invoice import Invoice
 from app import db
 
@@ -56,32 +58,53 @@ def create_invoice_item_controller():
         "item": item.to_dict()
     }), 201
 
-
 def update_invoice_item_controller(item_id):
     item = InvoiceItem.query.get(item_id)
     if not item:
         return jsonify({"error": "Invoice item not found"}), 404
 
-    data = request.get_json()
+    data = request.get_json() or {}
 
-    if "cantidad" in data:
-        item.quantity = data["cantidad"]
-    if "valorUnitario" in data:
-        item.unit_price = data["valorUnitario"]
-    if "impuestos" in data:
-        item.tax_amount = data["impuestos"]
-    if "descripcion" in data:
-        item.description = data["descripcion"]
-    if "prestacionId" in data:
-        item.prestation_id = data["prestacionId"]
+    # Validaciones y actualizaciones
+    try:
+        if "cantidad" in data:
+            quantity = Decimal(data["cantidad"])
+            if quantity <= 0:
+                return jsonify({"error": "Quantity must be greater than 0"}), 400
+            item.quantity = quantity
 
-    # Recalcular total
-    item.total_price = float(item.quantity) * float(item.unit_price) + float(item.tax_amount)
+        if "valorUnitario" in data:
+            unit_price = Decimal(data["valorUnitario"])
+            if unit_price <= 0:
+                return jsonify({"error": "Unit price must be greater than 0"}), 400
+            item.unit_price = unit_price
 
-    # Actualizar subtotal y total de la factura
+        if "impuestos" in data:
+            tax_amount = Decimal(data["impuestos"])
+            if tax_amount < 0:
+                return jsonify({"error": "Tax amount cannot be negative"}), 400
+            item.tax_amount = tax_amount
+
+        if "descripcion" in data:
+            item.description = str(data["descripcion"])
+
+        if "prestacionId" in data:
+            prestation_id = data["prestacionId"]
+            prestation = Prestation.query.get(prestation_id)
+            if not prestation:
+                return jsonify({"error": f"Prestation with id {prestation_id} does not exist"}), 404
+            item.prestation_id = prestation_id
+
+    except (InvalidOperation, ValueError):
+        return jsonify({"error": "Invalid numeric value provided"}), 400
+
+    # Recalcular total del ítem
+    item.total_price = item.quantity * item.unit_price + item.tax_amount
+
+    # Recalcular subtotal y total de la factura
     invoice = item.invoice
-    subtotal = sum([float(i.quantity) * float(i.unit_price) for i in invoice.items])
-    total_tax = sum([float(i.tax_amount) for i in invoice.items])
+    subtotal = sum([i.quantity * i.unit_price for i in invoice.items])
+    total_tax = sum([i.tax_amount for i in invoice.items])
     invoice.subtotal = subtotal
     invoice.total = subtotal + total_tax
 
@@ -92,15 +115,24 @@ def update_invoice_item_controller(item_id):
         "item": item.to_dict()
     }), 200
 
-
 def delete_invoice_item_controller(item_id):
     item = InvoiceItem.query.get(item_id)
     if not item:
         return jsonify({"error": "Invoice item not found"}), 404
 
     invoice = item.invoice
-    invoice.subtotal -= float(item.quantity) * float(item.unit_price)
-    invoice.total -= float(item.total_price)
+
+    quantity = Decimal(item.quantity)
+    unit_price = Decimal(item.unit_price)
+    total_price = Decimal(item.total_price)
+
+    invoice.subtotal -= quantity * unit_price
+    invoice.total -= total_price
+
+    if invoice.subtotal < 0:
+        invoice.subtotal = Decimal("0.00")
+    if invoice.total < 0:
+        invoice.total = Decimal("0.00")
 
     db.session.delete(item)
     db.session.commit()
