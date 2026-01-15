@@ -21,9 +21,15 @@ class Order(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    episode = db.relationship("Episode", backref="orders")
+    episode = db.relationship("Episode", back_populates="orders")
     professional = db.relationship("Professional", backref="orders")
-
+    authorizations = db.relationship(
+        "Authorization",
+        back_populates="order",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+    
     def to_dict(self):
         return {
             "id": self.id,

@@ -17,4 +17,4 @@ class Diagnosis(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     # Relationships
-    episode = db.relationship("Episode", backref=db.backref("diagnoses", lazy=True))
+    episode = db.relationship("Episode", back_populates="diagnoses")

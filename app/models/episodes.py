@@ -23,3 +23,21 @@ class Episode(db.Model):
     person = db.relationship("Person", backref=db.backref("episodes", lazy=True))
     professional = db.relationship("Professional", backref=db.backref("episodes", lazy=True))
     unit = db.relationship("Unit", backref=db.backref("episodes", lazy=True))
+    diagnoses = db.relationship(
+        "Diagnosis",
+        back_populates="episode",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+    clinical_notes = db.relationship(
+        "ClinicalNote",
+        back_populates="episode",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+    orders = db.relationship(
+        "Order",
+        back_populates="episode",
+        cascade="all, delete",
+        passive_deletes=True
+    )

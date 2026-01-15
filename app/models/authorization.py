@@ -26,6 +26,11 @@ class Authorization(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    order = db.relationship(
+    "Order",
+    back_populates="authorizations"
+)
+
     def to_dict(self):
         return {
             "id": self.id,

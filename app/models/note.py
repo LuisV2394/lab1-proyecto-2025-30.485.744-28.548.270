@@ -16,5 +16,5 @@ class ClinicalNote(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    episode = db.relationship("Episode", backref=db.backref("clinical_notes", lazy=True))
+    episode = db.relationship("Episode", back_populates="clinical_notes")
     professional = db.relationship("Professional", backref=db.backref("clinical_notes", lazy=True))
