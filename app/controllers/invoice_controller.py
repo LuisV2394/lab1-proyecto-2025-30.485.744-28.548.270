@@ -5,9 +5,9 @@ from app.models.invoice import Invoice
 from app.models.invoice_item import InvoiceItem
 from app.models.person import Person
 from app.models.insurer import Insurer
-# Descomentar cuando exista el modelo de prestaciones
-# from app.models.prestation import Prestation
+from app.models.prestation import Prestation
 
+ALLOWED_STATUSES = {"PENDING", "ISSUED", "PAID", "CANCELLED"}
 
 def get_all_invoices_controller():
     invoices = Invoice.query.all()
@@ -101,13 +101,12 @@ def create_invoice_controller():
         if tax_amount < 0:
             return jsonify({"error": "impuestos must be >= 0"}), 400
 
-        # Descomentar cuando exista el modelo de prestaciones
-        # if prestation_id:
-        #     prestation = Prestation.query.get(prestation_id)
-        #     if not prestation:
-        #         return jsonify({
-        #             "error": f"Prestacion not found (id: {prestation_id})"
-        #         }), 404
+        if prestation_id:
+            prestation = Prestation.query.get(prestation_id)
+            if not prestation:
+                return jsonify({
+                    "error": f"Prestacion not found"
+                }), 404
 
         line_subtotal = quantity * unit_price
         line_total = line_subtotal + tax_amount
@@ -151,30 +150,31 @@ def update_invoice_status_controller(invoice_id):
     if not invoice:
         return jsonify({"error": "Invoice not found"}), 404
 
-    data = request.get_json()
-    new_status = data.get("estado")
+    data = request.json or {}
+    new_status_str = data.get("estado")
+    if not new_status_str:
+        return jsonify({"error": "Missing 'estado' field"}), 400
 
-    status_map = {
-        "pendiente": "PENDING",
-        "emitida": "ISSUED",
-        "pagada": "PAID",
-        "anulada": "CANCELLED"
-    }
+    # Validación usando ALLOWED_STATUSES
+    new_status = new_status_str.upper()
+    if new_status not in ALLOWED_STATUSES:
+        return jsonify({"error": f"Invalid estado. Allowed values: {list(ALLOWED_STATUSES)}"}), 400
 
-    if new_status not in status_map:
-        return jsonify({"error": "Invalid estado"}), 400
-
+    # Validar que no se pueda modificar una factura cancelada
     if invoice.status == "CANCELLED":
         return jsonify({"error": "Cancelled invoices cannot be modified"}), 400
 
-    invoice.status = status_map[new_status]
-    db.session.commit()
+    try:
+        invoice.status = new_status
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
     return jsonify({
         "message": "Invoice status updated successfully",
-        "estado": new_status
+        "estado": invoice.status
     }), 200
-
 
 def cancel_invoice_controller(invoice_id):
     invoice = Invoice.query.get(invoice_id)

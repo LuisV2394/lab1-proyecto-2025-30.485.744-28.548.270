@@ -18,11 +18,13 @@ parameters:
     required: true
     schema:
       type: object
+      required:
+        - estado
       properties:
         estado:
           type: string
-          enum: ["pendiente","emitida","pagada","anulada"]
-          example: "emitida"
+          enum: ["PENDING", "ISSUED", "PAID", "CANCELLED"]
+          example: "ISSUED"
 responses:
   200:
     description: Status updated successfully
@@ -34,8 +36,28 @@ responses:
           example: "Invoice status updated successfully"
         estado:
           type: string
-          example: "emitida"
+          example: "ISSUED"
   400:
     description: Invalid input or cannot modify cancelled invoice
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invalid estado. Allowed values: ['PENDING', 'ISSUED', 'PAID', 'CANCELLED']"
   404:
     description: Invoice not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Invoice not found"
+  500:
+    description: Database error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Database error details"
