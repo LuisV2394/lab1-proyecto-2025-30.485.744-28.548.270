@@ -44,6 +44,13 @@ def create_payment_controller():
             except ValueError:
                 return jsonify({"error": "paid_at debe ser un formato ISO válido"}), 400
 
+        # Validar que la referencia sea única si se envía
+        if reference:
+            existing_payment = Payment.query.filter_by(reference=reference).first()
+            if existing_payment:
+                return jsonify({"error": f"La referencia '{reference}' ya existe"}), 400
+
+        # Crear el nuevo pago
         new_payment = Payment(
             invoice_id=invoice_id,
             amount=amount,
@@ -63,7 +70,6 @@ def create_payment_controller():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-
 
 # READ ALL – Obtener todos los pagos
 def get_all_payments_controller():
@@ -140,6 +146,16 @@ def update_payment_controller(payment_id):
         except ValueError:
             return jsonify({"error": "paid_at debe ser un formato ISO válido"}), 400
 
+    # Validar que la referencia sea única entre otros pagos
+    if reference:
+        existing_payment = Payment.query.filter(
+            Payment.reference == reference,
+            Payment.id != payment.id  # ignorar el pago actual
+        ).first()
+        if existing_payment:
+            return jsonify({"error": f"La referencia '{reference}' ya existe en otro pago"}), 400
+
+    # Actualizar campos
     payment.invoice_id = invoice_id
     payment.amount = amount
     payment.payment_method = payment_method
@@ -152,7 +168,6 @@ def update_payment_controller(payment_id):
         "message": "Pago actualizado",
         "id": payment.id
     }), 200
-
 
 # DELETE – Eliminar un pago
 def delete_payment_controller(payment_id):
