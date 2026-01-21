@@ -7,7 +7,7 @@ produces:
   - application/json
 parameters:
   - in: path
-    name: id
+    name: note_id
     required: true
     type: integer
     description: ID of the clinical note

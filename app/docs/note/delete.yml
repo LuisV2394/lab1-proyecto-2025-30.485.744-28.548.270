@@ -5,7 +5,7 @@ description: Deletes a clinical note. Notes of closed episodes cannot be deleted
 operationId: deleteClinicalNote
 parameters:
   - in: path
-    name: id
+    name: note_id
     required: true
     type: integer
     description: ID of the clinical note to delete
