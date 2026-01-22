@@ -1,16 +1,18 @@
 tags:
   - Units
-summary: Update an existing unit
-description: Updates fields of an existing unit.
+summary: Update a unit
+description: Updates the details of an existing unit.
+operationId: updateUnit
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
   - in: path
     name: unit_id
+    type: integer
     required: true
-    schema:
-      type: integer
     description: ID of the unit to update
-    example: 3
-
   - in: body
     name: body
     required: true
@@ -19,25 +21,65 @@ parameters:
       properties:
         name:
           type: string
-          example: "Unidad de Pediatría"
+          example: "Consultorio 101"
         type:
           type: string
-          example: "Especialidad"
+          enum: [SEDE, CONSULTORIO, SERVICIO]
+          example: "CONSULTORIO"
         description:
           type: string
-          example: "Área dedicada a la atención pediátrica"
+          example: "Consultorio actualizado"
+        address:
+          type: string
+          example: "Av. Principal, Edificio Salud, Piso 2"
         phone:
           type: string
-          example: "+58-212-5551234"
+          example: "+1 555-123-4567"
+        schedule_reference:
+          type: string
+          example: "Lunes a Viernes 8:00 AM - 5:00 PM"
         is_active:
           type: boolean
           example: true
-      description: "Any of the fields may be updated. All fields are optional."
-
 responses:
   200:
     description: Unit updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unit updated successfully"
+        unit:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "Consultorio 101"
+            type:
+              type: string
+              example: "CONSULTORIO"
+            description:
+              type: string
+              example: "Consultorio actualizado"
+            address:
+              type: string
+              example: "Av. Principal, Edificio Salud, Piso 2"
+            phone:
+              type: string
+              example: "+1 555-123-4567"
+            schedule_reference:
+              type: string
+              example: "Lunes a Viernes 8:00 AM - 5:00 PM"
+            is_active:
+              type: boolean
+              example: true
+  400:
+    description: Invalid request or invalid field values
   404:
     description: Unit not found
-  400:
-    description: Invalid data
+  500:
+    description: Internal server error

@@ -1,14 +1,26 @@
 tags:
   - Units
 summary: Deactivate a unit
+description: Deactivates a unit by setting its is_active field to false.
+operationId: deactivateUnit
+produces:
+  - application/json
 parameters:
   - in: path
     name: unit_id
+    type: integer
     required: true
-    schema:
-      type: integer
+    description: ID of the unit to deactivate
 responses:
   200:
     description: Unit deactivated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Unit deactivated successfully"
   404:
     description: Unit not found
+  500:
+    description: Internal server error

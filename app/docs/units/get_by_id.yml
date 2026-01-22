@@ -1,14 +1,47 @@
 tags:
   - Units
 summary: Get a unit by ID
+description: Retrieves a single unit by its ID.
+operationId: getUnitById
+produces:
+  - application/json
 parameters:
   - in: path
     name: unit_id
+    type: integer
     required: true
-    schema:
-      type: integer
+    description: ID of the unit
 responses:
   200:
-    description: Unit found
+    description: Unit retrieved successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Consultorio 101"
+        type:
+          type: string
+          example: "CONSULTORIO"
+        description:
+          type: string
+          example: "Consultorio equipado para medicina general"
+        address:
+          type: string
+          example: "Av. Principal, Edificio Salud, Piso 1"
+        phone:
+          type: string
+          example: "+1 555-123-4567"
+        schedule_reference:
+          type: string
+          example: "Lunes a Viernes 8:00 AM - 4:00 PM"
+        is_active:
+          type: boolean
+          example: true
   404:
     description: Unit not found
+  500:
+    description: Internal server error

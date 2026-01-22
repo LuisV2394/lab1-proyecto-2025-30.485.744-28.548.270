@@ -1,24 +1,41 @@
 tags:
   - Units
-summary: Retrieve all units
-description: Returns a list of all units in the system.
+summary: Get all units
+description: Retrieves a list of all units.
+operationId: getAllUnits
+produces:
+  - application/json
 responses:
   200:
-    description: List of units
-    content:
-      application/json:
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-              name:
-                type: string
-              type:
-                type: string
-              description:
-                type: string
-              is_active:
-                type: boolean
+    description: List of units retrieved successfully
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          name:
+            type: string
+            example: "Consultorio 101"
+          type:
+            type: string
+            example: "CONSULTORIO"
+          description:
+            type: string
+            example: "Consultorio equipado para medicina general"
+          address:
+            type: string
+            example: "Av. Principal, Edificio Salud, Piso 1"
+          phone:
+            type: string
+            example: "+1 555-123-4567"
+          schedule_reference:
+            type: string
+            example: "Lunes a Viernes 8:00 AM - 4:00 PM"
+          is_active:
+            type: boolean
+            example: true
+  500:
+    description: Internal server error

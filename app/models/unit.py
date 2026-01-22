@@ -7,7 +7,7 @@ class Unit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140), nullable=False)
     type = db.Column(
-        db.String(30),
+        db.Enum('SEDE', 'CONSULTORIO', 'SERVICIO', name='unit_type_enum'),
         nullable=False,
         comment="SEDE, CONSULTORIO, SERVICIO"
     )

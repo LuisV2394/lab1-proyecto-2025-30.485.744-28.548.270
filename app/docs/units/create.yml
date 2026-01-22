@@ -2,6 +2,11 @@ tags:
   - Units
 summary: Create a new unit
 description: Creates a new unit (sede, consultorio or service).
+operationId: createUnit
+consumes:
+  - application/json
+produces:
+  - application/json
 parameters:
   - in: body
     name: body
