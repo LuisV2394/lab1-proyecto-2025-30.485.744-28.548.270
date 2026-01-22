@@ -1,7 +1,7 @@
 tags:
   - Clinical Versions
 summary: Update a clinical version
-description: Updates the content of an existing clinical version.
+description: Updates the content snapshot of a clinical version. Validates that content is not empty and within length limits.
 operationId: updateClinicalVersion
 consumes:
   - application/json
@@ -10,6 +10,7 @@ produces:
 parameters:
   - name: version_id
     in: path
+    description: ID of the clinical version to update
     required: true
     type: integer
   - in: body
@@ -20,10 +21,11 @@ parameters:
       properties:
         content_snapshot:
           type: string
-          example: "Updated snapshot content"
+          description: New snapshot content (required, max 10000 characters)
+          example: "Updated snapshot content of the note"
 responses:
   200:
-    description: Version updated successfully
+    description: Clinical version updated successfully
     schema:
       type: object
       properties:
@@ -36,9 +38,18 @@ responses:
             id:
               type: integer
               example: 15
+            entity_type:
+              type: string
+              example: "clinical_note"
+            entity_id:
+              type: integer
+              example: 12
             content_snapshot:
               type: string
-              example: "Updated snapshot content"
+              example: "Updated snapshot content of the note"
+            user_id:
+              type: integer
+              example: 5
             version_number:
               type: integer
               example: 2
@@ -46,10 +57,8 @@ responses:
               type: string
               example: "2026-01-08T14:22:31"
   400:
-    description: Invalid input
+    description: Invalid content_snapshot
   404:
-    description: Version not found
-  401:
-    description: Unauthorized
-  403:
-    description: Forbidden
+    description: Clinical version not found
+  500:
+    description: Server error

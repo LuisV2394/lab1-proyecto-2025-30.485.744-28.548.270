@@ -5,14 +5,10 @@ class ClinicalVersion(db.Model):
     __tablename__ = 'clinical_versions'
 
     id = db.Column(db.Integer, primary_key=True)
-    
-    # We identify what type of entity we are versioning('note' o 'result')
     entity_type = db.Column(db.String(100), nullable=False) 
     entity_id = db.Column(db.Integer, nullable=False)
-    
     version_number = db.Column(db.Integer, nullable=False)
-    content_snapshot = db.Column(db.JSON, nullable=False) # We save the entire previous content
-    
+    content_snapshot = db.Column(db.JSON, nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 

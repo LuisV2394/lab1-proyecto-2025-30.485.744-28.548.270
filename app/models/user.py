@@ -18,7 +18,7 @@ class User(db.Model):
     person = db.relationship("Person", back_populates="users")
     roles = db.relationship(
         "Role",
-        secondary="user_roles",  # en string, porque SQLAlchemy ya conoce la tabla a través del modelo UserRole
+        secondary="user_roles", 
         backref=db.backref("users", lazy="dynamic")
         )
 

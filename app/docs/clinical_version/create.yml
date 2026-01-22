@@ -1,7 +1,7 @@
 tags:
   - Clinical Versions
 summary: Create a clinical version entry
-description: Creates a new clinical version manually.
+description: Creates a new clinical version manually. Validates entity type, user existence, version number, and content snapshot.
 operationId: createClinicalVersion
 consumes:
   - application/json
@@ -16,18 +16,24 @@ parameters:
       properties:
         entity_type:
           type: string
-          example: "note"
+          description: Type of entity (must be one of allowed types)
+          enum: [clinical_note, lab_result, prescription, episode]
+          example: "clinical_note"
         entity_id:
           type: integer
+          description: ID of the entity for which the version is created
           example: 12
         content_snapshot:
           type: string
+          description: Snapshot of the content (required, max 10000 characters)
           example: "Snapshot content of the note"
         user_id:
           type: integer
+          description: ID of the user creating the version (must exist)
           example: 5
         version_number:
           type: integer
+          description: Version number (must be positive)
           example: 2
       required:
         - entity_type
@@ -52,7 +58,7 @@ responses:
               example: 15
             entity_type:
               type: string
-              example: "note"
+              example: "clinical_note"
             entity_id:
               type: integer
               example: 12
@@ -69,7 +75,7 @@ responses:
               type: string
               example: "2026-01-08T14:22:31"
   400:
-    description: Invalid input
+    description: Invalid input (missing fields, invalid entity_type, non-existing user, negative version_number, or too long content_snapshot)
   401:
     description: Unauthorized
   403:

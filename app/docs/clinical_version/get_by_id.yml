@@ -1,45 +1,38 @@
 tags:
   - Clinical Versions
-summary: Get clinical version by ID
-description: Retrieves a single clinical version by its ID.
-operationId: getClinicalVersionById
+summary: Retrieve all clinical versions
+description: Retrieves all clinical versions in the system, ordered by creation date descending.
+operationId: getAllClinicalVersions
 produces:
   - application/json
-parameters:
-  - name: version_id
-    in: path
-    required: true
-    type: integer
 responses:
   200:
-    description: Version retrieved successfully
+    description: List of clinical versions retrieved successfully
     schema:
-      type: object
-      properties:
-        id:
-          type: integer
-          example: 3
-        entity_type:
-          type: string
-          example: "note"
-        entity_id:
-          type: integer
-          example: 12
-        content_snapshot:
-          type: string
-          example: "Previous note content..."
-        user_id:
-          type: integer
-          example: 2
-        version_number:
-          type: integer
-          example: 1
-        created_at:
-          type: string
-          example: "2026-01-07T11:20:00"
-  404:
-    description: Version not found
-  401:
-    description: Unauthorized
-  403:
-    description: Forbidden
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 15
+          entity_type:
+            type: string
+            example: "clinical_note"
+          entity_id:
+            type: integer
+            example: 12
+          content_snapshot:
+            type: string
+            example: "Snapshot content of the note"
+          user_id:
+            type: integer
+            example: 5
+          version_number:
+            type: integer
+            example: 2
+          created_at:
+            type: string
+            example: "2026-01-08T14:22:31"
+  500:
+    description: Server error
