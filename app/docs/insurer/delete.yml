@@ -1,0 +1,41 @@
+tags:
+  - Insurers
+summary: Delete an insurer
+description: Deletes an existing insurer from the system.
+operationId: deleteInsurer
+parameters:
+  - in: path
+    name: insurer_id
+    required: true
+    type: integer
+    example: 1
+produces:
+  - application/json
+
+responses:
+  200:
+    description: Insurer deleted successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Insurer deleted successfully"
+
+  404:
+    description: Insurer not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Insurer not found"
+
+  500:
+    description: Database or server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Database integrity error"

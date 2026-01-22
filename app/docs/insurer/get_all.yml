@@ -1,0 +1,37 @@
+tags:
+  - Insurers
+summary: Get all insurers
+description: Returns a list of all insurers in the system.
+operationId: getAllInsurers
+produces:
+  - application/json
+
+responses:
+  200:
+    description: List of insurers
+    schema:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          name:
+            type: string
+            example: "Seguros La Vida"
+          taxId:
+            type: string
+            example: "J123456789"
+          contact:
+            type: string
+            example: "+584123456789"
+          isActive:
+            type: boolean
+            example: true
+          createdAt:
+            type: string
+            example: "2026-01-22T03:29:27"
+          updatedAt:
+            type: string
+            example: "2026-01-22T03:29:27"

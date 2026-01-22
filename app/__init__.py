@@ -87,7 +87,7 @@ def create_app():
         from app.routes.clinical_versions_routes import version_bp
         from app.routes.payment_routes import payments_bp
         from app.routes.credit_debit_note_routes import credit_debit_notes_bp
-        
+        from app.routes.insurer_routes import insurer_bp
         from app.routes.invoice_routes import invoice_bp
         from app.routes.invoice_item_routes import invoice_item_bp
         from app.routes.notification_routes import notifications_bp
@@ -106,6 +106,7 @@ def create_app():
         app.register_blueprint(orders_bp)
         app.register_blueprint(prescriptions_bp)
         app.register_blueprint(results_bp)
+        app.register_blueprint(insurer_bp)
         app.register_blueprint(plans_bp)
         app.register_blueprint(affiliation_bp)
         app.register_blueprint(order_details_bp)

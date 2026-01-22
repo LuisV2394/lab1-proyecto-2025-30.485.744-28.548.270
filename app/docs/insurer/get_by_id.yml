@@ -1,0 +1,50 @@
+tags:
+  - Insurers
+summary: Get an insurer by ID
+description: Returns a single insurer by its ID.
+operationId: getInsurerById
+parameters:
+  - in: path
+    name: insurer_id
+    required: true
+    type: integer
+    example: 1
+produces:
+  - application/json
+
+responses:
+  200:
+    description: Insurer found
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Seguros La Vida"
+        taxId:
+          type: string
+          example: "J123456789"
+        contact:
+          type: string
+          example: "+584123456789"
+        isActive:
+          type: boolean
+          example: true
+        createdAt:
+          type: string
+          example: "2026-01-22T03:29:27"
+        updatedAt:
+          type: string
+          example: "2026-01-22T03:29:27"
+
+  404:
+    description: Insurer not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Insurer not found"

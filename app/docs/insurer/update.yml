@@ -1,0 +1,68 @@
+tags:
+  - Insurers
+summary: Update an insurer
+description: Updates an existing insurer's details.
+operationId: updateInsurer
+parameters:
+  - in: path
+    name: insurer_id
+    required: true
+    type: integer
+    example: 1
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Seguros La Vida Actualizada"
+        taxId:
+          type: string
+          example: "J123456789"
+        contact:
+          type: string
+          example: "+584123456789"
+        isActive:
+          type: boolean
+          example: true
+produces:
+  - application/json
+
+responses:
+  200:
+    description: Insurer updated successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Insurer updated successfully"
+
+  404:
+    description: Insurer not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Insurer not found"
+
+  409:
+    description: Conflict (taxId already exists)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "taxId already exists"
+
+  500:
+    description: Database or server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Database integrity error"

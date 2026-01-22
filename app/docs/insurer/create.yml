@@ -1,0 +1,71 @@
+tags:
+  - Insurers
+summary: Create a new insurer
+description: Creates a new insurer record in the system.
+operationId: createInsurer
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      required:
+        - name
+        - taxId
+      properties:
+        name:
+          type: string
+          example: "Seguros La Vida"
+        taxId:
+          type: string
+          example: "J123456789"
+        contact:
+          type: string
+          example: "+584123456789"
+        isActive:
+          type: boolean
+          example: true
+
+responses:
+  201:
+    description: Insurer created successfully
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Insurer created successfully"
+        insurerId:
+          type: integer
+          example: 1
+
+  400:
+    description: Validation error (missing required fields or invalid format)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Missing required field: name"
+
+  409:
+    description: Conflict (taxId already exists)
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "taxId already exists"
+
+  500:
+    description: Database error or server error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Database integrity error"

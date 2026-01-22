@@ -21,8 +21,8 @@ BASE_DOCS = os.path.abspath(
 
 # Obtener todos los profesionales
 @professionals_bp.route("/", methods=["GET"])
-#@jwt_required()
-#@role_required(["admin"])
+@jwt_required()
+@role_required(["admin"])
 @swag_from(os.path.join(BASE_DOCS, "get_all.yml"))
 def get_all_professionals():
     return get_all_professionals_controller()
