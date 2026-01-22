@@ -1,0 +1,42 @@
+[
+  {
+    "active": true,
+    "code": "LAB004",
+    "estimated_time": 50,
+    "group_name": "Laboratory",
+    "name": "Liver Function Test",
+    "requirements": "No fasting required"
+  },
+  {
+    "active": true,
+    "code": "LAB005",
+    "estimated_time": 40,
+    "group_name": "Laboratory",
+    "name": "Kidney Function Test",
+    "requirements": "Morning sample preferred"
+  },
+  {
+    "active": true,
+    "code": "CONS003",
+    "estimated_time": 30,
+    "group_name": "Consultation",
+    "name": "Dermatology Consultation",
+    "requirements": "Bring list of current medications"
+  },
+  {
+    "active": true,
+    "code": "CONS004",
+    "estimated_time": 50,
+    "group_name": "Consultation",
+    "name": "Cardiology Consultation",
+    "requirements": "Bring recent ECG or test results"
+  },
+  {
+    "active": true,
+    "code": "LAB006",
+    "estimated_time": 35,
+    "group_name": "Laboratory",
+    "name": "Thyroid Panel",
+    "requirements": "Fasting 8 hours recommended"
+  }
+]

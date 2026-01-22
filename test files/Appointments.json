@@ -1,0 +1,52 @@
+[
+  {
+    "canal": "PRESENCIAL",
+    "duration_minutes": 40,
+    "motivo": "Consulta cardiológica",
+    "observations": "Paciente con hipertensión solicita revisión de presión arterial",
+    "personId": 17,
+    "professionalId": 10,
+    "start": "2026-01-31T09:30:00",
+    "unitId": 10
+  },
+  {
+    "canal": "VIRTUAL",
+    "duration_minutes": 30,
+    "motivo": "Consulta dermatológica",
+    "observations": "Paciente presenta erupciones cutáneas y solicita diagnóstico",
+    "personId": 18,
+    "professionalId": 11,
+    "start": "2026-01-31T11:00:00",
+    "unitId": 11
+  },
+  {
+    "canal": "PRESENCIAL",
+    "duration_minutes": 25,
+    "motivo": "Control de presión",
+    "observations": "Paciente hipertenso solicita revisión mensual de presión",
+    "personId": 19,
+    "professionalId": 12,
+    "start": "2026-02-01T10:00:00",
+    "unitId": 12
+  },
+  {
+    "canal": "VIRTUAL",
+    "duration_minutes": 60,
+    "motivo": "Consulta psicológica",
+    "observations": "Paciente solicita seguimiento de terapia de depresión",
+    "personId": 20,
+    "professionalId": 13,
+    "start": "2026-02-01T14:00:00",
+    "unitId": 13
+  },
+  {
+    "canal": "PRESENCIAL",
+    "duration_minutes": 15,
+    "motivo": "Aplicación de vacuna",
+    "observations": "Paciente solicita vacuna antitetánica",
+    "personId": 21,
+    "professionalId": 14,
+    "start": "2026-02-02T09:15:00",
+    "unitId": 14
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "card_number": "CARD-223344",
+    "coinsurance": 9,
+    "copayment": 20,
+    "payer_id": 11,
+    "person_id": 16,
+    "plan_id": 11,
+    "policy_number": "POL-223355",
+    "status": true,
+    "valid_from": "2025-01-01",
+    "valid_to": "2025-12-31"
+  },
+  {
+    "card_number": "CARD-334455",
+    "coinsurance": 3,
+    "copayment": 5,
+    "payer_id": 12,
+    "person_id": 17,
+    "plan_id": 12,
+    "policy_number": "POL-334466",
+    "status": true,
+    "valid_from": "2025-02-01",
+    "valid_to": "2026-01-31"
+  },
+  {
+    "card_number": "CARD-445566",
+    "coinsurance": 6,
+    "copayment": 12,
+    "payer_id": 13,
+    "person_id": 18,
+    "plan_id": 13,
+    "policy_number": "POL-445577",
+    "status": true,
+    "valid_from": "2025-03-01",
+    "valid_to": "2026-02-28"
+  },
+  {
+    "card_number": "CARD-556677",
+    "coinsurance": 5,
+    "copayment": 10,
+    "payer_id": 14,
+    "person_id": 19,
+    "plan_id": 14,
+    "policy_number": "POL-556688",
+    "status": true,
+    "valid_from": "2025-04-01",
+    "valid_to": "2026-03-31"
+  },
+  {
+    "card_number": "CARD-667788",
+    "coinsurance": 7,
+    "copayment": 15,
+    "payer_id": 15,
+    "person_id": 20,
+    "plan_id": 15,
+    "policy_number": "POL-667799",
+    "status": true,
+    "valid_from": "2025-05-01",
+    "valid_to": "2026-04-30"
+  }
+]

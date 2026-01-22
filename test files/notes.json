@@ -1,0 +1,53 @@
+[
+  {
+    "assessment": "Upper respiratory tract infection",
+    "attachments": [
+      "file4.pdf"
+    ],
+    "episode_id": 60,
+    "objective": "Temp 37.8°C, HR 85, mild congestion",
+    "plan": "Prescribe symptomatic treatment, monitor for fever",
+    "professional_id": 14,
+    "subjective": "Patient reports sore throat and nasal congestion for 2 days"
+  },
+  {
+    "assessment": "Hypertension follow-up",
+    "attachments": [],
+    "episode_id": 61,
+    "objective": "BP 140/90, HR 76, no edema",
+    "plan": "Adjust antihypertensive medications, schedule follow-up in 1 month",
+    "professional_id": 15,
+    "subjective": "Patient reports occasional headaches, no chest pain"
+  },
+  {
+    "assessment": "Sprained ankle, mild",
+    "attachments": [
+      "image4.png"
+    ],
+    "episode_id": 62,
+    "objective": "Swelling present, mild tenderness, ROM slightly limited",
+    "plan": "RICE therapy, NSAIDs, follow-up in 1 week",
+    "professional_id": 16,
+    "subjective": "Patient reports twisting ankle during sports"
+  },
+  {
+    "assessment": "Routine adult check-up",
+    "attachments": [],
+    "episode_id": 63,
+    "objective": "Vitals stable, labs within normal limits",
+    "plan": "Maintain healthy lifestyle, schedule next annual check-up",
+    "professional_id": 17,
+    "subjective": "Patient reports feeling well, no complaints"
+  },
+  {
+    "assessment": "Mild asthma exacerbation",
+    "attachments": [
+      "file5.pdf"
+    ],
+    "episode_id": 64,
+    "objective": "Wheezing on auscultation, SpO2 95%",
+    "plan": "Administer inhaled bronchodilator, monitor symptoms",
+    "professional_id": 18,
+    "subjective": "Patient reports shortness of breath and mild cough"
+  }
+]

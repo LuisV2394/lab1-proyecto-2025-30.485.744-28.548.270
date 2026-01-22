@@ -1,0 +1,72 @@
+[
+  {
+    "details": [
+      {
+        "code": "LAB011",
+        "description": "Thyroid Function Test",
+        "indications": "Fasting not required"
+      }
+    ],
+    "episode_id": 17,
+    "priority": "normal",
+    "professional_id": 6,
+    "requires_authorization": false,
+    "type": "LABORATORY"
+  },
+  {
+    "details": [
+      {
+        "code": "LAB012",
+        "description": "Hemoglobin A1c",
+        "indications": "No special preparation"
+      }
+    ],
+    "episode_id": 18,
+    "priority": "urgent",
+    "professional_id": 7,
+    "requires_authorization": true,
+    "type": "LABORATORY"
+  },
+  {
+    "details": [
+      {
+        "code": "LAB013",
+        "description": "Electrolyte Panel",
+        "indications": "Fasting recommended"
+      }
+    ],
+    "episode_id": 19,
+    "priority": "normal",
+    "professional_id": 8,
+    "requires_authorization": false,
+    "type": "LABORATORY"
+  },
+  {
+    "details": [
+      {
+        "code": "LAB014",
+        "description": "Coagulation Profile",
+        "indications": "No fasting required"
+      }
+    ],
+    "episode_id": 20,
+    "priority": "urgent",
+    "professional_id": 9,
+    "requires_authorization": true,
+    "type": "LABORATORY"
+  },
+  {
+    "details": [
+      {
+        "code": "LAB015",
+        "description": "Vitamin D Test",
+        "indications": "No special preparation"
+      }
+    ],
+    "episode_id": 21,
+    "priority": "normal",
+    "professional_id": 10,
+    "requires_authorization": false,
+    "type": "LABORATORY"
+  }
+]

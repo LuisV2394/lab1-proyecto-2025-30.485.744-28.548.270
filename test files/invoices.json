@@ -1,0 +1,82 @@
+[
+  {
+    "aseguradoraId": 3,
+    "fechaEmision": "2026-01-20",
+    "items": [
+      {
+        "cantidad": 1,
+        "descripcion": "Consulta cardiológica",
+        "impuestos": 8,
+        "prestacionId": 6,
+        "valorUnitario": 70
+      }
+    ],
+    "moneda": "USD",
+    "numero": "FAC-000206",
+    "personaId": 15
+  },
+  {
+    "aseguradoraId": null,
+    "fechaEmision": "2026-01-21",
+    "items": [
+      {
+        "cantidad": 1,
+        "descripcion": "Examen de laboratorio completo",
+        "impuestos": 10,
+        "prestacionId": 7,
+        "valorUnitario": 50
+      }
+    ],
+    "moneda": "USD",
+    "numero": "FAC-000207",
+    "personaId": 16
+  },
+  {
+    "aseguradoraId": 5,
+    "fechaEmision": "2026-01-22",
+    "items": [
+      {
+        "cantidad": 1,
+        "descripcion": "Consulta psicológica",
+        "impuestos": 5,
+        "prestacionId": 8,
+        "valorUnitario": 65
+      }
+    ],
+    "moneda": "USD",
+    "numero": "FAC-000208",
+    "personaId": 17
+  },
+  {
+    "aseguradoraId": null,
+    "fechaEmision": "2026-01-23",
+    "items": [
+      {
+        "cantidad": 1,
+        "descripcion": "Consulta nutricional",
+        "impuestos": 5,
+        "prestacionId": 9,
+        "valorUnitario": 55
+      }
+    ],
+    "moneda": "USD",
+    "numero": "FAC-000209",
+    "personaId": 18
+  },
+  {
+    "aseguradoraId": 6,
+    "fechaEmision": "2026-01-24",
+    "items": [
+      {
+        "cantidad": 1,
+        "descripcion": "Consulta traumatológica",
+        "impuestos": 8,
+        "prestacionId": 10,
+        "valorUnitario": 80
+      }
+    ],
+    "moneda": "USD",
+    "numero": "FAC-000210",
+    "personaId": 19
+  }
+]

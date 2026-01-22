@@ -1,0 +1,52 @@
+[
+  {
+    "email": "ana.rodriguez@example.com",
+    "first_name": "Ana",
+    "last_name": "Rodríguez",
+    "phone": "+584123987654",
+    "professional_registry": "REG-9088",
+    "schedule_enabled": true,
+    "specialty": "Pediatría",
+    "status": "ACTIVE"
+  },
+  {
+    "email": "carlos.martinez@example.com",
+    "first_name": "Carlos",
+    "last_name": "Martínez",
+    "phone": "+584124567890",
+    "professional_registry": "REG-9089",
+    "schedule_enabled": false,
+    "specialty": "Dermatología",
+    "status": "ACTIVE"
+  },
+  {
+    "email": "maria.gomez@example.com",
+    "first_name": "María",
+    "last_name": "Gómez",
+    "phone": "+584125678901",
+    "professional_registry": "REG-9090",
+    "schedule_enabled": true,
+    "specialty": "Neurología",
+    "status": "ACTIVE"
+  },
+  {
+    "email": "juan.perez@example.com",
+    "first_name": "Juan",
+    "last_name": "Pérez",
+    "phone": "+584126789012",
+    "professional_registry": "REG-9091",
+    "schedule_enabled": true,
+    "specialty": "Cardiología",
+    "status": "ACTIVE"
+  },
+  {
+    "email": "sofia.lopez@example.com",
+    "first_name": "Sofía",
+    "last_name": "López",
+    "phone": "+584127890123",
+    "professional_registry": "REG-9092",
+    "schedule_enabled": false,
+    "specialty": "Ginecología",
+    "status": "ACTIVE"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "payload": {
+      "name": "John"
+    },
+    "recipient": "user@example.com",
+    "template": "welcome_email",
+    "type": "EMAIL"
+  },
+  {
+    "payload": {
+      "name": "Maria"
+    },
+    "recipient": "maria@example.com",
+    "template": "password_reset",
+    "type": "EMAIL"
+  },
+  {
+    "payload": {
+      "name": "Carlos"
+    },
+    "recipient": "carlos@example.com",
+    "template": "appointment_reminder",
+    "type": "EMAIL"
+  },
+  {
+    "payload": {
+      "name": "Luisa"
+    },
+    "recipient": "luisa@example.com",
+    "template": "newsletter",
+    "type": "EMAIL"
+  },
+  {
+    "payload": {
+      "name": "Pedro"
+    },
+    "recipient": "pedro@example.com",
+    "template": "billing_notification",
+    "type": "EMAIL"
+  }
+]

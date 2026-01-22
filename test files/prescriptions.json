@@ -1,0 +1,72 @@
+[
+  {
+    "episode_id": 13,
+    "items": [
+      {
+        "dosage": "200mg",
+        "duration": "7 days",
+        "frequency": "BID",
+        "medicine_code": "MED128",
+        "name": "Cefalexin",
+        "route": "oral"
+      }
+    ],
+    "observations": "Take 1 hour before meals"
+  },
+  {
+    "episode_id": 14,
+    "items": [
+      {
+        "dosage": "50mg",
+        "duration": "10 days",
+        "frequency": "QD",
+        "medicine_code": "MED129",
+        "name": "Metformin",
+        "route": "oral"
+      }
+    ],
+    "observations": "Take with breakfast"
+  },
+  {
+    "episode_id": 15,
+    "items": [
+      {
+        "dosage": "5mg",
+        "duration": "14 days",
+        "frequency": "QD",
+        "medicine_code": "MED130",
+        "name": "Lorazepam",
+        "route": "oral"
+      }
+    ],
+    "observations": "Take at bedtime"
+  },
+  {
+    "episode_id": 16,
+    "items": [
+      {
+        "dosage": "10ml",
+        "duration": "7 days",
+        "frequency": "TID",
+        "medicine_code": "MED131",
+        "name": "Cough Syrup",
+        "route": "oral"
+      }
+    ],
+    "observations": "Shake well before use"
+  },
+  {
+    "episode_id": 17,
+    "items": [
+      {
+        "dosage": "25mg",
+        "duration": "5 days",
+        "frequency": "BID",
+        "medicine_code": "MED132",
+        "name": "Prednisone",
+        "route": "oral"
+      }
+    ],
+    "observations": "Take with food to avoid stomach upset"
+  }
+]

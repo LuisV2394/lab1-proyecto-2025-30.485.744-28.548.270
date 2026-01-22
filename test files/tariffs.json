@@ -1,0 +1,42 @@
+[
+  {
+    "plan_id": 6,
+    "prestation_code": "SRV006",
+    "price": 300,
+    "taxes": 30,
+    "validFrom": "2026-06-01",
+    "validUntil": "2026-12-31"
+  },
+  {
+    "plan_id": 7,
+    "prestation_code": "SRV007",
+    "price": 220,
+    "taxes": 22,
+    "validFrom": "2026-07-01",
+    "validUntil": "2026-12-31"
+  },
+  {
+    "plan_id": 8,
+    "prestation_code": "SRV008",
+    "price": 180,
+    "taxes": 18,
+    "validFrom": "2026-08-01",
+    "validUntil": "2026-12-31"
+  },
+  {
+    "plan_id": 9,
+    "prestation_code": "SRV009",
+    "price": 260,
+    "taxes": 26,
+    "validFrom": "2026-09-01",
+    "validUntil": "2026-12-31"
+  },
+  {
+    "plan_id": 10,
+    "prestation_code": "SRV010",
+    "price": 195,
+    "taxes": 19.5,
+    "validFrom": "2026-10-01",
+    "validUntil": "2026-12-31"
+  }
+]

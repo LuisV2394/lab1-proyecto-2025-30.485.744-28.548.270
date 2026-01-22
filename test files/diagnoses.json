@@ -1,0 +1,37 @@
+[
+  {
+    "code": "N39.0",
+    "description": "Urinary tract infection, site not specified",
+    "episode_id": 31,
+    "main": true,
+    "type_diagnoses": "DEFINITIVE"
+  },
+  {
+    "code": "F32.9",
+    "description": "Major depressive disorder, single episode, unspecified",
+    "episode_id": 32,
+    "main": true,
+    "type_diagnoses": "PRESUMPTIVE"
+  },
+  {
+    "code": "H52.4",
+    "description": "Presbyopia",
+    "episode_id": 33,
+    "main": true,
+    "type_diagnoses": "DEFINITIVE"
+  },
+  {
+    "code": "L29.9",
+    "description": "Pruritus, unspecified",
+    "episode_id": 34,
+    "main": true,
+    "type_diagnoses": "PRESUMPTIVE"
+  },
+  {
+    "code": "G43.909",
+    "description": "Migraine, unspecified, not intractable, without status migrainosus",
+    "episode_id": 35,
+    "main": true,
+    "type_diagnoses": "DEFINITIVE"
+  }
+]

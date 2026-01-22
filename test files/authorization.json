@@ -1,0 +1,47 @@
+[
+  {
+    "authorization_number": "AUTH-20006",
+    "observations": "Solicitud inicial de procedimiento odontológico",
+    "order_id": 15,
+    "plan_id": 8,
+    "procedure_code": "PROC205",
+    "response_date": "2026-02-06T09:45:00",
+    "status": "REQUESTED"
+  },
+  {
+    "authorization_number": "AUTH-20007",
+    "observations": "Solicitud para examen de laboratorio especializado",
+    "order_id": 16,
+    "plan_id": 9,
+    "procedure_code": "PROC206",
+    "response_date": "2026-02-07T11:00:00",
+    "status": "APPROVED"
+  },
+  {
+    "authorization_number": "AUTH-20008",
+    "observations": "Solicitud de estudio de imagen avanzada",
+    "order_id": 17,
+    "plan_id": 10,
+    "procedure_code": "PROC207",
+    "response_date": "2026-02-08T13:30:00",
+    "status": "DENIED"
+  },
+  {
+    "authorization_number": "AUTH-20009",
+    "observations": "Solicitud de procedimiento quirúrgico menor",
+    "order_id": 18,
+    "plan_id": 11,
+    "procedure_code": "PROC208",
+    "response_date": "2026-02-09T10:00:00",
+    "status": "APPROVED"
+  },
+  {
+    "authorization_number": "AUTH-20010",
+    "observations": "Solicitud de consulta con especialista en cardiología",
+    "order_id": 19,
+    "plan_id": 12,
+    "procedure_code": "PROC209",
+    "response_date": "2026-02-10T12:15:00",
+    "status": "REQUESTED"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "address": "Calle 10, Torre Médica, Piso 2",
+    "description": "Consultorio de oftalmología con equipamiento moderno",
+    "is_active": true,
+    "name": "Consultorio 202",
+    "phone": "+1 555-789-0123",
+    "schedule_reference": "Lunes a Viernes 9:00 AM - 5:00 PM",
+    "type": "CONSULTORIO"
+  },
+  {
+    "address": "Av. Independencia, Edificio Salud Integral, Piso 3",
+    "description": "Consultorio especializado en odontología",
+    "is_active": true,
+    "name": "Consultorio 303",
+    "phone": "+1 555-890-1234",
+    "schedule_reference": "Lunes a Viernes 8:30 AM - 3:30 PM",
+    "type": "CONSULTORIO"
+  },
+  {
+    "address": "Calle 5, Centro Médico, Piso 1",
+    "description": "Consultorio de fisioterapia y rehabilitación",
+    "is_active": true,
+    "name": "Consultorio 103",
+    "phone": "+1 555-901-2345",
+    "schedule_reference": "Lunes a Viernes 10:00 AM - 6:00 PM",
+    "type": "CONSULTORIO"
+  },
+  {
+    "address": "Av. Universidad, Edificio Salud Total, Piso 4",
+    "description": "Consultorio de psiquiatría y psicología",
+    "is_active": true,
+    "name": "Consultorio 402",
+    "phone": "+1 555-012-3456",
+    "schedule_reference": "Lunes a Viernes 7:30 AM - 2:30 PM",
+    "type": "CONSULTORIO"
+  },
+  {
+    "address": "Calle Los Robles, Torre Salud, Piso 5",
+    "description": "Consultorio de nutrición y dietética",
+    "is_active": true,
+    "name": "Consultorio 502",
+    "phone": "+1 555-123-6789",
+    "schedule_reference": "Lunes a Viernes 8:00 AM - 4:00 PM",
+    "type": "CONSULTORIO"
+  }
+]

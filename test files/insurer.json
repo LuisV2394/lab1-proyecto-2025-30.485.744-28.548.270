@@ -1,0 +1,32 @@
+[
+  {
+    "contact": "+584136789012",
+    "isActive": true,
+    "name": "Salud Integral",
+    "taxId": "J888999000"
+  },
+  {
+    "contact": "+584137890123",
+    "isActive": true,
+    "name": "Cobertura Segura",
+    "taxId": "J111333555"
+  },
+  {
+    "contact": "+584138901234",
+    "isActive": true,
+    "name": "Vida Saludable",
+    "taxId": "J666777888"
+  },
+  {
+    "contact": "+584139012345",
+    "isActive": true,
+    "name": "Seguros Vitales",
+    "taxId": "J999000111"
+  },
+  {
+    "contact": "+584130123456",
+    "isActive": true,
+    "name": "Protección Familiar Plus",
+    "taxId": "J444555888"
+  }
+]

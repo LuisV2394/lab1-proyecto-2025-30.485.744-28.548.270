@@ -1,0 +1,37 @@
+[
+  {
+    "motivo": "Patient reports persistent headaches",
+    "person_id": 47,
+    "professional_id": 12,
+    "type_episode": "CONSULTATION",
+    "unit_id": 2
+  },
+  {
+    "motivo": "Annual physical examination",
+    "person_id": 48,
+    "professional_id": 13,
+    "type_episode": "CONSULTATION",
+    "unit_id": 3
+  },
+  {
+    "motivo": "Follow-up for type 2 diabetes management",
+    "person_id": 49,
+    "professional_id": 14,
+    "type_episode": "CONSULTATION",
+    "unit_id": 4
+  },
+  {
+    "motivo": "Patient presents with sore throat and cough",
+    "person_id": 50,
+    "professional_id": 15,
+    "type_episode": "CONSULTATION",
+    "unit_id": 5
+  },
+  {
+    "motivo": "Post-vaccination check-up",
+    "person_id": 51,
+    "professional_id": 16,
+    "type_episode": "CONSULTATION",
+    "unit_id": 1
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "method": "DIGITAL_SIGNATURE",
+    "person_id": 17,
+    "process_type": "research_participation"
+  },
+  {
+    "method": "VERBAL_WITH_RECORD",
+    "person_id": 18,
+    "process_type": "data_processing"
+  },
+  {
+    "method": "DIGITAL_SIGNATURE",
+    "person_id": 19,
+    "process_type": "medical_treatment"
+  },
+  {
+    "method": "VERBAL_WITH_RECORD",
+    "person_id": 20,
+    "process_type": "research_participation"
+  },
+  {
+    "method": "DIGITAL_SIGNATURE",
+    "person_id": 21,
+    "process_type": "data_processing"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "active": true,
+    "address": "Calle La Esperanza 12, Valencia, Venezuela",
+    "birth_date": "1991-04-10",
+    "document_number": "V90123456",
+    "email": "sofia.moreno@example.com",
+    "emergency_contact": "+584121234890",
+    "first_name": "Sofía",
+    "gender": "F",
+    "last_name": "Moreno",
+    "phone": "+584127891234"
+  },
+  {
+    "active": true,
+    "address": "Av. Carabobo 45, Barquisimeto, Venezuela",
+    "birth_date": "1987-09-05",
+    "document_number": "V11223344",
+    "email": "miguel.ramirez@example.com",
+    "emergency_contact": "+584129876001",
+    "first_name": "Miguel",
+    "gender": "M",
+    "last_name": "Ramírez",
+    "phone": "+584128765001"
+  },
+  {
+    "active": true,
+    "address": "Calle Los Tulipanes 7, Maracay, Venezuela",
+    "birth_date": "1993-06-22",
+    "document_number": "V55667788",
+    "email": "valentina.sosa@example.com",
+    "emergency_contact": "+584123009876",
+    "first_name": "Valentina",
+    "gender": "F",
+    "last_name": "Sosa",
+    "phone": "+584126543210"
+  },
+  {
+    "active": true,
+    "address": "Av. Bolívar 120, Quíbor, Venezuela",
+    "birth_date": "1989-02-18",
+    "document_number": "V33445566",
+    "email": "andres.lopez@example.com",
+    "emergency_contact": "+584124567890",
+    "first_name": "Andrés",
+    "gender": "M",
+    "last_name": "López",
+    "phone": "+584123987654"
+  },
+  {
+    "active": true,
+    "address": "Calle Las Flores 88, Caracas, Venezuela",
+    "birth_date": "1994-11-30",
+    "document_number": "V77889900",
+    "email": "camila.rivera@example.com",
+    "emergency_contact": "+584125432198",
+    "first_name": "Camila",
+    "gender": "F",
+    "last_name": "Rivera",
+    "phone": "+584128901234"
+  }
+]

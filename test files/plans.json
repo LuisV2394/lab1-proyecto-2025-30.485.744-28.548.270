@@ -1,0 +1,27 @@
+[
+  {
+    "general_conditions": "Covers general consultations",
+    "insurer_id": 3,
+    "name": "Basic Plan"
+  },
+  {
+    "general_conditions": "Covers consultations and lab tests",
+    "insurer_id": 2,
+    "name": "Standard Plan"
+  },
+  {
+    "general_conditions": "Covers consultations, lab tests, and specialist visits",
+    "insurer_id": 3,
+    "name": "Premium Plan"
+  },
+  {
+    "general_conditions": "Covers all consultations, lab tests, and surgical procedures",
+    "insurer_id": 4,
+    "name": "Comprehensive Plan"
+  },
+  {
+    "general_conditions": "Covers emergency care and general consultations",
+    "insurer_id": 5,
+    "name": "Emergency Plan"
+  }
+]
