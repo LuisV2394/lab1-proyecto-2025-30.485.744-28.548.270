@@ -2,6 +2,9 @@ from flask import jsonify, request
 from datetime import datetime
 from app import db
 from app.models.insurer import Insurer
+import re
+
+PHONE_REGEX = re.compile(r"^\+58\d{10}$") 
 
 def get_all_insurers_controller():
     insurers = Insurer.query.all()
@@ -34,7 +37,6 @@ def get_insurer_by_id_controller(insurer_id):
         "updatedAt": insurer.updated_at.isoformat() if insurer.updated_at else None,
     }), 200
 
-
 def create_insurer_controller():
     data = request.get_json()
     if not data:
@@ -50,10 +52,15 @@ def create_insurer_controller():
     if existing:
         return jsonify({"error": "taxId already exists"}), 409
 
+    # Validar teléfono si viene
+    contact = data.get("contact")
+    if contact and not PHONE_REGEX.match(contact):
+        return jsonify({"error": "Invalid phone number format. Use +58XXXXXXXXXX"}), 400
+
     insurer = Insurer(
         name=data["name"],
         tax_id=data["taxId"],
-        contact=data.get("contact"),
+        contact=contact,
         is_active=data.get("isActive", True),
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow()
@@ -70,7 +77,6 @@ def create_insurer_controller():
         "message": "Insurer created successfully",
         "insurerId": insurer.id
     }), 201
-
 
 def update_insurer_controller(insurer_id):
     insurer = Insurer.query.get(insurer_id)
@@ -90,7 +96,10 @@ def update_insurer_controller(insurer_id):
             return jsonify({"error": "taxId already exists"}), 409
         insurer.tax_id = data["taxId"]
     if "contact" in data:
-        insurer.contact = data["contact"]
+        contact = data["contact"]
+        if contact and not PHONE_REGEX.match(contact):
+            return jsonify({"error": "Invalid phone number format. Use +58XXXXXXXXXX"}), 400
+        insurer.contact = contact
     if "isActive" in data:
         insurer.is_active = data["isActive"]
 
@@ -103,7 +112,6 @@ def update_insurer_controller(insurer_id):
         return jsonify({"error": "Error updating insurer", "details": str(e)}), 500
 
     return jsonify({"message": "Insurer updated successfully"}), 200
-
 
 def delete_insurer_controller(insurer_id):
     insurer = Insurer.query.get(insurer_id)
