@@ -28,54 +28,42 @@ def get_authorization_by_id_controller(auth_id):
 def create_authorization_controller():
     data = request.get_json() or {}
 
-    # Must have either order_id OR procedure_code
     order_id = data.get("order_id")
     procedure_code = data.get("procedure_code")
     if not order_id and not procedure_code:
         return jsonify({"error": "Either order_id or procedure_code must be provided"}), 400
 
-    # Validate order_id exists if provided
-    if order_id:
-        if not Order.query.get(order_id):
-            return jsonify({"error": "Order not found"}), 404
+    if order_id and not Order.query.get(order_id):
+        return jsonify({"error": "Order not found"}), 404
 
-    # Validate plan_id exists
     plan_id = data.get("plan_id")
     if not plan_id:
         return jsonify({"error": "plan_id is required"}), 400
     if not CoveragePlan.query.get(plan_id):
         return jsonify({"error": "Coverage plan not found"}), 404
 
-    # Validate procedure_code uniqueness if provided
-    if procedure_code:
-        existing_proc = Authorization.query.filter_by(procedure_code=procedure_code).first()
-        if existing_proc:
-            return jsonify({"error": "procedure_code already exists"}), 400
+    if procedure_code and Authorization.query.filter_by(procedure_code=procedure_code).first():
+        return jsonify({"error": "procedure_code already exists"}), 400
 
-    # Validate authorization_number uniqueness if provided
-    if authorization_number:
-        existing_auth_num = Authorization.query.filter_by(authorization_number=authorization_number).first()
-        if existing_auth_num:
-            return jsonify({"error": "authorization_number already exists"}), 400
+    # Optional fields
+    authorization_number = data.get("authorization_number")
+    response_date = data.get("response_date")
+    observations = data.get("observations")
 
-    # Validate status
+    # Validate authorization_number uniqueness
+    if authorization_number and Authorization.query.filter_by(authorization_number=authorization_number).first():
+        return jsonify({"error": "authorization_number already exists"}), 400
+
     status = data.get("status", AuthorizationStatus.REQUESTED.value)
     if status not in VALID_STATUSES:
         return jsonify({"error": f"Invalid status. Must be one of {list(VALID_STATUSES)}"}), 400
 
-    # Optional fields
-    response_date = data.get("response_date")
-    authorization_number = data.get("authorization_number")
-    observations = data.get("observations")
-
-    # Convert response_date if provided
     if response_date:
         try:
             response_date = datetime.fromisoformat(response_date)
         except ValueError:
             return jsonify({"error": "Invalid response_date format. Must be ISO format"}), 400
 
-    # Create authorization
     new_auth = Authorization(
         order_id=order_id,
         procedure_code=procedure_code,
