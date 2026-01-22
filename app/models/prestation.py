@@ -5,11 +5,11 @@ class Prestation(db.Model):
     __tablename__ = 'prestations'
 
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(20), unique=True, nullable=False) # Código CUPS/CUM o interno
+    code = db.Column(db.String(20), unique=True, nullable=False) 
     name = db.Column(db.String(200), nullable=False)
-    group_name = db.Column(db.String(100)) # Ej: Laboratorio, Imágenes, Consulta
-    requirements = db.Column(db.Text) # Ej: Ayuno de 8 horas, Vejiga llena
-    estimated_time = db.Column(db.Integer) # Tiempo en minutos
+    group_name = db.Column(db.String(100)) 
+    requirements = db.Column(db.Text)
+    estimated_time = db.Column(db.Integer)
     
     active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

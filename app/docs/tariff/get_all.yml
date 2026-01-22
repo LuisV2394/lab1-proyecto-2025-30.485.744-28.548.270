@@ -1,19 +1,19 @@
 tags:
   - Tariffs
 summary: Get all tariffs
-description: Retrieve all tariffs, ordered by valid_from date descending.
+description: Retrieves all tariffs, ordered by valid_from descending.
 operationId: getAllTariffs
 produces:
   - application/json
 responses:
   200:
-    description: Tariffs retrieved successfully
+    description: List of all tariffs
     schema:
       type: object
       properties:
         count:
           type: integer
-          example: 3
+          example: 2
         tariffs:
           type: array
           items:
@@ -22,13 +22,13 @@ responses:
               id:
                 type: integer
                 example: 1
-              service_code:
+              prestation_code:
                 type: string
                 example: "SRV001"
               plan_id:
                 type: integer
                 example: 1
-              base_value:
+              price:
                 type: number
                 format: float
                 example: 150.0
@@ -42,9 +42,5 @@ responses:
               valid_until:
                 type: string
                 example: "2026-12-31"
-  401:
-    description: Unauthorized
-  403:
-    description: Forbidden
   500:
     description: Server error

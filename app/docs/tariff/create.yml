@@ -14,7 +14,7 @@ parameters:
     schema:
       type: object
       properties:
-        service_code:
+        prestation_code:
           type: string
           example: "SRV001"
         plan_id:
@@ -37,8 +37,7 @@ parameters:
           format: date
           example: "2026-12-31"
       required:
-        - service_code
-        - plan_id
+        - prestation_code
         - price
         - validFrom
 responses:
@@ -56,13 +55,13 @@ responses:
             id:
               type: integer
               example: 1
-            service_code:
+            prestation_code:
               type: string
               example: "SRV001"
             plan_id:
               type: integer
               example: 1
-            base_value:
+            price:
               type: number
               format: float
               example: 150.0
@@ -77,7 +76,7 @@ responses:
               type: string
               example: "2026-12-31"
   400:
-    description: Invalid input or date format
+    description: Invalid input, date format, or negative values
   404:
     description: Service or coverage plan not found
   500:

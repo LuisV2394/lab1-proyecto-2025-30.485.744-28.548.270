@@ -1,7 +1,7 @@
 tags:
   - Tariffs
-summary: Update an existing tariff
-description: Updates the price, taxes, or valid_until date of an existing tariff.
+summary: Update a tariff
+description: Updates an existing tariff by its ID.
 operationId: updateTariff
 consumes:
   - application/json
@@ -18,6 +18,12 @@ parameters:
     schema:
       type: object
       properties:
+        prestation_code:
+          type: string
+          example: "SRV001"
+        plan_id:
+          type: integer
+          example: 1
         price:
           type: number
           format: float
@@ -26,6 +32,10 @@ parameters:
           type: number
           format: float
           example: 16.0
+        validFrom:
+          type: string
+          format: date
+          example: "2026-01-08"
         validUntil:
           type: string
           format: date
@@ -45,13 +55,13 @@ responses:
             id:
               type: integer
               example: 1
-            service_code:
+            prestation_code:
               type: string
               example: "SRV001"
             plan_id:
               type: integer
               example: 1
-            base_value:
+            price:
               type: number
               format: float
               example: 160.0
@@ -66,7 +76,7 @@ responses:
               type: string
               example: "2026-12-31"
   400:
-    description: Invalid input or date format
+    description: Invalid input, negative values, or duplicate tariff
   404:
     description: Tariff not found
   500:

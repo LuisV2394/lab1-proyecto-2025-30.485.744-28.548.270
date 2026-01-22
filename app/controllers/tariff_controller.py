@@ -1,10 +1,8 @@
 from flask import jsonify, request
 from app.models.tariff import Tariff
-from app.models.prestation import Prestation
 from app.models.coverage_plans import CoveragePlan
 from app import db
 from datetime import datetime
-
 
 def get_all_tariffs_controller():
     try:
@@ -16,24 +14,30 @@ def get_all_tariffs_controller():
     except Exception as e:
         return jsonify({"error": "Error retrieving tariffs", "details": str(e)}), 500
 
-# CREATE TARIFF
+
 def create_tariff_controller():
     data = request.get_json() or {}
 
-    # Validar campos requeridos
-    required_fields = ["service_code", "plan_id", "price", "validFrom"]
+    required_fields = ["prestation_code", "plan_id", "price", "validFrom"]
     missing = [f for f in required_fields if f not in data]
     if missing:
         return jsonify({"error": f"Missing required fields: {', '.join(missing)}"}), 400
 
-    # Validar existencia de Service y CoveragePlan
-    service = Prestation.query.filter_by(code=data.get('service_code')).first()
-    plan = CoveragePlan.query.get(data.get('plan_id'))
+    # Validar existencia de CoveragePlan si plan_id no es null
+    plan_id = data.get('plan_id')
+    if plan_id:
+        plan = CoveragePlan.query.get(plan_id)
+        if not plan:
+            return jsonify({"error": "Coverage plan not found"}), 404
 
-    if not service:
-        return jsonify({"error": "Service not found"}), 404
-    if not plan:
-        return jsonify({"error": "Coverage plan not found"}), 404
+    # Validar precios positivos
+    try:
+        price = float(data.get('price'))
+        taxes = float(data.get('taxes', 0.0))
+        if price < 0 or taxes < 0:
+            return jsonify({"error": "Price and taxes must be positive numbers"}), 400
+    except ValueError:
+        return jsonify({"error": "Price and taxes must be numeric"}), 400
 
     # Validar fechas
     try:
@@ -42,13 +46,22 @@ def create_tariff_controller():
     except ValueError:
         return jsonify({"error": "Invalid date format, should be YYYY-MM-DD"}), 400
 
+    # Validar unicidad: no puede existir otra tarifa con mismo code + plan + fecha inicio
+    existing = Tariff.query.filter_by(
+        prestation_code=data.get('prestation_code'),
+        plan_id=plan_id,
+        valid_from=valid_from
+    ).first()
+    if existing:
+        return jsonify({"error": "A tariff with this code, plan and valid_from already exists"}), 400
+
     # Crear tarifa
     try:
         new_tariff = Tariff(
-            service_code=data.get('service_code'),
-            plan_id=data.get('plan_id'),
-            base_value=data.get('price'),
-            taxes=data.get('taxes', 0.0),
+            prestation_code=data.get('prestation_code'),
+            plan_id=plan_id,
+            price=price,
+            taxes=taxes,
             valid_from=valid_from,
             valid_until=valid_until
         )
@@ -64,7 +77,6 @@ def create_tariff_controller():
         db.session.rollback()
         return jsonify({"error": "Error creating tariff", "details": str(e)}), 500
 
-# GET TARIFF BY ID
 def get_tariff_by_id_controller(tariff_id):
     tariff = Tariff.query.get(tariff_id)
     if not tariff:
@@ -75,7 +87,6 @@ def get_tariff_by_id_controller(tariff_id):
         "tariff": tariff.to_dict()
     }), 200
 
-# UPDATE TARIFF
 def update_tariff_controller(tariff_id):
     tariff = Tariff.query.get(tariff_id)
     if not tariff:
@@ -85,11 +96,38 @@ def update_tariff_controller(tariff_id):
 
     try:
         if 'price' in data:
-            tariff.base_value = data['price']
+            price = float(data['price'])
+            if price < 0:
+                return jsonify({"error": "Price must be positive"}), 400
+            tariff.price = price
+
         if 'taxes' in data:
-            tariff.taxes = data['taxes']
+            taxes = float(data['taxes'])
+            if taxes < 0:
+                return jsonify({"error": "Taxes must be positive"}), 400
+            tariff.taxes = taxes
+
         if 'validUntil' in data:
             tariff.valid_until = datetime.strptime(data['validUntil'], '%Y-%m-%d').date()
+
+        # Opcional: validar unicidad si cambió code o plan o valid_from
+        if 'prestation_code' in data or 'plan_id' in data or 'validFrom' in data:
+            prestation_code = data.get('prestation_code', tariff.prestation_code)
+            plan_id = data.get('plan_id', tariff.plan_id)
+            valid_from = datetime.strptime(data.get('validFrom'), '%Y-%m-%d').date() if data.get('validFrom') else tariff.valid_from
+
+            existing = Tariff.query.filter(
+                Tariff.id != tariff.id,
+                Tariff.prestation_code == prestation_code,
+                Tariff.plan_id == plan_id,
+                Tariff.valid_from == valid_from
+            ).first()
+            if existing:
+                return jsonify({"error": "Another tariff with this code, plan and valid_from already exists"}), 400
+
+            tariff.prestation_code = prestation_code
+            tariff.plan_id = plan_id
+            tariff.valid_from = valid_from
 
         db.session.commit()
         return jsonify({
@@ -98,12 +136,11 @@ def update_tariff_controller(tariff_id):
         }), 200
 
     except ValueError:
-        return jsonify({"error": "Invalid date format, should be YYYY-MM-DD"}), 400
+        return jsonify({"error": "Invalid data format"}), 400
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": "Error updating tariff", "details": str(e)}), 500
 
-# DELETE TARIFF
 def delete_tariff_controller(tariff_id):
     tariff = Tariff.query.get(tariff_id)
     if not tariff:

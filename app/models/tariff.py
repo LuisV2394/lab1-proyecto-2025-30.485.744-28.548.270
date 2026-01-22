@@ -1,12 +1,13 @@
 from app import db
 from datetime import datetime
 
+
 class Tariff(db.Model):
     __tablename__ = 'plan_tariffs'
 
     id = db.Column(db.Integer, primary_key=True)
-    prestation_id = db.Column(db.String(20), db.ForeignKey('services.id'), nullable=False)
-    plan_id = db.Column(db.Integer, db.ForeignKey('coverage_plans.id'), nullable=False)
+    prestation_code = db.Column(db.String(20), nullable=False)
+    plan_id = db.Column(db.Integer, db.ForeignKey('plans.id'), nullable=True)
     price = db.Column(db.Numeric(12, 2), nullable=False)
     taxes = db.Column(db.Numeric(10, 2), default=0.0)
     valid_from = db.Column(db.Date, nullable=False)
@@ -17,7 +18,7 @@ class Tariff(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "prestation_id": self.prestation_id,
+            "prestation_code": self.prestation_code,
             "plan_id": self.plan_id,
             "price": float(self.price),
             "taxes": float(self.taxes),

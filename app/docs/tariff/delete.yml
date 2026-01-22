@@ -1,8 +1,10 @@
 tags:
   - Tariffs
 summary: Delete a tariff
-description: Permanently deletes a tariff by its ID.
+description: Deletes an existing tariff by its ID.
 operationId: deleteTariff
+produces:
+  - application/json
 parameters:
   - name: tariff_id
     in: path

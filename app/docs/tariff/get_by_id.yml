@@ -1,7 +1,7 @@
 tags:
   - Tariffs
-summary: Get a tariff by ID
-description: Retrieves a tariff by its ID.
+summary: Get tariff by ID
+description: Retrieves a single tariff by its ID.
 operationId: getTariffById
 produces:
   - application/json
@@ -25,13 +25,13 @@ responses:
             id:
               type: integer
               example: 1
-            service_code:
+            prestation_code:
               type: string
               example: "SRV001"
             plan_id:
               type: integer
               example: 1
-            base_value:
+            price:
               type: number
               format: float
               example: 150.0
@@ -47,7 +47,5 @@ responses:
               example: "2026-12-31"
   404:
     description: Tariff not found
-  401:
-    description: Unauthorized
-  403:
-    description: Forbidden
+  500:
+    description: Server error
