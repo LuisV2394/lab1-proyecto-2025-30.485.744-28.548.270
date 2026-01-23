@@ -6,22 +6,22 @@
   },
   {
     "amount": 90.50,
-    "invoice_id": 129,
+    "factura_id": 129,
     "reason": "Promotional discount applied"
   },
   {
     "amount": 250.75,
-    "invoice_id": 130,
+    "factura_id": 130,
     "reason": "Correction for duplicate charge"
   },
   {
     "amount": 60.00,
-    "invoice_id": 131,
+    "factura_id": 131,
     "reason": "Partial refund for damaged item"
   },
   {
     "amount": 145.25,
-    "invoice_id": 132,
+    "factura_id": 132,
     "reason": "Adjustment for tax calculation"
   }
 ]

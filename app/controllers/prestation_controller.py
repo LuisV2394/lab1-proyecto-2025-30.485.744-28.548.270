@@ -8,7 +8,6 @@ def get_all_services_controller():
     data = [s.to_dict() for s in services]
     return jsonify(data), 200
 
-
 # Buscar servicio por ID
 def get_service_by_id_controller(service_id):
     service = Prestation.query.get(service_id)

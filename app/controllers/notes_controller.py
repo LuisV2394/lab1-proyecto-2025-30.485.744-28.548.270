@@ -51,7 +51,6 @@ def create_note_controller():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-
 def get_all_notes_controller():
     notes = ClinicalNote.query.all()
 
@@ -71,7 +70,6 @@ def get_all_notes_controller():
         for note in notes
     ]), 200
 
-
 def get_note_by_id_controller(note_id):
     note = ClinicalNote.query.get(note_id)
     if not note:
@@ -89,7 +87,6 @@ def get_note_by_id_controller(note_id):
         "created_at": note.created_at.isoformat() if note.created_at else None,
         "updated_at": note.updated_at.isoformat() if note.updated_at else None
     }), 200
-
 
 def update_note_controller(note_id):
     note = ClinicalNote.query.get(note_id)
@@ -114,7 +111,6 @@ def update_note_controller(note_id):
         "message": "Clinical note updated",
         "id": note.id
     }), 200
-
 
 def delete_note_controller(note_id):
     note = ClinicalNote.query.get(note_id)

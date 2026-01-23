@@ -5,17 +5,17 @@ class Affiliation(db.Model):
     __tablename__ = 'affiliations'
 
     id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey('people.id'), nullable=False)  # The person being affiliated
-    plan_id = db.Column(db.Integer, db.ForeignKey('plans.id'), nullable=False)  # The insurance or coverage plan
-    payer_id = db.Column(db.Integer, db.ForeignKey('payers.id'), nullable=True)  # Optional: the entity paying for the plan
-    card_number = db.Column(db.String(50), nullable=False)  # Health card or membership number
-    policy_number = db.Column(db.String(50))  # Policy number
+    person_id = db.Column(db.Integer, db.ForeignKey('people.id'), nullable=False)  
+    plan_id = db.Column(db.Integer, db.ForeignKey('plans.id'), nullable=False) 
+    payer_id = db.Column(db.Integer, db.ForeignKey('payers.id'), nullable=True) 
+    card_number = db.Column(db.String(50), nullable=False)  
+    policy_number = db.Column(db.String(50))  
     valid_from = db.Column(db.Date, nullable=False)
     valid_to = db.Column(db.Date)
     
     # Financial fields
-    copayment = db.Column(db.Numeric(10, 2), default=0.0)  # Fixed co-pay per appointment
-    coinsurance = db.Column(db.Numeric(10, 2), default=0.0)  # Portion of the cost the patient pays (cuota moderadora)
+    copayment = db.Column(db.Numeric(10, 2), default=0.0)  
+    coinsurance = db.Column(db.Numeric(10, 2), default=0.0)  
     status = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

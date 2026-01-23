@@ -5,7 +5,7 @@ from app.models.user import User
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
-# GET ALL LOGS (pagination)
+# GET ALL LOGS
 def get_all_logs_controller():
     try:
         limit = int(request.args.get("limit", 100))
@@ -87,7 +87,7 @@ def create_log_controller():
 
     try:
         new_log = AccessLog(
-            user_id=user_id,   # ya validado o None
+            user_id=user_id,
             resource=data["resource"],
             action=data["action"],
             details=data.get("details"),

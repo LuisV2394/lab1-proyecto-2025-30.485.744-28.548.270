@@ -5,11 +5,9 @@ from app.models.prestation import Prestation
 from app.models.invoice import Invoice
 from app import db
 
-
 def get_all_invoice_items_controller():
     items = InvoiceItem.query.all()
     return jsonify([item.to_dict() for item in items]), 200
-
 
 def get_invoice_item_by_id_controller(item_id):
     item = InvoiceItem.query.get(item_id)
@@ -17,7 +15,6 @@ def get_invoice_item_by_id_controller(item_id):
         return jsonify({"error": "Invoice item not found"}), 404
 
     return jsonify(item.to_dict()), 200
-
 
 def create_invoice_item_controller():
     data = request.get_json()
