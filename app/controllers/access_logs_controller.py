@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from app.models.access_logs import AccessLog
 from app import db
+from app.models.user import User
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
@@ -54,14 +55,12 @@ def get_logs_by_user_controller(user_id):
 def create_log_controller():
     data = request.get_json() or {}
 
-    # Required business fields
     required_fields = ["resource", "action"]
 
     for field in required_fields:
         if field not in data:
             return jsonify({"error": f"Missing required field: {field}"}), 400
 
-    # Length validations consistent with your model
     if len(data.get("resource", "")) > 100:
         return jsonify({"error": "Resource exceeds maximum length (100)"}), 400
 
@@ -71,8 +70,12 @@ def create_log_controller():
     if data.get("details") and len(data["details"]) > 5000:
         return jsonify({"error": "Details exceeds maximum length (5000)"}), 400
 
-    # Parse optional custom date input
-    # Format example: "2026-01-09 14:50:00"
+    user_id = data.get("user_id")
+    if user_id is not None:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": f"user_id {user_id} does not exist"}), 400
+
     date_value = data.get("date")
     if date_value:
         try:
@@ -84,7 +87,7 @@ def create_log_controller():
 
     try:
         new_log = AccessLog(
-            user_id=data.get("user_id"),  # can be null
+            user_id=user_id,   # ya validado o None
             resource=data["resource"],
             action=data["action"],
             details=data.get("details"),
@@ -108,8 +111,17 @@ def create_log_controller():
 # INTERNAL UTILITY
 def create_log_entry(user_id, resource, action, details=None):
     try:
+        safe_user_id = None
+
+        if user_id is not None:
+            user = User.query.get(user_id)
+            if user:
+                safe_user_id = user.id
+            else:
+                print(f"[WARN] Invalid user_id {user_id} for access log. Using NULL.")
+
         log = AccessLog(
-            user_id=user_id,
+            user_id=safe_user_id, 
             resource=resource,
             action=action,
             details=details,
@@ -117,6 +129,7 @@ def create_log_entry(user_id, resource, action, details=None):
             user_agent=getattr(request.user_agent, "string", None),
             date=datetime.utcnow()
         )
+
         db.session.add(log)
         db.session.commit()
 
